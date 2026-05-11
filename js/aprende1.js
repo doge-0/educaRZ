@@ -45,3 +45,54 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+var player;
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        height: '0',
+        width: '0',
+        videoId: '8EczaHDAcXE',
+        playerVars: {
+            'autoplay': 1,
+            'mute': 1,
+            'loop': 1,
+            'playlist': '8EczaHDAcXE'
+        },
+        events: {
+            'onReady': onPlayerReady
+        }
+    });
+}
+
+function onPlayerReady(event) {
+    event.target.unMute();
+    event.target.playVideo();
+    const btn = document.getElementById('boton-musica');
+    if (btn) {
+        btn.textContent = 'Música ON';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btnMusica = document.getElementById('boton-musica');
+    if (btnMusica) {
+        btnMusica.addEventListener('click', toggleMusica);
+    }
+});
+
+function toggleMusica() {
+    const btn = document.getElementById('boton-musica');
+    if (!player) {
+        return;
+    }
+
+    if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+        player.pauseVideo();
+        btn.textContent = 'Música OFF';
+    } else {
+        player.unMute();
+        player.playVideo();
+        btn.textContent = 'Música ON';
+    }
+}

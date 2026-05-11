@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprende a contar</title>
+    <link rel="stylesheet" href="css/contar.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+    <div class="contenedor-leccion">
+        <h1>Aprende a contar del 0 al 10</h1>
+        <div class="numeros">
+            <button class="numero" data-num="0">0</button>
+            <button class="numero" data-num="1">1</button>
+            <button class="numero" data-num="2">2</button>
+            <button class="numero" data-num="3">3</button>
+            <button class="numero" data-num="4">4</button>
+            <button class="numero" data-num="5">5</button>
+            <button class="numero" data-num="6">6</button>
+            <button class="numero" data-num="7">7</button>
+            <button class="numero" data-num="8">8</button>
+            <button class="numero" data-num="9">9</button>
+            <button class="numero" data-num="10">10</button>
+        </div>
+        <div id="imagenes-container" class="imagenes-container"></div>
+        <button id="completar-leccion" class="btn-completar">Completar lección y volver</button>
+    </div>
+    
+    <!-- Música de fondo -->
+    <div id="player"></div>
+    
+    <!-- Botón de música -->
+    <button id="boton-musica" class="boton-musica">Música ON</button>
+    
+    <script src="js/contar.js"></script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+﻿body {
+    background-image: url('../img/peceson_fondo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contenedor-leccion {
+    background-color: rgba(135, 206, 235, 0.9);
+    border: 2px solid #4682B4;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 1400px;
+    width: 95%;
+}
+
+.titulo-con-imagen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.titulo-con-imagen h1 {
+    color: #333;
+    margin: 0;
+    font-size: 2.2em;
+}
+
+.axolote-titulo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.contenedor-principal-suma {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.tabla-numeros {
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 15px;
+    border-radius: 10px;
+    min-width: 160px;
+}
+
+.tabla-numeros h3 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+}
+
+.numeros-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.num-btn {
+    padding: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    background-color: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.num-btn:hover {
+    background-color: #764ba2;
+    transform: scale(1.05);
+}
+
+.num-btn:active {
+    transform: scale(0.95);
+}
+
+.contenedor-suma {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.entrada-numeros {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.grupo-entrada {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-numero {
+    width: 80px;
+    padding: 10px;
+    font-size: 1.2em;
+    text-align: center;
+    border: 2px solid #4682B4;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.input-numero:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+}
+
+.texto-ajolotes {
+    color: #333;
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.simbolo-mas {
+    font-size: 1.8em;
+    color: #333;
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+.btn-sumar {
+    font-size: 1.5em;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.btn-sumar:hover {
+    background-color: #45a049;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5);
+}
+
+.btn-sumar:active {
+    transform: scale(0.95);
+}
+
+.resultado-caja {
+    width: 70px;
+    height: 70px;
+    background-color: #FFD700;
+    border: 3px solid #FFA500;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 4px 12px rgba(255, 165, 0, 0.4);
+}
+
+#resultado-texto {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.imagenes-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    min-height: 120px;
+}
+
+.imagenes-container img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.boton-musica {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px 15px;
+    font-size: 1em;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    z-index: 1000;
+}
+
+.boton-musica:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255, 107, 107, 0.5);
+}
+
+.btn-completar {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    font-size: 1em;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    z-index: 1000;
+}
+
+.btn-completar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(76, 175, 80, 0.5);
+}

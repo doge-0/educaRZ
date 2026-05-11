@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suma los ajolotes</title>
+    <link rel="stylesheet" href="css/sumar.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+    <div class="contenedor-leccion">
+        <div class="titulo-con-imagen">
+            <h1>Suma los ajolotes</h1>
+            <img src="img/Axolot.webp" alt="Ajolote" class="axolote-titulo">
+        </div>
+        
+        <div class="contenedor-principal-suma">
+            <div class="tabla-numeros">
+                <h3>Números que puedes sumar</h3>
+                <div class="numeros-grid">
+                    <button class="num-btn">0</button>
+                    <button class="num-btn">1</button>
+                    <button class="num-btn">2</button>
+                    <button class="num-btn">3</button>
+                    <button class="num-btn">4</button>
+                    <button class="num-btn">5</button>
+                    <button class="num-btn">6</button>
+                    <button class="num-btn">7</button>
+                    <button class="num-btn">8</button>
+                    <button class="num-btn">9</button>
+                    <button class="num-btn">10</button>
+                </div>
+            </div>
+            
+            <div class="contenedor-suma">
+                <div class="entrada-numeros">
+                    <div class="grupo-entrada">
+                        <input type="number" id="numero1" min="0" max="10" placeholder="Número 1" class="input-numero">
+                        <span class="texto-ajolotes">ajolotes</span>
+                    </div>
+                    
+                    <div class="simbolo-mas">+</div>
+                    
+                    <div class="grupo-entrada">
+                        <input type="number" id="numero2" min="0" max="10" placeholder="Número 2" class="input-numero">
+                        <span class="texto-ajolotes">ajolotes</span>
+                    </div>
+                    
+                    <button id="btn-sumar" class="btn-sumar">=</button>
+                    
+                    <div id="resultado-caja" class="resultado-caja">
+                        <span id="resultado-texto">?</span>
+                    </div>
+                </div>
+                
+                <div id="imagenes-container" class="imagenes-container"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Música de fondo -->
+    <div id="player"></div>
+    
+    <!-- Botón de música -->
+    <button id="boton-musica" class="boton-musica">Música ON</button>
+    
+    <!-- Botón completar lección -->
+    <button id="completar-leccion" class="btn-completar">Completar lección y volver</button>
+    
+    <script src="js/sumar.js"></script>
+</body>
+</html>

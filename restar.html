@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprende a restar</title>
+    <link rel="stylesheet" href="css/interfaz.css">
+</head>
+<body>
+    <div class="contenedor-principal">
+        <h1 class="titulo">Aprende como restar</h1>
+        <p style="text-align:center; color:#333; font-size:1.1rem;">Aquí vas a aprender a restar. Próximamente se agregará el contenido interactivo.</p>
+        <button id="completar-leccion" class="boton-entrar" style="margin-top:20px; width:auto; cursor:pointer;">Completar lección y volver</button>
+    </div>
+
+    <script>
+        document.getElementById('completar-leccion').addEventListener('click', function() {
+            localStorage.setItem('leccion_restar_completada', 'true');
+            window.location.href = 'aprende1.html';
+        });
+    </script>
+</body>
+</html>
