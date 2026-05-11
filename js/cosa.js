@@ -26,7 +26,7 @@ const mensajesPez = [
 function reproducirVoz(texto, callback) {
     const speech = new SpeechSynthesisUtterance(texto);
     speech.lang = 'es-ES';
-    speech.rate = 0;
+    speech.rate = 1;
     speech.pitch = 1;
     speech.volume = 1;
     speech.onend = () => {
@@ -171,3 +171,55 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+var player;
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        height: '0',
+        width: '0',
+        videoId: '3KDxilHdq0M',
+        playerVars: {
+            'autoplay': 1,
+            'mute': 1,
+            'loop': 1,
+            'playlist': '3KDxilHdq0M'
+        },
+        events: {
+            'onReady': onPlayerReady
+        }
+    });
+}
+
+function onPlayerReady(event) {
+    event.target.unMute();
+    event.target.playVideo();
+    const btn = document.getElementById('boton-musica');
+    if (btn) {
+        btn.textContent = 'Música ON';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btnMusica = document.getElementById('boton-musica');
+    if (btnMusica) {
+        btnMusica.addEventListener('click', toggleMusica);
+    }
+});
+
+function toggleMusica() {
+    const btn = document.getElementById('boton-musica');
+    if (!player) {
+        return;
+    }
+
+    const estado = player.getPlayerState();
+    if (estado === YT.PlayerState.PLAYING) {
+        player.pauseVideo();
+        btn.textContent = 'Música OFF';
+    } else {
+        player.playVideo();
+        player.unMute();
+        btn.textContent = 'Música ON';
+    }
+}
