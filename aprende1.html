@@ -1,28 +1,138 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aprende números</title>
-    <link rel="stylesheet" href="css/aprende1.css">
+    <title>Menú Aprende</title>
+    <link rel="stylesheet" href="css/interfaz.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style>
+        .menu-opciones {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .menu-opciones a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 18px 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+        .menu-opciones a:hover:not(.bloqueado) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.24);
+        }
+        .menu-opciones a.bloqueado {
+            background: linear-gradient(135deg, #999 0%, #666 100%);
+            cursor: not-allowed;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .candado {
+            font-size: 1.2em;
+        }
+    </style>
 </head>
 <body>
-    <div class="contenedor-leccion">
-        <h1>Lección 1: aprende los números del 1 al 10</h1>
-        <div class="numeros">
-            <button class="numero" data-num="1">1</button>
-            <button class="numero" data-num="2">2</button>
-            <button class="numero" data-num="3">3</button>
-            <button class="numero" data-num="4">4</button>
-            <button class="numero" data-num="5">5</button>
-            <button class="numero" data-num="6">6</button>
-            <button class="numero" data-num="7">7</button>
-            <button class="numero" data-num="8">8</button>
-            <button class="numero" data-num="9">9</button>
-            <button class="numero" data-num="10">10</button>
+    <div class="contenedor-principal">
+        <h1 class="titulo">Elige tu lección</h1>
+        <div class="menu-opciones">
+            <a href="contar.html" class="leccion-btn" data-leccion="contar">Aprende a como contar</a>
+            <a href="sumar.html" class="leccion-btn" data-leccion="sumar">Aprende a como sumar</a>
+            <a href="restar.html" class="leccion-btn" data-leccion="restar">Aprende como restar</a>
+            <a href="juego1.html" class="leccion-btn" data-leccion="juego">Juego</a>
         </div>
-        <div id="imagenes-container" class="imagenes-container"></div>
     </div>
-    <script src="js/aprende1.js"></script>
+
+    <!-- Música de fondo -->
+    <div id="player"></div>
+    <button id="boton-musica" class="boton-musica">Música ON</button>
+
+    <script>
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: '3KDxilHdq0M',
+                playerVars: {
+                    autoplay: 1,
+                    mute: 1,
+                    loop: 1,
+                    playlist: '3KDxilHdq0M'
+                },
+                events: {
+                    onReady: onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.unMute();
+            event.target.playVideo();
+            const btn = document.getElementById('boton-musica');
+            if (btn) {
+                btn.textContent = 'Música ON';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar bloqueos de lecciones
+            const leccionesOrden = ['contar', 'sumar', 'restar', 'juego'];
+            const botonesLecciones = document.querySelectorAll('.leccion-btn');
+            
+            botonesLecciones.forEach((btn, index) => {
+                const leccion = btn.getAttribute('data-leccion');
+                
+                // Primera lección siempre disponible
+                if (index === 0) {
+                    btn.classList.remove('bloqueado');
+                    return;
+                }
+                
+                // Verificar si la lección anterior está completada
+                const leccionAnterior = leccionesOrden[index - 1];
+                const completada = localStorage.getItem(`leccion_${leccionAnterior}_completada`) === 'true';
+                
+                if (completada) {
+                    btn.classList.remove('bloqueado');
+                } else {
+                    btn.classList.add('bloqueado');
+                    btn.innerHTML = '<span class="candado">🔒</span>' + btn.textContent;
+                    btn.href = 'javascript:void(0);';
+                }
+            });
+            
+            const btnMusica = document.getElementById('boton-musica');
+            if (btnMusica) {
+                btnMusica.addEventListener('click', function() {
+                    if (!player) {
+                        return;
+                    }
+                    if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                        player.pauseVideo();
+                        btnMusica.textContent = 'Música OFF';
+                    } else {
+                        player.unMute();
+                        player.playVideo();
+                        btnMusica.textContent = 'Música ON';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
