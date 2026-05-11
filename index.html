@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprende a contar</title>
+    <link rel="icon" type="image/svg+xml" href="img/marhlogo.jpg">
+    <link rel="stylesheet" href="css/interfaz.css">
+</head>
+<body>
+    <div class="contenedor-principal">
+        <h1 class="titulo">Fish-Math</h1>
+        
+        <div class="seccion-imagen">
+            <div class="pezagua-contenedor">
+                <img id="pezagua" src="img/pezagua.png" alt="Imagen central" class="imagen-central" style="cursor: pointer;">
+                <div id="burbuja-pez" class="burbuja-pez">glup glup glup</div>
+            </div>
+        </div>
+        
+        <div class="seccion-nombre">
+            <input type="text" id="nombrePersona" class="input-nombre" placeholder="Ingresa tu nombre" required>
+        </div>
+        
+        <div class="seccion-avatar">
+            <h2 class="titulo-avatar">Elige tu avatar</h2>
+            <div class="contenedor-avatares">
+                <label class="avatar-option">
+                    <input type="radio" name="avatar" value="avatar1" required>
+                    <img src="img/alce.png" alt="Avatar 1" class="avatar-img">
+                </label>
+                <label class="avatar-option">
+                    <input type="radio" name="avatar" value="avatar2" required>
+                    <img src="img/leon.png" alt="Avatar 2" class="avatar-img">
+                </label>
+                <label class="avatar-option">
+                    <input type="radio" name="avatar" value="avatar3" required>
+                    <img src="img/rana.png" alt="Avatar 3" class="avatar-img">
+                </label>
+                <label class="avatar-option">
+                    <input type="radio" name="avatar" value="avatar4" required>
+                    <img src="img/tigre.png" alt="Avatar 4" class="avatar-img">
+                </label>
+            </div>
+        </div>
+        
+        <button class="boton-entrar" onclick="validarFormulario()">Entrar</button>
+    </div>
+    
+    <div id="gif-burbujas" class="gif-burbujas">
+        <img src="img/spongebobo.gif" alt="Burbujas" class="gif-animation">
+    </div>
+    
+    <script src="js/cosa.js"></script>
+</body>
+</html>

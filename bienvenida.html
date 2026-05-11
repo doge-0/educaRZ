@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenida - Fish-Math</title>
+    <link rel="icon" type="image/svg+xml" href="img/marhlogo.jpg">
+    <link rel="stylesheet" href="css/interfaz.css">
+</head>
+<body>
+    <div class="contenedor-principal">
+        <h1 class="titulo">¡Bienvenido!</h1>
+        
+        <div class="seccion-bienvenida">
+            <div class="avatar-bienvenida">
+                <img id="avatarImg" src="" alt="Avatar del usuario" class="avatar-img-grande">
+            </div>
+            <div class="mensaje-bienvenida">
+                <h2 id="mensajeBienvenida"></h2>
+            </div>
+        </div>
+        
+        <button class="boton-entrar" onclick="continuar()">Continuar</button>
+    </div>
+    
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const nombre = localStorage.getItem('nombreUsuario');
+            const avatar = localStorage.getItem('avatarSeleccionado');
+            
+            if (!nombre || !avatar) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const avatarMap = {
+                avatar1: 'alce.png',
+                avatar2: 'leon.png',
+                avatar3: 'rana.png',
+                avatar4: 'tigre.png'
+            };
+            
+            document.getElementById('avatarImg').src = 'img/' + avatarMap[avatar];
+            document.getElementById('mensajeBienvenida').textContent = `Bienvenido ${nombre}, ¿estás listo para aprender?`;
+        });
+        
+        function continuar() {
+            // Aquí puedes redirigir a la siguiente página, por ejemplo, la lección principal
+            window.location.href = 'aprende1.html';
+        }
+    </script>
+</body>
+</html>
