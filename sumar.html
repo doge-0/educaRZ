@@ -13,6 +13,11 @@
         <span id="nombreUsuario"></span>
     </div>
     <div class="contenedor-leccion">
+        <div class="asistente-pececito">
+            <img id="pez-asistente" src="img/Catfish.webp" alt="Pez asistente">
+            <div id="burbuja-pececito" class="burbuja-pececito">¡Hola! Suma números para aprender. Presiona todos los números para desbloquear el desafío.</div>
+        </div>
+        
         <div class="titulo-con-imagen">
             <h1>Suma los peces</h1>
             <img src="img/Sunfish.webp" alt="Sunfish" class="axolote-titulo">
@@ -60,16 +65,35 @@
                 <div id="imagenes-container" class="imagenes-container"></div>
             </div>
         </div>
+        
+        <button id="btn-iniciar-desafio" class="btn-iniciar-desafio oculto">Iniciar Desafío de Suma</button>
+        
+        <div id="desafio-suma" class="desafio-suma oculto">
+            <p class="texto-desafio">Desafío: Resuelve la suma</p>
+            <div class="suma-desafio">
+                <span id="num-desafio-1" class="num-grande">?</span>
+                <span class="simbolo-suma">+</span>
+                <span id="num-desafio-2" class="num-grande">?</span>
+                <span class="simbolo-igual">=</span>
+                <input id="respuesta-suma" type="text" placeholder="Respuesta" class="input-respuesta-suma">
+            </div>
+            <button id="enviar-suma" class="btn-verificar">Verificar</button>
+            <div id="feedback-suma" class="feedback"></div>
+            <div class="botones-desafio">
+                <button id="btn-volver-suma" class="btn-volver">Volver</button>
+                <button id="btn-siguiente-suma" class="btn-siguiente bloqueado" disabled>Siguiente 🔒</button>
+            </div>
+        </div>
     </div>
+    
+    <!-- Contenedor de confeti -->
+    <div id="contenedor-confeti" class="contenedor-confeti"></div>
     
     <!-- Música de fondo -->
     <div id="player"></div>
     
     <!-- Botón de música -->
     <button id="boton-musica" class="boton-musica">Música ON</button>
-    
-    <!-- Botón completar lección -->
-    <button id="completar-leccion" class="btn-completar">Completar lección y volver</button>
     
     <script src="js/sumar.js"></script>
 </body>

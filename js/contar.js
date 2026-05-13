@@ -12,6 +12,7 @@
     const btnSiguiente = document.getElementById('btn-siguiente');
     const seccionNumeros = document.querySelector('.numeros');
     const imagenesContainer = document.getElementById('imagenes-container');
+    const btnIniciarDesafio = document.getElementById('btn-iniciar-desafio');
 
     const nombresNumeros = {
         0: 'cero',
@@ -74,11 +75,11 @@
 
         if (!mensajeDesafioMostrado && presionCount >= 3) {
             mensajeDesafioMostrado = true;
-            hablarTexto('Cuando presiones todos los botones te saldrá un desafío para ver si aprendiste.');
+            hablarTexto('Presiona todos los números para desbloquear el botón del desafío.');
         }
 
         if (!desafioIniciado && numerosPresionados.size === botonesNumeros.length) {
-            iniciarDesafio();
+            mostrarBotonDesafio();
         }
     }
 
@@ -89,7 +90,14 @@
         desafiosContainer.classList.remove('oculto');
         seccionNumeros.classList.add('oculto');
         imagenesContainer.classList.add('oculto');
+        btnIniciarDesafio.classList.add('oculto');
         hablarTexto('¡Desafío listo! Escribe el nombre en español del número que ves en pantalla.');
+    }
+
+    function mostrarBotonDesafio() {
+        btnIniciarDesafio.classList.remove('oculto');
+        btnIniciarDesafio.addEventListener('click', iniciarDesafio);
+        hablarTexto('¡Todos los números presionados! Presiona el botón para iniciar el desafío.');
     }
 
     function mostrarNumeroYImagenes(num) {
@@ -98,7 +106,7 @@
 
         const numeroElement = document.createElement('div');
         numeroElement.className = 'numero-animado';
-        numeroElement.textContent = num;
+        numeroElement.innerHTML = `<div>${num}</div><div style="font-size: 0.6em; margin-top: 10px; color: #666;">${nombresNumeros[num]}</div>`;
         imagenesContainer.appendChild(numeroElement);
 
         setTimeout(() => {
@@ -127,6 +135,10 @@
         feedbackEl.textContent = '';
         btnSiguiente.classList.add('bloqueado');
         btnSiguiente.disabled = true;
+        btnIniciarDesafio.classList.add('oculto');
+        numerosPresionados.clear();
+        presionCount = 0;
+        mensajeDesafioMostrado = false;
         hablarTexto('Regresaste a los números. Presiona todos para el desafío.');
     });
 
@@ -150,6 +162,14 @@
             feedbackEl.style.color = '#0b6623';
             btnSiguiente.classList.remove('bloqueado');
             btnSiguiente.disabled = false;
+            
+            // Cambiar imagen del pez y mostrar confeti
+            const pezAsistente = document.getElementById('pez-asistente');
+            if (pezAsistente) {
+                pezAsistente.src = 'img/pezgirando.gif';
+            }
+            mostrarConfeti();
+            
             hablarTexto('¡Muy bien! Has acertado, ahora puedes pasar a la siguiente lección.');
         } else {
             const primeraLetra = respuestaCorrecta.charAt(0);
@@ -159,6 +179,29 @@
             feedbackEl.style.color = '#b22222';
             hablarTexto(texto);
         }
+    }
+
+    function mostrarConfeti() {
+        const contenedorConfeti = document.getElementById('contenedor-confeti');
+        const coloresConfeti = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#F38181', '#AA96DA', '#FCBAD3', '#A8D8EA'];
+        
+        for (let i = 0; i < 50; i++) {
+            const confeti = document.createElement('div');
+            confeti.classList.add('confeti');
+            confeti.style.left = Math.random() * window.innerWidth + 'px';
+            confeti.style.backgroundColor = coloresConfeti[Math.floor(Math.random() * coloresConfeti.length)];
+            confeti.style.width = (Math.random() * 10 + 5) + 'px';
+            confeti.style.height = confeti.style.width;
+            confeti.style.animationDuration = (Math.random() * 2 + 2.5) + 's';
+            confeti.style.animationDelay = (Math.random() * 0.3) + 's';
+            
+            contenedorConfeti.appendChild(confeti);
+        }
+        
+        // Limpiar los confetis después de la animación
+        setTimeout(() => {
+            document.querySelectorAll('.confeti').forEach(c => c.remove());
+        }, 5000);
     }
 });
 

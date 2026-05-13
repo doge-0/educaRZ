@@ -196,15 +196,33 @@
                 console.log('No hay datos de usuario');
             }
             
+            // Determinar el mensaje del asistente basado en el progreso
+            const contarCompletada = localStorage.getItem('leccion_contar_completada') === 'true';
+            const sumarCompletada = localStorage.getItem('leccion_sumar_completada') === 'true';
+            const restarCompletada = localStorage.getItem('leccion_restar_completada') === 'true';
+            
+            let mensajeAsistente = 'Empezemos con tu primera leccion, aprendamos a contar numeros';
+            
+            if (contarCompletada && !sumarCompletada) {
+                mensajeAsistente = `Muy bien hecho ${nombre}, ahora aprenderemos a sumar`;
+            } else if (sumarCompletada && !restarCompletada) {
+                mensajeAsistente = 'Eres muy bueno en esto, sigue asi en la leccion de restar';
+            } else if (restarCompletada) {
+                mensajeAsistente = `Ya has aprendido mucho ${nombre}, te espero en el juego`;
+            }
+            
             // Event listener para la imagen del catfish
             const catfish = document.getElementById('catfish');
             const burbujaCatfish = document.getElementById('burbuja-catfish');
             if (catfish && burbujaCatfish) {
+                // Establecer el mensaje en la burbuja
+                burbujaCatfish.textContent = mensajeAsistente;
+                
                 catfish.addEventListener('click', () => {
                     burbujaCatfish.classList.add('mostrar');
                     setTimeout(() => {
                         burbujaCatfish.classList.remove('mostrar');
-                    }, 3000); // Mostrar por 3 segundos
+                    }, 4000); // Mostrar por 4 segundos para mensajes más largos
                 });
             }
             

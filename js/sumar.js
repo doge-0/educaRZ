@@ -74,16 +74,168 @@ document.addEventListener('DOMContentLoaded', function() {
 
     cargarUsuario();
 
+    // Variables para el desafío
+    const botonesNumeros = document.querySelectorAll('.num-btn');
+    const btnIniciarDesafio = document.getElementById('btn-iniciar-desafio');
+    const desafioContainer = document.getElementById('desafio-suma');
+    const num1Desafio = document.getElementById('num-desafio-1');
+    const num2Desafio = document.getElementById('num-desafio-2');
+    const respuestaSuma = document.getElementById('respuesta-suma');
+    const btnEnviarSuma = document.getElementById('enviar-suma');
+    const feedbackSuma = document.getElementById('feedback-suma');
+    const btnVolverSuma = document.getElementById('btn-volver-suma');
+    const btnSiguienteSuma = document.getElementById('btn-siguiente-suma');
+    const pezAsistente = document.getElementById('pez-asistente');
+    const burbujaPececito = document.getElementById('burbuja-pececito');
+
+    let numerosPresionados = new Set();
+    let presionCount = 0;
+    let desafioIniciado = false;
+    let num1Desafio_val = null;
+    let num2Desafio_val = null;
+    let mensajeDesafioMostrado = false;
+    
+    // Mensaje inicial al cargar la página
+    setTimeout(() => {
+        reproducirVoz('Para tener el desafio debes presionar todos los botones y aprender a sumar');
+    }, 500);
+
+    // Rastrear números presionados
+    botonesNumeros.forEach(boton => {
+        boton.addEventListener('click', function() {
+            const num = parseInt(this.textContent);
+            numerosPresionados.add(num);
+            presionCount += 1;
+
+            if (!mensajeDesafioMostrado && presionCount >= 3) {
+                mensajeDesafioMostrado = true;
+                reproducirVoz('Presiona todos los números para desbloquear el botón del desafío.');
+            }
+
+            if (!desafioIniciado && numerosPresionados.size === botonesNumeros.length) {
+                mostrarBotonDesafio();
+            }
+        });
+    });
+
+    function mostrarBotonDesafio() {
+        btnIniciarDesafio.classList.remove('oculto');
+        reproducirVoz('Vayamos al desafio para ver si aprendiste a sumar');
+    }
+
+    function iniciarDesafio() {
+        desafioIniciado = true;
+        num1Desafio_val = Math.floor(Math.random() * 11);
+        num2Desafio_val = Math.floor(Math.random() * 11);
+        num1Desafio.textContent = num1Desafio_val;
+        num2Desafio.textContent = num2Desafio_val;
+        desafioContainer.classList.remove('oculto');
+        document.querySelector('.contenedor-principal-suma').classList.add('oculto');
+        btnIniciarDesafio.classList.add('oculto');
+        reproducirVoz('¡Desafío de suma! Resuelve la operación.');
+    }
+
+    function verificarRespuestaSuma() {
+        if (num1Desafio_val === null || num2Desafio_val === null) {
+            return;
+        }
+
+        const respuesta = respuestaSuma.value.trim();
+        const respuestaCorrecta = num1Desafio_val + num2Desafio_val;
+
+        if (parseInt(respuesta) === respuestaCorrecta) {
+            feedbackSuma.textContent = '¡Muy bien! Puedes pasar a la siguiente lección.';
+            feedbackSuma.style.color = '#0b6623';
+            btnSiguienteSuma.classList.remove('bloqueado');
+            btnSiguienteSuma.disabled = false;
+
+            // Cambiar imagen del pez y mostrar confeti
+            if (pezAsistente) {
+                pezAsistente.src = 'img/pezgirando.gif';
+            }
+            mostrarConfeti();
+
+            reproducirVoz('¡Muy bien! Has acertado, ahora puedes pasar a la siguiente lección.');
+        } else {
+            feedbackSuma.textContent = 'Intenta de nuevo. Recuerda que ' + numeroEnEspanol(num1Desafio_val) + ' más ' + numeroEnEspanol(num2Desafio_val) + ' son ' + numeroEnEspanol(respuestaCorrecta);
+            feedbackSuma.style.color = '#b22222';
+            reproducirVoz('Parece que te has equivocado, intenta de nuevo.');
+        }
+    }
+
+    function mostrarConfeti() {
+        const contenedorConfeti = document.getElementById('contenedor-confeti');
+        const coloresConfeti = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#F38181', '#AA96DA', '#FCBAD3', '#A8D8EA'];
+        
+        for (let i = 0; i < 50; i++) {
+            const confeti = document.createElement('div');
+            confeti.classList.add('confeti');
+            confeti.style.left = Math.random() * window.innerWidth + 'px';
+            confeti.style.backgroundColor = coloresConfeti[Math.floor(Math.random() * coloresConfeti.length)];
+            confeti.style.width = (Math.random() * 10 + 5) + 'px';
+            confeti.style.height = confeti.style.width;
+            confeti.style.animationDuration = (Math.random() * 2 + 2.5) + 's';
+            confeti.style.animationDelay = (Math.random() * 0.3) + 's';
+            
+            contenedorConfeti.appendChild(confeti);
+        }
+        
+        setTimeout(() => {
+            document.querySelectorAll('.confeti').forEach(c => c.remove());
+        }, 5000);
+    }
+
+    btnIniciarDesafio.addEventListener('click', iniciarDesafio);
+    btnEnviarSuma.addEventListener('click', verificarRespuestaSuma);
+
+    btnVolverSuma.addEventListener('click', function() {
+        desafioContainer.classList.add('oculto');
+        document.querySelector('.contenedor-principal-suma').classList.remove('oculto');
+        desafioIniciado = false;
+        respuestaSuma.value = '';
+        feedbackSuma.textContent = '';
+        btnSiguienteSuma.classList.add('bloqueado');
+        btnSiguienteSuma.disabled = true;
+        btnIniciarDesafio.classList.add('oculto');
+        numerosPresionados.clear();
+        presionCount = 0;
+        mensajeDesafioMostrado = false;
+        pezAsistente.src = 'img/Catfish.webp';
+        reproducirVoz('Regresaste a la práctica. Presiona todos los números para el desafío.');
+    });
+
+    btnSiguienteSuma.addEventListener('click', function() {
+        if (!btnSiguienteSuma.disabled) {
+            localStorage.setItem('leccion_sumar_completada', 'true');
+            window.location.href = 'aprende1.html';
+        }
+    });
+
     const numero1 = document.getElementById('numero1');
     const numero2 = document.getElementById('numero2');
     const btnSumar = document.getElementById('btn-sumar');
     const imagenesContainer = document.getElementById('imagenes-container');
     const resultadoTexto = document.getElementById('resultado-texto');
-    const botonesNumeros = document.querySelectorAll('.num-btn');
 
+    // Rastrear números presionados y llenar campos
     botonesNumeros.forEach(btn => {
         btn.addEventListener('click', function() {
-            const num = this.textContent;
+            const num = parseInt(this.textContent);
+            
+            // Rastrear para el desafío
+            numerosPresionados.add(num);
+            presionCount += 1;
+
+            if (!mensajeDesafioMostrado && presionCount >= 3) {
+                mensajeDesafioMostrado = true;
+                reproducirVoz('Presiona todos los números para desbloquear el botón del desafío.');
+            }
+
+            if (!desafioIniciado && numerosPresionados.size === botonesNumeros.length) {
+                mostrarBotonDesafio();
+            }
+            
+            // Lógica original para llenar campos
             if (numero1.value === '') {
                 numero1.value = num;
                 numero1.focus();
@@ -153,6 +305,17 @@ document.addEventListener('DOMContentLoaded', function() {
         utterance.rate = 1.2;
         utterance.pitch = 1;
         window.speechSynthesis.speak(utterance);
+        mostrarBurbujaPez(texto);
+    }
+
+    function mostrarBurbujaPez(texto) {
+        if (!burbujaPececito) return;
+        burbujaPececito.textContent = texto;
+        burbujaPececito.classList.add('mostrar');
+        clearTimeout(window.burbujaTimeoutSuma);
+        window.burbujaTimeoutSuma = setTimeout(() => {
+            burbujaPececito.classList.remove('mostrar');
+        }, 4000);
     }
 
     function mostrarAjolotes(cantidad) {
@@ -165,13 +328,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    const btnCompletar = document.getElementById('completar-leccion');
-    if (btnCompletar) {
-        btnCompletar.addEventListener('click', function() {
-            localStorage.setItem('leccion_sumar_completada', 'true');
-            window.location.href = 'aprende1.html';
-        });
-    }
 });
 
 var player;
