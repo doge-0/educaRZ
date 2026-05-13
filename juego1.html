@@ -7,10 +7,35 @@
     <link rel="stylesheet" href="css/interfaz.css">
 </head>
 <body>
+    <div id="usuario-info" class="usuario-info">
+        <img id="avatarUsuario" src="" alt="Avatar">
+        <span id="nombreUsuario"></span>
+    </div>
     <div class="contenedor-principal">
         <h1 class="titulo">Juego</h1>
         <p style="text-align:center; color:#333; font-size:1.1rem;">Aquí irá el juego. Próximamente se desarrollará la actividad interactiva.</p>
         <a href="aprende1.html" class="boton-entrar" style="margin-top:20px; display:inline-block; width:auto;">Volver al menú</a>
     </div>
+
+    <script>
+        // Cargar info del usuario
+        const nombre = localStorage.getItem('nombreUsuario');
+        const avatar = localStorage.getItem('avatarSeleccionado');
+        
+        if (nombre && avatar) {
+            const avatarMap = {
+                avatar1: 'alce.png',
+                avatar2: 'leon.png',
+                avatar3: 'rana.png',
+                avatar4: 'tigre.png'
+            };
+            
+            document.getElementById('avatarUsuario').src = 'img/' + avatarMap[avatar];
+            document.getElementById('nombreUsuario').textContent = nombre;
+            console.log('Usuario cargado en juego1:', nombre, avatar);
+        } else {
+            console.log('No hay datos de usuario en juego1');
+        }
+    </script>
 </body>
 </html>

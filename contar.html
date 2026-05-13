@@ -8,8 +8,16 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
+    <div id="usuario-info" class="usuario-info">
+        <img id="avatarUsuario" src="" alt="Avatar">
+        <span id="nombreUsuario"></span>
+    </div>
     <div class="contenedor-leccion">
         <h1>Aprende a contar del 0 al 10</h1>
+        <div class="asistente-pececito">
+            <img id="pez-asistente" src="img/Catfish.webp" alt="Pez asistente">
+            <div id="burbuja-pececito" class="burbuja-pececito">¡Hola! Presiona algunos números para aprender a contar.</div>
+        </div>
         <div class="numeros">
             <button class="numero" data-num="0">0</button>
             <button class="numero" data-num="1">1</button>
@@ -24,7 +32,18 @@
             <button class="numero" data-num="10">10</button>
         </div>
         <div id="imagenes-container" class="imagenes-container"></div>
-        <button id="completar-leccion" class="btn-completar">Completar lección y volver</button>
+        <div id="desafio-contador" class="desafio-contador oculto">
+            <p class="texto-desafio">Desafío: escribe el nombre en español del número que aparece aquí:</p>
+            <div id="numero-random" class="numero-random">?</div>
+            <input id="respuesta-numero" type="text" placeholder="Escribe el nombre del número">
+            <button id="enviar-respuesta" class="btn-verificar">Verificar</button>
+            <div id="feedback" class="feedback"></div>
+            <div class="botones-desafio">
+                <button id="btn-volver" class="btn-volver">Volver</button>
+                <button id="btn-siguiente" class="btn-siguiente bloqueado" disabled>Siguiente 🔒</button>
+            </div>
+        </div>
+        <button id="completar-leccion" class="btn-completar oculto">Completar lección y volver</button>
     </div>
     
     <!-- Música de fondo -->

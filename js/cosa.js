@@ -173,6 +173,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 var player;
+var musicRequested = false;
 
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
@@ -180,23 +181,30 @@ function onYouTubeIframeAPIReady() {
         width: '0',
         videoId: '3KDxilHdq0M',
         playerVars: {
-            'autoplay': 1,
-            'mute': 1,
-            'loop': 1,
-            'playlist': '3KDxilHdq0M'
+            autoplay: 1,
+            mute: 1,
+            loop: 1,
+            playlist: '3KDxilHdq0M'
         },
         events: {
-            'onReady': onPlayerReady
+            onReady: onPlayerReady
         }
     });
 }
 
 function onPlayerReady(event) {
-    event.target.unMute();
-    event.target.playVideo();
     const btn = document.getElementById('boton-musica');
-    if (btn) {
-        btn.textContent = 'Música ON';
+    if (musicRequested) {
+        event.target.unMute();
+        event.target.playVideo();
+        if (btn) {
+            btn.textContent = 'Música ON';
+        }
+        musicRequested = false;
+    } else {
+        if (btn) {
+            btn.textContent = 'Música OFF';
+        }
     }
 }
 
@@ -210,16 +218,27 @@ document.addEventListener('DOMContentLoaded', () => {
 function toggleMusica() {
     const btn = document.getElementById('boton-musica');
     if (!player) {
+        musicRequested = true;
+        if (typeof YT !== 'undefined' && YT && YT.Player) {
+            onYouTubeIframeAPIReady();
+        }
+        if (btn) {
+            btn.textContent = 'Música ON';
+        }
         return;
     }
 
     const estado = player.getPlayerState();
     if (estado === YT.PlayerState.PLAYING) {
         player.pauseVideo();
-        btn.textContent = 'Música OFF';
+        if (btn) {
+            btn.textContent = 'Música OFF';
+        }
     } else {
-        player.playVideo();
         player.unMute();
-        btn.textContent = 'Música ON';
+        player.playVideo();
+        if (btn) {
+            btn.textContent = 'Música ON';
+        }
     }
 }

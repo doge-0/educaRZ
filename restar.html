@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="css/interfaz.css">
 </head>
 <body>
+    <div id="usuario-info" class="usuario-info">
+        <img id="avatarUsuario" src="" alt="Avatar">
+        <span id="nombreUsuario"></span>
+    </div>
     <div class="contenedor-principal">
         <h1 class="titulo">Aprende como restar</h1>
         <p style="text-align:center; color:#333; font-size:1.1rem;">Aquí vas a aprender a restar. Próximamente se agregará el contenido interactivo.</p>
@@ -14,6 +18,25 @@
     </div>
 
     <script>
+        // Cargar info del usuario
+        const nombre = localStorage.getItem('nombreUsuario');
+        const avatar = localStorage.getItem('avatarSeleccionado');
+        
+        if (nombre && avatar) {
+            const avatarMap = {
+                avatar1: 'alce.png',
+                avatar2: 'leon.png',
+                avatar3: 'rana.png',
+                avatar4: 'tigre.png'
+            };
+            
+            document.getElementById('avatarUsuario').src = 'img/' + avatarMap[avatar];
+            document.getElementById('nombreUsuario').textContent = nombre;
+            console.log('Usuario cargado en restar:', nombre, avatar);
+        } else {
+            console.log('No hay datos de usuario en restar');
+        }
+        
         document.getElementById('completar-leccion').addEventListener('click', function() {
             localStorage.setItem('leccion_restar_completada', 'true');
             window.location.href = 'aprende1.html';
