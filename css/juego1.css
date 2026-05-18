@@ -1,0 +1,285 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('../img/fondo.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.usuario-info {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 2px solid #333;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.usuario-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.usuario-info span {
+    font-weight: bold;
+    color: #333;
+}
+
+.contenedor-juego {
+    background-color: rgba(135, 206, 235, 0.95);
+    border: 3px solid #4682B4;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+    max-width: 1100px;
+    width: 100%;
+}
+
+h1 {
+    color: #0e4c78;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 2em;
+}
+
+.instruccion {
+    color: #1a4172;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+.area-juego {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+.lago-contenedor,
+.pecera-contenedor {
+    flex: 1;
+    text-align: center;
+    max-width: 350px;
+}
+
+.lago-contenedor h3,
+.pecera-contenedor h3 {
+    color: #0e4c78;
+    margin-bottom: 12px;
+    font-size: 1.3em;
+}
+
+.lago-area {
+    background-image: url('../img/lago.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 16px;
+    width: 100%;
+    height: 320px;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    box-shadow: none;
+}
+
+.pecera-area {
+    background-image: url('../img/pecera.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 16px;
+    width: 100%;
+    height: 320px;
+    min-height: 320px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+    align-content: flex-start;
+    padding: 15px;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    box-shadow: none;
+}
+
+.red-contenedor {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.red-pesca {
+    width: 120px;
+    height: auto;
+    cursor: grab;
+    user-select: none;
+    transition: all 0.2s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+.red-pesca:hover {
+    transform: scale(1.1);
+}
+
+.red-pesca.arrastrando {
+    opacity: 0.7;
+    cursor: grabbing;
+}
+
+.axolotl {
+    width: 80px;
+    height: 80px;
+    background: url('../img/Axolotl.webp') no-repeat center / contain;
+    cursor: grab;
+    user-select: none;
+    transition: all 0.2s ease;
+    border-radius: 10px;
+}
+
+.axolotl:hover {
+    transform: scale(1.1);
+}
+
+.axolotl.arrastrando {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+.axolotl.en-transito {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1001;
+}
+
+.contador {
+    color: #0e4c78;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 12px;
+}
+
+.botones-area {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.btn-verificar,
+.btn-siguiente {
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-verificar {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.btn-verificar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(76, 175, 80, 0.5);
+}
+
+.btn-verificar:active {
+    transform: translateY(0);
+}
+
+.btn-siguiente {
+    background: linear-gradient(135deg, #999 0%, #666 100%);
+    color: white;
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: 0 4px 12px rgba(100, 100, 100, 0.3);
+}
+
+.btn-siguiente:not(.oculto):not(.bloqueado) {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    opacity: 1;
+    cursor: pointer;
+}
+
+.btn-siguiente:not(.oculto):not(.bloqueado):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(76, 175, 80, 0.5);
+}
+
+.oculto {
+    display: none !important;
+}
+
+.bloqueado {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+}
+
+.feedback {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    min-height: 30px;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.feedback.correcto {
+    color: #0b6623;
+    background: rgba(107, 209, 123, 0.2);
+    border: 1px solid #0b6623;
+}
+
+.feedback.incorrecto {
+    color: #b22222;
+    background: rgba(178, 34, 34, 0.2);
+    border: 1px solid #b22222;
+}
+
+@media (max-width: 900px) {
+    .area-juego {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .lago-contenedor,
+    .pecera-contenedor {
+        max-width: 100%;
+    }
+
+    .lago-area,
+    .pecera-area {
+        height: 250px;
+    }
+}

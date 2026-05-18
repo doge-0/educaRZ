@@ -1,7 +1,23 @@
-﻿document.addEventListener('DOMContentLoaded', function() {
+﻿let vozMasculinaContar = null;
+
+function obtenerVozMasculinaEspañolaContar() {
+    const voces = window.speechSynthesis.getVoices();
+    const vozPreferida = voces.find(v => v.lang.startsWith('es') && /male|hombre|masculino/i.test(v.name));
+    return vozPreferida || voces.find(v => v.lang.startsWith('es')) || null;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    vozMasculinaContar = obtenerVozMasculinaEspañolaContar();
+    if (typeof speechSynthesis !== 'undefined') {
+        window.speechSynthesis.onvoiceschanged = function() {
+            vozMasculinaContar = obtenerVozMasculinaEspañolaContar();
+        };
+    }
+
     cargarUsuarioContar();
 
     const botonesNumeros = document.querySelectorAll('.numero');
+    const btnIrDesafio = document.getElementById('btn-ir-desafio');
     const desafiosContainer = document.getElementById('desafio-contador');
     const numeroRandomEl = document.getElementById('numero-random');
     const respuestaInput = document.getElementById('respuesta-numero');
@@ -10,9 +26,9 @@
     const botonCompletar = document.getElementById('completar-leccion');
     const btnVolver = document.getElementById('btn-volver');
     const btnSiguiente = document.getElementById('btn-siguiente');
+    const btnVolverLeccionesContar = document.getElementById('btn-volver-lecciones-contar');
     const seccionNumeros = document.querySelector('.numeros');
     const imagenesContainer = document.getElementById('imagenes-container');
-    const btnIniciarDesafio = document.getElementById('btn-iniciar-desafio');
 
     const nombresNumeros = {
         0: 'cero',
@@ -51,6 +67,12 @@
     function hablarTexto(texto) {
         const utterance = new SpeechSynthesisUtterance(texto);
         utterance.lang = 'es-ES';
+        if (!vozMasculinaContar) {
+            vozMasculinaContar = obtenerVozMasculinaEspañolaContar();
+        }
+        if (vozMasculinaContar) {
+            utterance.voice = vozMasculinaContar;
+        }
         utterance.volume = 1;
         utterance.rate = 1;
         utterance.pitch = 1;
@@ -75,11 +97,16 @@
 
         if (!mensajeDesafioMostrado && presionCount >= 3) {
             mensajeDesafioMostrado = true;
-            hablarTexto('Presiona todos los números para desbloquear el botón del desafío.');
+            hablarTexto('Cuando presiones todos los botones te saldrá un desafío para ver si aprendiste.');
         }
 
         if (!desafioIniciado && numerosPresionados.size === botonesNumeros.length) {
-            mostrarBotonDesafio();
+            if (btnIrDesafio) {
+                btnIrDesafio.classList.remove('oculto');
+                hablarTexto('¡Muy bien! Presiona el botón para ir al desafío.');
+            } else {
+                iniciarDesafio();
+            }
         }
     }
 
@@ -90,14 +117,10 @@
         desafiosContainer.classList.remove('oculto');
         seccionNumeros.classList.add('oculto');
         imagenesContainer.classList.add('oculto');
-        btnIniciarDesafio.classList.add('oculto');
+        if (btnIrDesafio) {
+            btnIrDesafio.classList.add('oculto');
+        }
         hablarTexto('¡Desafío listo! Escribe el nombre en español del número que ves en pantalla.');
-    }
-
-    function mostrarBotonDesafio() {
-        btnIniciarDesafio.classList.remove('oculto');
-        btnIniciarDesafio.addEventListener('click', iniciarDesafio);
-        hablarTexto('¡Todos los números presionados! Presiona el botón para iniciar el desafío.');
     }
 
     function mostrarNumeroYImagenes(num) {
@@ -106,7 +129,7 @@
 
         const numeroElement = document.createElement('div');
         numeroElement.className = 'numero-animado';
-        numeroElement.innerHTML = `<div>${num}</div><div style="font-size: 0.6em; margin-top: 10px; color: #666;">${nombresNumeros[num]}</div>`;
+        numeroElement.textContent = num;
         imagenesContainer.appendChild(numeroElement);
 
         setTimeout(() => {
@@ -115,6 +138,8 @@
                 const img = document.createElement('img');
                 img.src = 'img/pezperro.webp';
                 img.alt = 'Pez perro';
+                img.classList.add('pez-aparecer');
+                img.style.animationDelay = `${i * 0.08}s`;
                 imagenesContainer.appendChild(img);
             }
             const audio = new Audio('sonidos/ladridodeperro.mp3');
@@ -126,6 +151,12 @@
         verificarRespuesta();
     });
 
+    if (btnIrDesafio) {
+        btnIrDesafio.addEventListener('click', function() {
+            iniciarDesafio();
+        });
+    }
+
     btnVolver.addEventListener('click', function() {
         desafiosContainer.classList.add('oculto');
         seccionNumeros.classList.remove('oculto');
@@ -135,12 +166,14 @@
         feedbackEl.textContent = '';
         btnSiguiente.classList.add('bloqueado');
         btnSiguiente.disabled = true;
-        btnIniciarDesafio.classList.add('oculto');
-        numerosPresionados.clear();
-        presionCount = 0;
-        mensajeDesafioMostrado = false;
         hablarTexto('Regresaste a los números. Presiona todos para el desafío.');
     });
+
+    if (btnVolverLeccionesContar) {
+        btnVolverLeccionesContar.addEventListener('click', function() {
+            window.location.href = 'aprende1.html';
+        });
+    }
 
     btnSiguiente.addEventListener('click', function() {
         if (!btnSiguiente.disabled) {
@@ -162,14 +195,7 @@
             feedbackEl.style.color = '#0b6623';
             btnSiguiente.classList.remove('bloqueado');
             btnSiguiente.disabled = false;
-            
-            // Cambiar imagen del pez y mostrar confeti
-            const pezAsistente = document.getElementById('pez-asistente');
-            if (pezAsistente) {
-                pezAsistente.src = 'img/pezgirando.gif';
-            }
-            mostrarConfeti();
-            
+            celebrarDesafioContar();
             hablarTexto('¡Muy bien! Has acertado, ahora puedes pasar a la siguiente lección.');
         } else {
             const primeraLetra = respuestaCorrecta.charAt(0);
@@ -181,27 +207,25 @@
         }
     }
 
-    function mostrarConfeti() {
-        const contenedorConfeti = document.getElementById('contenedor-confeti');
-        const coloresConfeti = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#F38181', '#AA96DA', '#FCBAD3', '#A8D8EA'];
-        
-        for (let i = 0; i < 50; i++) {
-            const confeti = document.createElement('div');
-            confeti.classList.add('confeti');
-            confeti.style.left = Math.random() * window.innerWidth + 'px';
-            confeti.style.backgroundColor = coloresConfeti[Math.floor(Math.random() * coloresConfeti.length)];
-            confeti.style.width = (Math.random() * 10 + 5) + 'px';
-            confeti.style.height = confeti.style.width;
-            confeti.style.animationDuration = (Math.random() * 2 + 2.5) + 's';
-            confeti.style.animationDelay = (Math.random() * 0.3) + 's';
-            
-            contenedorConfeti.appendChild(confeti);
+    function celebrarDesafioContar() {
+        const pez = document.getElementById('pez-asistente');
+        if (pez) {
+            pez.src = 'img/pezgirando.gif';
         }
-        
-        // Limpiar los confetis después de la animación
-        setTimeout(() => {
-            document.querySelectorAll('.confeti').forEach(c => c.remove());
-        }, 5000);
+        crearConfetti();
+    }
+
+    function crearConfetti() {
+        const total = 35;
+        for (let i = 0; i < total; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti-piece';
+            confetti.style.left = `${Math.random() * 100}%`;
+            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 65%)`;
+            confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 3000);
+        }
     }
 });
 

@@ -3,44 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aprende a restar</title>
-    <link rel="stylesheet" href="css/interfaz.css">
+    <title>Resta los peces</title>
+    <link rel="stylesheet" href="css/sumar.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
     <div id="usuario-info" class="usuario-info">
         <img id="avatarUsuario" src="" alt="Avatar">
         <span id="nombreUsuario"></span>
     </div>
-    <div class="contenedor-principal">
-        <h1 class="titulo">Aprende como restar</h1>
-        <p style="text-align:center; color:#333; font-size:1.1rem;">Aquí vas a aprender a restar. Próximamente se agregará el contenido interactivo.</p>
-        <button id="completar-leccion" class="boton-entrar" style="margin-top:20px; width:auto; cursor:pointer;">Completar lección y volver</button>
+    <div class="contenedor-leccion">
+        <div class="titulo-con-imagen">
+            <h1>Resta los peces</h1>
+            <img src="img/Sunfish.webp" alt="Sunfish" class="axolote-titulo">
+        </div>
+        <div class="asistente-pececito">
+            <img id="pez-asistente" src="img/Catfish.webp" alt="Pez asistente">
+            <div>
+                <div id="burbuja-pececito" class="burbuja-pececito">¡Hola! Luego de hacer 5 restas aparecerá el botón para el desafío.</div>
+                <div class="recordatorio-peces">Restar es quitarle una cantidad al número inicial.</div>
+            </div>
+        </div>
+        <div id="leccion-resta">
+            <div class="contenedor-principal-suma">
+                <div class="tabla-numeros">
+                    <h3>Números que puedes restar</h3>
+                    <div class="numeros-grid">
+                        <button class="num-btn">0</button>
+                        <button class="num-btn">1</button>
+                        <button class="num-btn">2</button>
+                        <button class="num-btn">3</button>
+                        <button class="num-btn">4</button>
+                        <button class="num-btn">5</button>
+                        <button class="num-btn">6</button>
+                        <button class="num-btn">7</button>
+                        <button class="num-btn">8</button>
+                        <button class="num-btn">9</button>
+                        <button class="num-btn">10</button>
+                    </div>
+                </div>
+                <div class="contenedor-suma">
+                    <div class="entrada-numeros">
+                        <div class="grupo-entrada">
+                            <input type="number" id="numero1" min="0" max="10" placeholder="Número 1" class="input-numero">
+                            <span class="texto-ajolotes">peces</span>
+                        </div>
+                        <div class="simbolo-mas">-</div>
+                        <div class="grupo-entrada">
+                            <input type="number" id="numero2" min="0" max="10" placeholder="Número 2" class="input-numero">
+                            <span class="texto-ajolotes">Peces</span>
+                        </div>
+                        <button id="btn-restar" class="btn-sumar">=</button>
+                        <div id="resultado-caja" class="resultado-caja">
+                            <span id="resultado-texto">?</span>
+                        </div>
+                    </div>
+                    <div id="imagenes-container" class="imagenes-container"></div>
+                </div>
+            </div>
+            <button id="btn-desafio" class="btn-desafio oculto">Desafío</button>
+            <button id="btn-volver-lecciones-resta" class="btn-volver-lecciones">Volver a las lecciones</button>
+        </div>
+        <div id="pantalla-desafio-resta" class="desafio-suma oculto">
+            <h2>Desafío de restar</h2>
+            <p class="texto-desafio">Desafío: resta estos dos números y escribe el resultado:</p>
+            <div id="resta-desafio-texto" class="suma-desafio-texto">?</div>
+            <input id="respuesta-desafio" type="number" placeholder="Escribe la respuesta" class="input-numero">
+            <button id="verificar-desafio" class="btn-sumar">Verificar</button>
+            <div id="feedback-desafio" class="feedback"></div>
+            <div class="botones-desafio">
+                <button id="btn-volver-resta" class="btn-volver">Volver</button>
+                <button id="btn-siguiente-resta" class="btn-siguiente bloqueado" disabled>Siguiente 🔒</button>
+            </div>
+        </div>
     </div>
-
-    <script>
-        // Cargar info del usuario
-        const nombre = localStorage.getItem('nombreUsuario');
-        const avatar = localStorage.getItem('avatarSeleccionado');
-        
-        if (nombre && avatar) {
-            const avatarMap = {
-                avatar1: 'alce.png',
-                avatar2: 'leon.png',
-                avatar3: 'rana.png',
-                avatar4: 'tigre.png'
-            };
-            
-            document.getElementById('avatarUsuario').src = 'img/' + avatarMap[avatar];
-            document.getElementById('nombreUsuario').textContent = nombre;
-            console.log('Usuario cargado en restar:', nombre, avatar);
-        } else {
-            console.log('No hay datos de usuario en restar');
-        }
-        
-        document.getElementById('completar-leccion').addEventListener('click', function() {
-            localStorage.setItem('leccion_restar_completada', 'true');
-            window.location.href = 'aprende1.html';
-        });
-    </script>
+    <div id="player"></div>
+    <button id="boton-musica" class="boton-musica">Música ON</button>
+    <script src="js/restar.js"></script>
 </body>
 </html>

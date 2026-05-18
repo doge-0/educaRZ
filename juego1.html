@@ -3,39 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego</title>
-    <link rel="stylesheet" href="css/interfaz.css">
+    <title>Juego de Axolotl</title>
+    <link rel="stylesheet" href="css/juego1.css">
 </head>
 <body>
     <div id="usuario-info" class="usuario-info">
         <img id="avatarUsuario" src="" alt="Avatar">
         <span id="nombreUsuario"></span>
     </div>
-    <div class="contenedor-principal">
-        <h1 class="titulo">Juego</h1>
-        <p style="text-align:center; color:#333; font-size:1.1rem;">Aquí irá el juego. Próximamente se desarrollará la actividad interactiva.</p>
-        <a href="aprende1.html" class="boton-entrar" style="margin-top:20px; display:inline-block; width:auto;">Volver al menú</a>
+    <div class="contenedor-juego">
+        <h1>Juego de Axolotl</h1>
+        <div class="stage-info">
+            <p class="instruccion" id="instruccion">Etapa 1: suma</p>
+            <p class="operacion" id="operacion-suma"></p>
+        </div>
+
+        <div class="area-juego">
+            <div class="lago-contenedor">
+                <h3>Lago</h3>
+                <div id="lago-area" class="lago-area"></div>
+            </div>
+            <div class="pecera-contenedor">
+                <h3>Pecera</h3>
+                <div id="pecera-area" class="pecera-area"></div>
+            </div>
+        </div>
+
+        <div class="red-contenedor">
+            <img id="red-pesca" class="red-pesca" src="img/red.png" alt="Red de pesca" draggable="true">
+        </div>
+
+        <div class="botones-area">
+            <button id="btn-siguiente" class="btn-verificar oculto">Siguiente etapa</button>
+            <button id="btn-reiniciar" class="btn-verificar oculto">Reiniciar juego</button>
+        </div>
+
+        <div id="feedback" class="feedback"></div>
     </div>
 
-    <script>
-        // Cargar info del usuario
-        const nombre = localStorage.getItem('nombreUsuario');
-        const avatar = localStorage.getItem('avatarSeleccionado');
-        
-        if (nombre && avatar) {
-            const avatarMap = {
-                avatar1: 'alce.png',
-                avatar2: 'leon.png',
-                avatar3: 'rana.png',
-                avatar4: 'tigre.png'
-            };
-            
-            document.getElementById('avatarUsuario').src = 'img/' + avatarMap[avatar];
-            document.getElementById('nombreUsuario').textContent = nombre;
-            console.log('Usuario cargado en juego1:', nombre, avatar);
-        } else {
-            console.log('No hay datos de usuario en juego1');
-        }
-    </script>
+    <script src="js/juego1.js"></script>
 </body>
 </html>
