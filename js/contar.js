@@ -6,6 +6,27 @@ function obtenerVozMasculinaEspañolaContar() {
     return vozPreferida || voces.find(v => v.lang.startsWith('es')) || null;
 }
 
+function speakGreeting() {
+    const greeting = '¡Hola! Presiona algunos números para aprender a contar.';
+    const trySpeak = () => {
+        const voces = window.speechSynthesis.getVoices();
+        if (voces && voces.length > 0) {
+            vozMasculinaContar = obtenerVozMasculinaEspañolaContar();
+            window.speechSynthesis.cancel();
+            hablarTexto(greeting);
+        } else {
+            setTimeout(() => {
+                vozMasculinaContar = obtenerVozMasculinaEspañolaContar();
+                window.speechSynthesis.cancel();
+                hablarTexto(greeting);
+            }, 400);
+        }
+    };
+    if (typeof speechSynthesis !== 'undefined') {
+        trySpeak();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     vozMasculinaContar = obtenerVozMasculinaEspañolaContar();
     if (typeof speechSynthesis !== 'undefined') {
@@ -15,6 +36,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     cargarUsuarioContar();
+
+    // Reproducir saludo inicial (burbuja + voz masculina) al entrar en la página
+    speakGreeting();
+    window.addEventListener('pageshow', speakGreeting);
 
     const botonesNumeros = document.querySelectorAll('.numero');
     const btnIrDesafio = document.getElementById('btn-ir-desafio');
@@ -142,8 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.style.animationDelay = `${i * 0.08}s`;
                 imagenesContainer.appendChild(img);
             }
-            const audio = new Audio('sonidos/ladridodeperro.mp3');
-            audio.play();
         }, 1000);
     }
 
@@ -293,9 +316,6 @@ function toggleMusica() {
 function cargarUsuarioContar() {
     const nombre = localStorage.getItem('nombreUsuario');
     const avatar = localStorage.getItem('avatarSeleccionado');
-    if (!nombre || !avatar) {
-        return;
-    }
 
     const avatarMap = {
         avatar1: 'alce.png',
@@ -306,10 +326,20 @@ function cargarUsuarioContar() {
 
     const avatarEl = document.getElementById('avatarUsuario');
     const nombreEl = document.getElementById('nombreUsuario');
+
     if (avatarEl) {
-        avatarEl.src = 'img/' + avatarMap[avatar];
+        if (avatar && avatarMap[avatar]) {
+            avatarEl.src = 'img/' + avatarMap[avatar];
+            avatarEl.style.display = '';
+        } else if (nombre) {
+            avatarEl.src = 'img/alce.png';
+            avatarEl.style.display = '';
+        } else {
+            avatarEl.removeAttribute('src');
+            avatarEl.style.display = 'none';
+        }
     }
     if (nombreEl) {
-        nombreEl.textContent = nombre;
+        nombreEl.textContent = nombre || '';
     }
 }

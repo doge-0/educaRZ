@@ -1,46 +1,73 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Axolotl</title>
-    <link rel="stylesheet" href="css/juego1.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Pesca Matemática</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/juego1.css" />
 </head>
+
 <body>
-    <div id="usuario-info" class="usuario-info">
-        <img id="avatarUsuario" src="" alt="Avatar">
-        <span id="nombreUsuario"></span>
-    </div>
-    <div class="contenedor-juego">
-        <h1>Juego de Axolotl</h1>
-        <div class="stage-info">
-            <p class="instruccion" id="instruccion">Etapa 1: suma</p>
-            <p class="operacion" id="operacion-suma"></p>
-        </div>
 
-        <div class="area-juego">
-            <div class="lago-contenedor">
-                <h3>Lago</h3>
-                <div id="lago-area" class="lago-area"></div>
-            </div>
-            <div class="pecera-contenedor">
-                <h3>Pecera</h3>
-                <div id="pecera-area" class="pecera-area"></div>
-            </div>
-        </div>
+<div class="game" id="game">
 
-        <div class="red-contenedor">
-            <img id="red-pesca" class="red-pesca" src="img/red.png" alt="Red de pesca" draggable="true">
-        </div>
+  <div class="topbar">
 
-        <div class="botones-area">
-            <button id="btn-siguiente" class="btn-verificar oculto">Siguiente etapa</button>
-            <button id="btn-reiniciar" class="btn-verificar oculto">Reiniciar juego</button>
-        </div>
-
-        <div id="feedback" class="feedback"></div>
+    <div class="card">
+      🎣 Capturados:
+      <span id="caught">0</span>
     </div>
 
-    <script src="js/juego1.js"></script>
+    <div class="card">
+      ⭐ Puntaje:
+      <span id="score">0</span>
+    </div>
+
+    <div class="card">
+      🔥 Racha:
+      <span id="streak">0</span>
+    </div>
+
+    <div class="card">
+      ⏰ Tiempo:
+      <span id="timer">--</span>
+    </div>
+
+  </div>
+
+  <div class="equation" id="equation">
+    2 + 2
+  </div>
+
+  <div class="message" id="message">
+    ¡Excelente!
+  </div>
+
+  <div class="bottom-ui">
+
+    <button class="easy" onclick="setDifficulty('easy')">
+      🟢 Fácil
+    </button>
+
+    <button class="medium" onclick="setDifficulty('medium')">
+      🟡 Normal
+    </button>
+
+    <button class="hard" onclick="setDifficulty('hard')">
+      🔴 Difícil
+    </button>
+
+    <button class="verify" id="verifyBtn" onclick="verifyAnswer()">
+      ✅ Verificar
+    </button>
+
+  </div>
+
+</div>
+<script src="js/juego1.js"></script>
 </body>
 </html>

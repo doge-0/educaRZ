@@ -39,11 +39,6 @@ function cargarUsuario() {
     const nombre = localStorage.getItem('nombreUsuario');
     const avatar = localStorage.getItem('avatarSeleccionado');
 
-    if (!nombre || !avatar) {
-        console.log('No hay datos de usuario en restar');
-        return;
-    }
-
     const avatarMap = {
         avatar1: 'alce.png',
         avatar2: 'leon.png',
@@ -54,10 +49,19 @@ function cargarUsuario() {
     const avatarEl = document.getElementById('avatarUsuario');
     const nombreEl = document.getElementById('nombreUsuario');
     if (avatarEl) {
-        avatarEl.src = 'img/' + avatarMap[avatar];
+        if (avatar && avatarMap[avatar]) {
+            avatarEl.src = 'img/' + avatarMap[avatar];
+            avatarEl.style.display = '';
+        } else if (nombre) {
+            avatarEl.src = 'img/alce.png';
+            avatarEl.style.display = '';
+        } else {
+            avatarEl.removeAttribute('src');
+            avatarEl.style.display = 'none';
+        }
     }
     if (nombreEl) {
-        nombreEl.textContent = nombre;
+        nombreEl.textContent = nombre || '';
     }
     console.log('Usuario cargado en restar:', nombre, avatar);
 }

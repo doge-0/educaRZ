@@ -1,285 +1,193 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ========= RESET ========= */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  user-select:none;
 }
 
-body {
-    background-image: url('../img/fondo.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    font-family: Arial, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+body{
+  overflow:hidden;
+  font-family:'Fredoka', sans-serif;
+  background:linear-gradient(
+    to bottom,
+    #d8f4ff 0%,
+    #8fd8f5 40%,
+    #5fbde7 100%
+  );
+  height:100vh;
 }
 
-.usuario-info {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: white;
-    padding: 10px 15px;
-    border-radius: 10px;
-    border: 2px solid #333;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+/* ========= GAME ========= */
+
+.game{
+  position:relative;
+  width:100%;
+  height:100%;
+  overflow:hidden;
 }
 
-.usuario-info img {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+/* ========= UI ========= */
+
+.topbar{
+  position:absolute;
+  top:15px;
+  left:50%;
+  transform:translateX(-50%);
+  width:92%;
+  display:flex;
+  justify-content:space-between;
+  z-index:20;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
-.usuario-info span {
-    font-weight: bold;
-    color: #333;
+.card{
+  background:rgba(255,255,255,0.75);
+  backdrop-filter:blur(8px);
+  border-radius:24px;
+  padding:15px 24px;
+  box-shadow:0 8px 18px rgba(0,0,0,0.08);
+  font-size:1.1rem;
+  color:#255;
 }
 
-.contenedor-juego {
-    background-color: rgba(135, 206, 235, 0.95);
-    border: 3px solid #4682B4;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
-    max-width: 1100px;
-    width: 100%;
+.equation{
+  position:absolute;
+  top:110px;
+  left:50%;
+  transform:translateX(-50%);
+  background:white;
+  border-radius:30px;
+  padding:18px 40px;
+  font-size:3rem;
+  font-weight:bold;
+  color:#246b88;
+  box-shadow:0 10px 25px rgba(0,0,0,0.12);
+  z-index:10;
 }
 
-h1 {
-    color: #0e4c78;
-    text-align: center;
-    margin-bottom: 10px;
-    font-size: 2em;
+.bottom-ui{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:15px;
+  z-index:20;
+  flex-wrap:wrap;
+  justify-content:center;
 }
 
-.instruccion {
-    color: #1a4172;
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 25px;
+button{
+  border:none;
+  border-radius:22px;
+  padding:14px 24px;
+  font-size:1rem;
+  font-weight:bold;
+  color:white;
+  cursor:pointer;
+  transition:0.25s;
+  box-shadow:0 6px 16px rgba(0,0,0,0.15);
 }
 
-.area-juego {
-    display: flex;
-    gap: 40px;
-    margin-bottom: 30px;
-    align-items: center;
-    justify-content: center;
+button:hover{
+  transform:scale(1.06);
 }
 
-.lago-contenedor,
-.pecera-contenedor {
-    flex: 1;
-    text-align: center;
-    max-width: 350px;
+.easy{
+  background:#72d58b;
 }
 
-.lago-contenedor h3,
-.pecera-contenedor h3 {
-    color: #0e4c78;
-    margin-bottom: 12px;
-    font-size: 1.3em;
+.medium{
+  background:#ffc95f;
 }
 
-.lago-area {
-    background-image: url('../img/lago.png');
-    background-size: cover;
-    background-position: center;
-    border-radius: 16px;
-    width: 100%;
-    height: 320px;
-    min-height: 320px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    border: none;
-    box-shadow: none;
+.hard{
+  background:#ff8b8b;
 }
 
-.pecera-area {
-    background-image: url('../img/pecera.png');
-    background-size: cover;
-    background-position: center;
-    border-radius: 16px;
-    width: 100%;
-    height: 320px;
-    min-height: 320px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: flex-start;
-    align-content: flex-start;
-    padding: 15px;
-    position: relative;
-    overflow: hidden;
-    border: none;
-    box-shadow: none;
+.verify{
+  background:#59a8ff;
 }
 
-.red-contenedor {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
+/* ========= PECES ========= */
+
+.fish{
+  position:absolute;
+  width:90px;
+  height:90px;
+  z-index:5;
+  cursor:pointer;
+  transition:transform 0.2s;
 }
 
-.red-pesca {
-    width: 120px;
-    height: auto;
-    cursor: grab;
-    user-select: none;
-    transition: all 0.2s ease;
-    display: block;
-    margin: 0 auto;
+.fish:hover{
+  transform:scale(1.1);
 }
 
-.red-pesca:hover {
-    transform: scale(1.1);
+.fish img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  pointer-events:none;
 }
 
-.red-pesca.arrastrando {
-    opacity: 0.7;
-    cursor: grabbing;
+/* ========= MENSAJES ========= */
+
+.message{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  background:white;
+  border-radius:30px;
+  padding:30px 50px;
+  font-size:2rem;
+  color:#246;
+  font-weight:bold;
+  display:none;
+  z-index:50;
+  box-shadow:0 15px 30px rgba(0,0,0,0.15);
 }
 
-.axolotl {
-    width: 80px;
-    height: 80px;
-    background: url('../img/Axolotl.webp') no-repeat center / contain;
-    cursor: grab;
-    user-select: none;
-    transition: all 0.2s ease;
-    border-radius: 10px;
+.pop{
+  position:absolute;
+  font-size:1.4rem;
+  font-weight:bold;
+  color:white;
+  animation:popAnim 1s forwards;
+  pointer-events:none;
 }
 
-.axolotl:hover {
-    transform: scale(1.1);
+@keyframes popAnim{
+  from{
+    opacity:1;
+    transform:translateY(0px);
+  }
+  to{
+    opacity:0;
+    transform:translateY(-40px);
+  }
 }
 
-.axolotl.arrastrando {
-    opacity: 0.5;
-    cursor: grabbing;
+/* ========= BURBUJAS ========= */
+
+.bubble{
+  position:absolute;
+  bottom:-60px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.35);
+  animation:rise linear infinite;
 }
 
-.axolotl.en-transito {
-    position: fixed;
-    pointer-events: none;
-    z-index: 1001;
-}
-
-.contador {
-    color: #0e4c78;
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin-top: 12px;
-}
-
-.botones-area {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.btn-verificar,
-.btn-siguiente {
-    padding: 12px 28px;
-    font-size: 1rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-verificar {
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-    color: white;
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-}
-
-.btn-verificar:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(76, 175, 80, 0.5);
-}
-
-.btn-verificar:active {
-    transform: translateY(0);
-}
-
-.btn-siguiente {
-    background: linear-gradient(135deg, #999 0%, #666 100%);
-    color: white;
-    opacity: 0.6;
-    cursor: not-allowed;
-    box-shadow: 0 4px 12px rgba(100, 100, 100, 0.3);
-}
-
-.btn-siguiente:not(.oculto):not(.bloqueado) {
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-    opacity: 1;
-    cursor: pointer;
-}
-
-.btn-siguiente:not(.oculto):not(.bloqueado):hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(76, 175, 80, 0.5);
-}
-
-.oculto {
-    display: none !important;
-}
-
-.bloqueado {
-    opacity: 0.6 !important;
-    cursor: not-allowed !important;
-}
-
-.feedback {
-    text-align: center;
-    font-weight: 700;
-    font-size: 1.1rem;
-    min-height: 30px;
-    padding: 10px;
-    border-radius: 12px;
-}
-
-.feedback.correcto {
-    color: #0b6623;
-    background: rgba(107, 209, 123, 0.2);
-    border: 1px solid #0b6623;
-}
-
-.feedback.incorrecto {
-    color: #b22222;
-    background: rgba(178, 34, 34, 0.2);
-    border: 1px solid #b22222;
-}
-
-@media (max-width: 900px) {
-    .area-juego {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .lago-contenedor,
-    .pecera-contenedor {
-        max-width: 100%;
-    }
-
-    .lago-area,
-    .pecera-area {
-        height: 250px;
-    }
+@keyframes rise{
+  from{
+    transform:translateY(0);
+  }
+  to{
+    transform:translateY(-120vh);
+  }
 }

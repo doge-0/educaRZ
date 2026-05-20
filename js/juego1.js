@@ -1,244 +1,362 @@
-// Variables globales
-let stage = 1;
-let sumA = 0;
-let sumB = 0;
-let targetSum = 0;
-let subA = 0;
-let subB = 0;
-let stage1Count = 0;
-let stage2Count = 0;
-let netHolding = false;
+/* ========= IMAGENES ========= */
 
-function cargarUsuario() {
-    const nombre = localStorage.getItem('nombreUsuario');
-    const avatar = localStorage.getItem('avatarSeleccionado');
+const fishImages = [
+  "img/Catfish.webp",
+  "img/pezperro.webp",
+  "img/Sunfish.webp"
+];
 
-    if (!nombre || !avatar) {
-        console.log('No hay datos de usuario en juego1');
-        return;
+/* ========= ELEMENTOS ========= */
+
+const game = document.getElementById('game');
+const equationEl = document.getElementById('equation');
+const caughtEl = document.getElementById('caught');
+const timerEl = document.getElementById('timer');
+const scoreEl = document.getElementById('score');
+const streakEl = document.getElementById('streak');
+const verifyBtn = document.getElementById('verifyBtn');
+const messageEl = document.getElementById('message');
+
+/* ========= VARIABLES ========= */
+
+let target = 0;
+let caught = 0;
+let score = 0;
+let streak = 0;
+let fishCount = 10;
+let fishSpeed = 1.2;
+let difficulty = 'easy';
+
+let timer;
+let timeLeft = 0;
+
+/* ========= VOZ ========= */
+
+function speak(text){
+
+  const voice = new SpeechSynthesisUtterance(text);
+
+  voice.lang = 'es-ES';
+  voice.pitch = 0.9;
+  voice.rate = 0.95;
+
+  speechSynthesis.speak(voice);
+}
+
+/* ========= VOZ NUMEROS ========= */
+
+function speakNumber(number){
+
+  speechSynthesis.cancel();
+
+  const voice = new SpeechSynthesisUtterance(number.toString());
+
+  voice.lang = 'es-ES';
+  voice.pitch = 1;
+  voice.rate = 0.9;
+  voice.volume = 1;
+
+  speechSynthesis.speak(voice);
+}
+
+/* ========= DIFICULTAD ========= */
+
+function setDifficulty(level){
+
+  difficulty = level;
+
+  if(level === 'easy'){
+    fishCount = 8;
+    fishSpeed = 1.1;
+  }
+
+  if(level === 'medium'){
+    fishCount = 12;
+    fishSpeed = 1.6;
+  }
+
+  if(level === 'hard'){
+    fishCount = 14;
+    fishSpeed = 2.2;
+  }
+
+  startRound();
+}
+
+/* ========= RANDOM ========= */
+
+function random(min,max){
+  return Math.floor(Math.random()*(max-min)+min);
+}
+
+/* ========= ECUACIONES ========= */
+
+function generateEquation(){
+
+  let a,b;
+
+  if(difficulty === 'easy'){
+    a = random(1,6);
+    b = random(1,5);
+  }
+
+  else if(difficulty === 'medium'){
+    a = random(3,9);
+    b = random(1,8);
+  }
+
+  else{
+    a = random(5,12);
+    b = random(1,10);
+  }
+
+  const type = Math.random() > 0.5 ? '+' : '-';
+
+  if(type === '+'){
+    target = a+b;
+  }else{
+
+    if(a < b){
+      [a,b] = [b,a];
     }
 
-    const avatarMap = {
-        avatar1: 'alce.png',
-        avatar2: 'leon.png',
-        avatar3: 'rana.png',
-        avatar4: 'tigre.png'
+    target = a-b;
+  }
+
+  equationEl.innerHTML = `${a} ${type} ${b}`;
+}
+
+/* ========= PECES ========= */
+
+function createFish(){
+
+  document.querySelectorAll('.fish').forEach(f=>f.remove());
+
+  for(let i=0;i<fishCount;i++){
+
+    const fish = document.createElement('div');
+    fish.classList.add('fish');
+
+    const img = document.createElement('img');
+
+    const selectedFish = fishImages[random(0, fishImages.length)];
+
+    img.src = selectedFish;
+
+    /* DEBUG */
+    console.log("Cargando:", selectedFish);
+
+    fish.appendChild(img);
+
+    fish.style.left = random(10,85)+'vw';
+    fish.style.top = random(20,80)+'vh';
+
+    let dx = Math.random() > 0.5 ? 1 : -1;
+    let dy = Math.random() > 0.5 ? 1 : -1;
+
+    fish.onclick = ()=>{
+
+    fish.remove();
+
+    caught++;
+
+    caughtEl.innerText = caught;
+
+    /* SONIDO DEL NUMERO */
+    speakNumber(caught);
+
+    popText('+1', fish.style.left, fish.style.top);
     };
 
-    const avatarEl = document.getElementById('avatarUsuario');
-    const nombreEl = document.getElementById('nombreUsuario');
-    if (avatarEl) {
-        avatarEl.src = 'img/' + avatarMap[avatar];
-    }
-    if (nombreEl) {
-        nombreEl.textContent = nombre;
-    }
+    game.appendChild(fish);
+
+    setInterval(()=>{
+
+      let x = parseFloat(fish.style.left);
+      let y = parseFloat(fish.style.top);
+
+      x += dx * fishSpeed * 0.12;
+      y += dy * fishSpeed * 0.09;
+
+      if(x > 88 || x < 2){
+        dx *= -1;
+
+        fish.style.transform =
+          dx < 0 ? 'scaleX(-1)' : 'scaleX(1)';
+      }
+
+      if(y > 82 || y < 15){
+        dy *= -1;
+      }
+
+      fish.style.left = x+'vw';
+      fish.style.top = y+'vh';
+
+    },30);
+  }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    cargarUsuario();
-    initGame();
+/* ========= VERIFICAR ========= */
 
-    const lagoArea = document.getElementById('lago-area');
-    lagoArea.addEventListener('dragover', dragOver);
-    lagoArea.addEventListener('drop', dropEnLago);
-    lagoArea.addEventListener('dragleave', dragLeave);
+function verifyAnswer(){
 
-    const pecera = document.getElementById('pecera-area');
-    pecera.addEventListener('dragover', dragOver);
-    pecera.addEventListener('drop', dropEnPecera);
-    pecera.addEventListener('dragleave', dragLeave);
+  if(caught === target){
 
-    const redPesca = document.getElementById('red-pesca');
-    redPesca.addEventListener('dragstart', dragStartRed);
-    redPesca.addEventListener('dragend', dragEndRed);
+    let gained = 10 + (streak * 2);
 
-    document.getElementById('btn-siguiente').addEventListener('click', setupStage2);
-    document.getElementById('btn-reiniciar').addEventListener('click', initGame);
-});
+    score += gained;
 
-function initGame() {
-    stage = 1;
-    stage1Count = 0;
-    stage2Count = 0;
-    netHolding = false;
-    document.getElementById('feedback').textContent = '';
-    document.getElementById('btn-siguiente').classList.add('oculto');
-    document.getElementById('btn-reiniciar').classList.add('oculto');
-    setupStage1();
+    streak++;
+
+    scoreEl.innerText = score;
+    streakEl.innerText = streak;
+
+    showMessage('🌟 ¡Correcto!');
+
+    speak(randomPraise());
+
+  }else{
+
+    streak = 0;
+
+    streakEl.innerText = streak;
+
+    showMessage('😅 Intenta otra vez');
+
+    speak('Sigue intentando');
+  }
+
+  setTimeout(()=>{
+    startRound();
+  },1600);
 }
 
-function setupStage1() {
-    stage = 1;
-    stage1Count = 0;
-    netHolding = false;
-    sumA = Math.floor(Math.random() * 8) + 1;
-    sumB = Math.floor(Math.random() * 8) + 1;
-    targetSum = sumA + sumB;
+/* ========= MENSAJES ========= */
 
-    document.getElementById('instruccion').textContent = 'Etapa 1: suma';
-    document.getElementById('operacion-suma').textContent = `${sumA} + ${sumB}`;
-    document.getElementById('lago-area').innerHTML = '';
-    document.getElementById('pecera-area').innerHTML = '';
-    crearAxolotlEnLago();
-    showFeedback('Arrastra la red al lago para capturar un Axolotl.', '');
+function randomPraise(){
+
+  const praises = [
+
+    'Excelente trabajo',
+    'Muy bien hecho',
+    'Fantástico',
+    'Buen trabajo pescador',
+    'Lo estás haciendo genial'
+
+  ];
+
+  return praises[random(0,praises.length)];
 }
 
-function setupStage2() {
-    stage = 2;
-    stage2Count = 0;
-    netHolding = false;
-    subA = Math.floor(Math.random() * 5) + 6;
-    subB = Math.floor(Math.random() * (subA - 1)) + 1;
+function showMessage(text){
 
-    document.getElementById('instruccion').textContent = 'Etapa 2: resta';
-    document.getElementById('operacion-suma').textContent = `${subA} - ${subB}`;
-    document.getElementById('lago-area').innerHTML = '';
-    createPeceraAxolotls(subA);
-    document.getElementById('btn-siguiente').classList.add('oculto');
-    showFeedback('Ahora saca los Axolotls de la pecera con la red y llévalos al lago.', '');
+  messageEl.innerHTML = text;
+
+  messageEl.style.display = 'block';
+
+  setTimeout(()=>{
+    messageEl.style.display = 'none';
+  },1200);
 }
 
-function crearAxolotlEnLago() {
-    const lagoArea = document.getElementById('lago-area');
-    lagoArea.innerHTML = '';
-    const axolotl = document.createElement('div');
-    axolotl.className = 'axolotl';
-    lagoArea.appendChild(axolotl);
+function popText(text,x,y){
+
+  const pop = document.createElement('div');
+
+  pop.classList.add('pop');
+
+  pop.innerText = text;
+
+  pop.style.left = x;
+  pop.style.top = y;
+
+  game.appendChild(pop);
+
+  setTimeout(()=>{
+    pop.remove();
+  },1000);
 }
 
-function createPeceraAxolotls(count) {
-    const pecera = document.getElementById('pecera-area');
-    pecera.innerHTML = '';
-    for (let i = 0; i < count; i++) {
-        const axolotl = document.createElement('div');
-        axolotl.className = 'axolotl';
-        pecera.appendChild(axolotl);
-    }
-}
+/* ========= TIMER ========= */
 
-function dragStartRed(e) {
-    e.dataTransfer.setData('tipo', 'red');
-    e.dataTransfer.setData('text/plain', 'red');
-    e.dataTransfer.effectAllowed = 'move';
-    this.classList.add('arrastrando');
-}
+function startTimer(){
 
-function dragEndRed() {
-    this.classList.remove('arrastrando');
-}
+  clearInterval(timer);
 
-function dragOver(e) {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    this.classList.add('drag-over');
-}
+  if(difficulty !== 'hard'){
 
-function dropEnLago(e) {
-    e.preventDefault();
-    this.classList.remove('drag-over');
+    timerEl.innerText = '--';
 
-    const tipoData = e.dataTransfer.getData('tipo') || e.dataTransfer.getData('text/plain');
-    if (tipoData !== 'red') {
-        return;
-    }
+    verifyBtn.style.display = 'inline-block';
 
-    if (stage === 1) {
-        if (netHolding) {
-            showFeedback('Ya tienes un Axolotl en la red. Suéltalo en la pecera.', 'incorrecto');
-            return;
-        }
+    return;
+  }
 
-        const lagoArea = document.getElementById('lago-area');
-        const axolotl = lagoArea.querySelector('.axolotl');
-        if (!axolotl) {
-            showFeedback('No hay Axolotl en el lago. Espera a que aparezca.', 'incorrecto');
-            return;
-        }
+  verifyBtn.style.display = 'none';
 
-        axolotl.remove();
-        netHolding = true;
-        showFeedback('¡Has atrapado un Axolotl! Llévalo a la pecera.', '');
-    } else if (stage === 2) {
-        if (!netHolding) {
-            showFeedback('Primero atrapa un Axolotl de la pecera.', 'incorrecto');
-            return;
-        }
+  timeLeft = 8;
 
-        netHolding = false;
-        stage2Count += 1;
-        showFeedback(`Has devuelto ${stage2Count} Axolotl(s) al lago.`, 'correcto');
+  timerEl.innerText = timeLeft;
 
-        if (stage2Count === subB) {
-            showGameComplete();
-        }
-    }
-}
+  timer = setInterval(()=>{
 
-function dropEnPecera(e) {
-    e.preventDefault();
-    this.classList.remove('drag-over');
+    timeLeft--;
 
-    const tipoData = e.dataTransfer.getData('tipo') || e.dataTransfer.getData('text/plain');
-    if (tipoData !== 'red') {
-        return;
+    timerEl.innerText = timeLeft;
+
+    if(timeLeft <= 0){
+
+      clearInterval(timer);
+
+      verifyAnswer();
     }
 
-    if (stage === 1) {
-        if (!netHolding) {
-            showFeedback('Primero atrapa un Axolotl en el lago con la red.', 'incorrecto');
-            return;
-        }
-
-        netHolding = false;
-        stage1Count += 1;
-        addAxolotlToPecera();
-
-        if (stage1Count < targetSum) {
-            crearAxolotlEnLago();
-            showFeedback(`Has llevado ${stage1Count} Axolotl(s) a la pecera. Sigue con la suma.`, 'correcto');
-        } else {
-            document.getElementById('btn-siguiente').classList.remove('oculto');
-            showFeedback('¡Perfecto! Has completado la suma. Pulsa Siguiente etapa.', 'correcto');
-        }
-    } else if (stage === 2) {
-        if (netHolding) {
-            showFeedback('La red ya tiene un Axolotl. Llévalo al lago.', 'incorrecto');
-            return;
-        }
-
-        const pecera = document.getElementById('pecera-area');
-        const axolotl = pecera.querySelector('.axolotl');
-        if (!axolotl) {
-            showFeedback('No quedan Axolotls en la pecera para sacar.', 'incorrecto');
-            return;
-        }
-
-        axolotl.remove();
-        netHolding = true;
-        showFeedback('¡Has atrapado un Axolotl de la pecera! Suéltalo en el lago.', '');
-    }
+  },1000);
 }
 
-function addAxolotlToPecera() {
-    const pecera = document.getElementById('pecera-area');
-    const axolotl = document.createElement('div');
-    axolotl.className = 'axolotl';
-    pecera.appendChild(axolotl);
+/* ========= BURBUJAS ========= */
+
+function createBubbles(){
+
+  setInterval(()=>{
+
+    const bubble = document.createElement('div');
+
+    bubble.classList.add('bubble');
+
+    const size = random(10,35);
+
+    bubble.style.width = size+'px';
+    bubble.style.height = size+'px';
+
+    bubble.style.left = random(0,100)+'vw';
+
+    bubble.style.animationDuration = random(5,12)+'s';
+
+    game.appendChild(bubble);
+
+    setTimeout(()=>{
+      bubble.remove();
+    },12000);
+
+  },500);
 }
 
-function showGameComplete() {
-    showFeedback('¡Genial! Has completado la resta. Juego terminado.', 'correcto');
-    document.getElementById('btn-reiniciar').classList.remove('oculto');
+/* ========= START ========= */
+
+function startRound(){
+
+  caught = 0;
+
+  caughtEl.innerText = 0;
+
+  generateEquation();
+
+  createFish();
+
+  startTimer();
 }
 
-function showFeedback(text, type) {
-    const feedbackEl = document.getElementById('feedback');
-    feedbackEl.textContent = text;
-    feedbackEl.classList.remove('correcto', 'incorrecto');
-    if (type === 'correcto') {
-        feedbackEl.classList.add('correcto');
-    } else if (type === 'incorrecto') {
-        feedbackEl.classList.add('incorrecto');
-    }
-}
+createBubbles();
+
+setDifficulty('easy');

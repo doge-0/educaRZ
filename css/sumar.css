@@ -1,5 +1,5 @@
 ﻿body {
-    background-image: url('../img/peceson_fondo.jpg');
+    background-image: url('../img/fondo2.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -16,11 +16,14 @@
     background-color: rgba(135, 206, 235, 0.9);
     border: 2px solid #4682B4;
     border-radius: 15px;
-    padding: 20px;
+    padding: 16px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     text-align: center;
-    max-width: 1400px;
+    max-width: 1500px;
     width: 95%;
+    margin: 20px auto;
+    max-height: 88vh;
+    overflow-y: auto;
 }
 
 .titulo-con-imagen {
@@ -45,14 +48,14 @@
 
 .contenedor-principal-suma {
     display: flex;
-    gap: 20px;
+    gap: 16px;
     justify-content: flex-start;
     align-items: flex-start;
 }
 
 .tabla-numeros {
     background-color: rgba(255, 255, 255, 0.7);
-    padding: 15px;
+    padding: 14px;
     border-radius: 10px;
     min-width: 160px;
 }
@@ -105,7 +108,7 @@
     gap: 10px;
     flex-wrap: wrap;
     background-color: rgba(255, 255, 255, 0.7);
-    padding: 20px;
+    padding: 16px;
     border-radius: 10px;
 }
 
@@ -202,11 +205,11 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 20px;
-    padding: 20px;
+    margin-top: 14px;
+    padding: 14px;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 10px;
-    min-height: 120px;
+    min-height: 90px;
 }
 
 .imagenes-container img {
@@ -214,6 +217,21 @@
     height: 90px;
     object-fit: cover;
     border-radius: 5px;
+}
+
+.imagen-ejemplo-suma-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.imagen-ejemplo-suma {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+    border-radius: 12px;
+    border: 2px solid rgba(70, 130, 180, 0.85);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
 }
 
 .pez-aparecer {
@@ -337,17 +355,6 @@
     padding: 12px 16px;
     border-radius: 20px;
     max-width: 560px;
-    font-size: 1rem;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-    opacity: 0.95;
-}
-    position: relative;
-    background: #ffffff;
-    border: 2px solid #3d99d8;
-    color: #222;
-    padding: 12px 16px;
-    border-radius: 20px;
-    max-width: 520px;
     font-size: 1rem;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
     opacity: 0.95;

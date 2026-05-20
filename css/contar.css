@@ -1,5 +1,5 @@
 ﻿body {
-    background-image: url('../img/peceson_fondo.jpg');
+    background-image: url('../img/fondo2.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -22,6 +22,33 @@
     text-align: center;
     max-width: 1000px;
     width: 95%;
+}
+
+/* Imagen lateral para la página contar */
+
+.imagen-numeros {
+    width: 290px;
+    max-width: 15%;
+    height: auto;
+    margin-left: 36px;
+    border-radius: 10px;
+    border: 2px solid rgba(61,153,216,0.9);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+    object-fit: cover;
+}
+
+@media (max-width: 900px) {
+    .imagen-numeros {
+        display: none;
+    }
+    body {
+        padding: 20px;
+        align-items: flex-start;
+    }
+    .contenedor-leccion {
+        width: 100%;
+        max-width: 720px;
+    }
 }
 
 .asistente-pececito {
