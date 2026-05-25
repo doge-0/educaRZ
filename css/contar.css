@@ -1,405 +1,829 @@
-﻿body {
-    background-image: url('../img/fondo2.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+﻿/* =========================================================
+   ESTILO WEBFISHING - VERSION MEJORADA
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-.contenedor-leccion {
-    position: relative;
-    background-color: rgba(135, 206, 235, 0.9);
-    border: 2px solid #4682B4;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    max-width: 1000px;
-    width: 95%;
+img{
+    max-width:100%;
+    display:block;
 }
 
-/* Imagen lateral para la página contar */
+body{
 
-.imagen-numeros {
-    width: 290px;
-    max-width: 15%;
-    height: auto;
-    margin-left: 36px;
-    border-radius: 10px;
-    border: 2px solid rgba(61,153,216,0.9);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.18);
-    object-fit: cover;
+    overflow:hidden;
+
+    background-image:url('../img/fondo2.png');
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    font-family:'Fredoka', sans-serif;
+
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    position:relative;
 }
 
-@media (max-width: 900px) {
-    .imagen-numeros {
-        display: none;
-    }
-    body {
-        padding: 20px;
-        align-items: flex-start;
-    }
-    .contenedor-leccion {
-        width: 100%;
-        max-width: 720px;
-    }
+/* =========================================================
+   BURBUJAS FONDO
+========================================================= */
+
+body::before{
+
+    content:'';
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15) 0 10px, transparent 12px),
+    radial-gradient(circle at 80% 40%, rgba(255,255,255,0.12) 0 14px, transparent 16px),
+    radial-gradient(circle at 60% 70%, rgba(255,255,255,0.1) 0 18px, transparent 20px);
+
+    animation:moverBurbujas 14s linear infinite;
+
+    pointer-events:none;
 }
 
-.asistente-pececito {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    margin: 20px auto;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 16px;
-    border: 2px solid #3d99d8;
-    max-width: 680px;
+.bubble{
+
+    position:fixed;
+
+    bottom:-40px;
+
+    border-radius:50%;
+
+    background:
+    rgba(255,255,255,0.35);
+
+    box-shadow:
+    inset 0 0 8px rgba(255,255,255,0.65);
+
+    pointer-events:none;
+
+    animation:subirBurbuja linear forwards;
+
+    z-index:1;
 }
 
-.asistente-pececito img {
-    width: 100px;
-    height: 100px;
-    border-radius: 16px;
-    object-fit: cover;
-}
+@keyframes subirBurbuja{
 
-.burbuja-pececito {
-    width: 100%;
-    margin: 0 auto;
-    text-align: center;
-    position: relative;
-    background: #ffffff;
-    border: 2px solid #3d99d8;
-    color: #222;
-    padding: 12px 16px;
-    border-radius: 20px;
-    max-width: 560px;
-    font-size: 1rem;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-    opacity: 0.95;
-}
-
-.burbuja-pececito::after {
-    content: '';
-    position: absolute;
-    bottom: -16px;
-    left: 30px;
-    border-width: 16px 12px 0 12px;
-    border-style: solid;
-    border-color: #ffffff transparent transparent transparent;
-}
-
-.burbuja-pececito.mostrar {
-    animation: aparecerBurbuja 0.3s ease;
-}
-
-@keyframes aparecerBurbuja {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 0.95; transform: translateY(0); }
-}
-
-.desafio-contador {
-    margin-top: 20px;
-    padding: 18px 20px;
-    background: rgba(255, 255, 255, 0.98);
-    border: 2px solid #5aa3d1;
-    border-radius: 18px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-    display: inline-block;
-    text-align: left;
-    max-width: 520px;
-}
-
-.texto-desafio {
-    margin: 0 0 12px 0;
-    font-weight: 700;
-    color: #1a4172;
-}
-
-.numero-random {
-    font-size: 3rem;
-    font-weight: 900;
-    color: #1f4e79;
-    margin: 0 auto 12px auto;
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #a4d8ff 0%, #5aa3d1 100%);
-    border-radius: 18px;
-}
-
-#respuesta-numero {
-    width: calc(100% - 26px);
-    padding: 12px;
-    font-size: 1rem;
-    border-radius: 10px;
-    border: 2px solid #a4d8ff;
-    margin-bottom: 12px;
-}
-
-.btn-verificar {
-    padding: 10px 16px;
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.feedback {
-    margin-top: 12px;
-    font-weight: 700;
-}
-
-.botones-desafio {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    margin-top: 15px;
-}
-
-.btn-volver {
-    padding: 10px 16px;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-volver:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(255, 107, 107, 0.5);
-}
-
-.btn-siguiente {
-    padding: 10px 16px;
-    background: linear-gradient(135deg, #999 0%, #666 100%);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: not-allowed;
-    opacity: 0.6;
-    transition: all 0.3s ease;
-}
-
-.btn-siguiente:not(.bloqueado) {
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-    cursor: pointer;
-    opacity: 1;
-}
-
-.btn-siguiente:not(.bloqueado):hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(76, 175, 80, 0.5);
-}
-
-.btn-siguiente.bloqueado::after {
-    content: '🔒';
-    margin-left: 8px;
-}
-
-.oculto {
-    display: none !important;
-}
-
-h1 {
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.numeros {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.numero {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.numero:hover {
-    background-color: #45a049;
-}
-
-.imagenes-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 20px;
-    position: relative;
-    min-height: 150px; /* Para dar espacio al número animado */
-}
-
-.imagenes-container img {
-    width: 100px;
-    height: 100px;
-}
-
-.pez-aparecer {
-    opacity: 0;
-    transform: translateY(20px) scale(0.85);
-    animation: aparecerPez 0.5s ease forwards;
-}
-
-@keyframes aparecerPez {
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+    to{
+        transform:translateY(-110vh);
+        opacity:0;
     }
 }
 
-.usuario-info {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: white;
-    padding: 10px;
-    border-radius: 10px;
-    border: 2px solid #333;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+#player{
+
+    position:fixed;
+
+    width:0;
+    height:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
 }
 
-.usuario-info img {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-}
+@keyframes moverBurbujas{
 
-.usuario-info span {
-    font-weight: bold;
-    color: #333;
-}
-
-.numero-animado {
-    font-size: 120px;
-    color: #ff0000;
-    font-weight: bold;
-    animation: aparecerNumero 0.5s ease-in-out;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-}
-
-@keyframes aparecerNumero {
-    0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.5);
+    from{
+        transform:translateY(0);
     }
-    100% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
+
+    to{
+        transform:translateY(-40px);
     }
 }
 
-.boton-musica {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    right: auto;
-    padding: 10px 15px;
-    font-size: 1em;
-    font-weight: 600;
-    color: white;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-    z-index: 1000;
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+========================================================= */
+
+.contenedor-leccion{
+
+    position:relative;
+
+    width:min(94vw, 1180px);
+
+    max-height:94vh;
+
+    overflow-y:auto;
+
+    padding:32px 36px;
+
+    border-radius:36px;
+
+    background:
+    rgba(255,255,255,0.14);
+
+    backdrop-filter:blur(18px);
+
+    border:
+    1px solid rgba(255,255,255,0.3);
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,0.18);
+
+    text-align:center;
+
+    z-index:2;
+
+    margin:auto;
 }
 
-.boton-musica:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(255, 107, 107, 0.5);
+/* =========================================================
+   TITULO
+========================================================= */
+
+h1{
+
+    font-size:clamp(2.5rem, 4vw, 5rem);
+
+    line-height:1.05;
+
+    color:white;
+
+    margin-bottom:28px;
+
+    text-align:center;
+
+    font-weight:800;
+
+    text-shadow:
+    0 6px 12px rgba(0,0,0,0.25);
 }
 
-.btn-completar {
-    margin-top: 0;
-    padding: 12px 24px;
-    font-size: 1em;
-    font-weight: 600;
-    color: white;
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
+/* =========================================================
+   PANEL USUARIO
+========================================================= */
+
+.usuario-info{
+
+    position:fixed;
+
+    top:18px;
+    right:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:12px 18px;
+
+    border-radius:24px;
+
+    background:
+    rgba(255,255,255,0.92);
+
+    backdrop-filter:blur(10px);
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.14);
+
+    z-index:9999;
 }
 
-.btn-completar:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(76, 175, 80, 0.5);
+.usuario-info img{
+
+    width:52px;
+    height:52px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:3px solid white;
 }
 
-.btn-volver-lecciones {
-    display: inline-block;
-    margin-top: 18px;
-    padding: 12px 24px;
-    font-size: 1rem;
-    font-weight: 700;
-    color: white;
-    background: #667eea;
-    border: none;
-    border-radius: 18px;
-    cursor: pointer;
-    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.25);
+.usuario-info span{
+
+    font-size:1rem;
+
+    font-weight:700;
+
+    color:#244;
 }
 
-.btn-volver-lecciones:hover {
-    transform: translateY(-2px);
+/* =========================================================
+   PEZ ASISTENTE
+========================================================= */
+
+.asistente-pececito{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:18px;
+
+    margin-bottom:28px;
 }
 
-.confetti-piece {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    opacity: 0.9;
-    border-radius: 50%;
-    top: 0;
-    animation: caerConfetti 2.5s ease-out forwards;
-    z-index: 2000;
+.asistente-pececito img{
+
+    width:150px;
+
+    height:150px;
+
+    object-fit:contain;
+
+    animation:
+    pezFlotar 3s ease-in-out infinite;
+
+    filter:
+    drop-shadow(0 12px 18px rgba(0,0,0,0.22));
 }
 
-@keyframes caerConfetti {
-    to {
-        transform: translate3d(0, 90vh, 0) rotate(720deg);
-        opacity: 0;
+@keyframes pezFlotar{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-12px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+/* =========================================================
+   BURBUJA PEZ
+========================================================= */
+
+.burbuja-pececito{
+
+    width:100%;
+
+    max-width:700px;
+
+    padding:18px 24px;
+
+    border-radius:24px;
+
+    background:white;
+
+    color:#244;
+
+    font-size:1.15rem;
+
+    font-weight:600;
+
+    position:relative;
+
+    box-shadow:
+    0 10px 22px rgba(0,0,0,0.12);
+
+    animation:burbujaFloat 3s ease-in-out infinite;
+}
+
+@keyframes burbujaFloat{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-4px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+/* =========================================================
+   NUMEROS - AHORA HORIZONTALES
+========================================================= */
+
+.numeros{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-wrap:nowrap;
+
+    gap:14px;
+
+    width:100%;
+
+    max-width:100%;
+
+    margin:28px auto;
+
+    overflow-x:auto;
+
+    padding:6px 10px 14px;
+}
+
+/* SCROLL BONITO */
+
+.numeros::-webkit-scrollbar{
+
+    height:10px;
+}
+
+.numeros::-webkit-scrollbar-thumb{
+
+    background:
+    rgba(255,255,255,0.4);
+
+    border-radius:20px;
+}
+
+/* =========================================================
+   BOTONES NUMEROS
+========================================================= */
+
+.numero{
+
+    min-width:82px;
+
+    height:82px;
+
+    border:none;
+
+    border-radius:22px;
+
+    font-size:1.9rem;
+
+    font-weight:800;
+
+    color:white;
+
+    cursor:pointer;
+
+    background:
+    linear-gradient(
+        180deg,
+        #8df0a9,
+        #45c46c
+    );
+
+    box-shadow:
+    0 8px 0 #2f9d53,
+    0 12px 25px rgba(0,0,0,0.18);
+
+    transition:all 0.18s ease;
+
+    flex:none;
+}
+
+.numero:hover{
+
+    transform:
+    translateY(-5px)
+    scale(1.06);
+}
+
+.numero:active{
+
+    transform:
+    translateY(4px);
+
+    box-shadow:
+    0 3px 0 #2f9d53;
+}
+
+/* =========================================================
+   PECES
+========================================================= */
+
+.imagenes-container{
+
+    position:relative;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:22px;
+
+    min-height:260px;
+
+    width:100%;
+
+    margin-top:28px;
+
+    overflow:hidden;
+}
+
+.imagenes-container img{
+
+    width:120px !important;
+
+    height:120px !important;
+
+    object-fit:contain;
+
+    animation:
+    aparecerPez 0.45s ease forwards,
+    nadarIdle 2.5s ease-in-out infinite;
+
+    filter:
+    drop-shadow(0 10px 14px rgba(0,0,0,0.18));
+}
+
+@keyframes aparecerPez{
+
+    from{
+        opacity:0;
+        transform:
+        translateY(20px)
+        scale(0.8);
+    }
+
+    to{
+        opacity:1;
+        transform:
+        translateY(0)
+        scale(1);
+    }
+}
+
+@keyframes nadarIdle{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+/* =========================================================
+   NUMERO GIGANTE
+========================================================= */
+
+.numero-animado{
+
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    transform:
+    translate(-50%, -50%);
+
+    font-size:clamp(5.5rem, 12vw, 9rem);
+
+    font-weight:900;
+
+    color:white;
+
+    text-shadow:
+    0 8px 18px rgba(0,0,0,0.3);
+
+    animation:popNumero 0.5s ease;
+
+    pointer-events:none;
+}
+
+@keyframes popNumero{
+
+    from{
+        opacity:0;
+        transform:
+        translate(-50%, -50%)
+        scale(0.5);
+    }
+
+    to{
+        opacity:1;
+        transform:
+        translate(-50%, -50%)
+        scale(1);
+    }
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+button{
+
+    font-family:'Fredoka', sans-serif;
+}
+
+.btn-verificar,
+.btn-volver,
+.btn-siguiente,
+.btn-volver-lecciones,
+.btn-completar,
+.boton-musica{
+
+    border:none;
+
+    padding:14px 22px;
+
+    border-radius:18px;
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:0.2s;
+
+    box-shadow:
+    0 8px 18px rgba(0,0,0,0.18);
+
+    min-height:48px;
+}
+
+.btn-verificar{
+
+    background:
+    linear-gradient(
+        180deg,
+        #62e884,
+        #35b95d
+    );
+}
+
+.btn-volver{
+
+    background:
+    linear-gradient(
+        180deg,
+        #ff9f72,
+        #ff6b6b
+    );
+}
+
+.btn-siguiente{
+
+    background:
+    linear-gradient(
+        180deg,
+        #5caeff,
+        #3478f6
+    );
+}
+
+.btn-volver-lecciones{
+
+    background:
+    linear-gradient(
+        180deg,
+        #8a8dff,
+        #6677ff
+    );
+}
+
+.boton-musica{
+
+    position:fixed;
+
+    bottom:20px;
+    right:20px;
+
+    background:
+    linear-gradient(
+        180deg,
+        #ffb65c,
+        #ff7b3d
+    );
+
+    z-index:999;
+}
+
+button:hover{
+
+    transform:
+    translateY(-3px)
+    scale(1.03);
+}
+
+/* =========================================================
+   DESAFIO
+========================================================= */
+
+.desafio-contador{
+
+    margin:35px auto 0 auto;
+
+    max-width:620px;
+
+    width:100%;
+
+    padding:30px;
+
+    border-radius:28px;
+
+    background:
+    rgba(255,255,255,0.95);
+
+    box-shadow:
+    0 15px 30px rgba(0,0,0,0.15);
+}
+
+.numero-random{
+
+    width:110px;
+    height:110px;
+
+    margin:22px auto;
+
+    border-radius:24px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:4rem;
+
+    font-weight:900;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        180deg,
+        #69c8ff,
+        #3f95ff
+    );
+}
+
+#respuesta-numero{
+
+    width:100%;
+
+    padding:14px;
+
+    border-radius:14px;
+
+    border:
+    2px solid #9edbff;
+
+    font-size:1rem;
+
+    margin-top:12px;
+}
+
+/* =========================================================
+   BOTONES DESAFIO
+========================================================= */
+
+.botones-desafio{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:18px;
+
+    margin-top:22px;
+
+    flex-wrap:wrap;
+}
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+.confetti-piece{
+
+    position:fixed;
+
+    width:10px;
+    height:10px;
+
+    border-radius:50%;
+
+    top:0;
+
+    animation:
+    caerConfetti 2.5s ease-out forwards;
+
+    z-index:9999;
+}
+
+@keyframes caerConfetti{
+
+    to{
+
+        transform:
+        translateY(100vh)
+        rotate(720deg);
+
+        opacity:0;
+    }
+}
+
+/* =========================================================
+   IMAGEN LATERAL
+========================================================= */
+
+.oculto{
+    display:none !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1300px){
+
+    .contenedor-leccion{
+
+        width:96vw;
+    }
+
+    .numeros{
+
+        justify-content:center;
+    }
+}
+
+@media(max-width:900px){
+
+    .numero{
+
+        min-width:68px;
+
+        height:68px;
+
+        font-size:1.45rem;
+    }
+
+    .imagenes-container img{
+
+        width:90px !important;
+        height:90px !important;
+    }
+
+    .numero-animado{
+
+        font-size:90px;
+    }
+
+    .usuario-info{
+
+        transform:scale(0.9);
+    }
+}
+
+@media(max-width:620px){
+
+    body{
+        align-items:flex-start;
+        padding-top:92px;
+    }
+
+    .contenedor-leccion{
+        width:94vw;
+        max-height:calc(100vh - 110px);
+        padding:24px 18px;
+        border-radius:24px;
+    }
+
+    h1{
+        font-size:2.1rem;
+    }
+
+    .numeros{
+        justify-content:flex-start;
+    }
+
+    .usuario-info{
+        left:12px;
+        right:auto;
+        max-width:calc(100vw - 24px);
     }
 }

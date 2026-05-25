@@ -14,26 +14,28 @@
         <span id="nombreUsuario"></span>
     </div>
     <div class="contenedor-leccion">
-        <h1>Aprende a contar del 0 al 10</h1>
-        <div class="asistente-pececito">
-            <img id="pez-asistente" src="img/Catfish.webp" alt="Pez asistente">
-            <div id="burbuja-pececito" class="burbuja-pececito">¡Hola! Presiona algunos números para aprender a contar.</div>
+        <div id="leccion-contar">
+            <h1>Aprende a contar del 0 al 10</h1>
+            <div class="asistente-pececito">
+                <img id="pez-asistente" src="img/Catfish.webp" alt="Pez asistente">
+                <div id="burbuja-pececito" class="burbuja-pececito">¡Hola! Presiona algunos números para aprender a contar.</div>
+            </div>
+            <div class="numeros">
+                <button class="numero" data-num="0">0</button>
+                <button class="numero" data-num="1">1</button>
+                <button class="numero" data-num="2">2</button>
+                <button class="numero" data-num="3">3</button>
+                <button class="numero" data-num="4">4</button>
+                <button class="numero" data-num="5">5</button>
+                <button class="numero" data-num="6">6</button>
+                <button class="numero" data-num="7">7</button>
+                <button class="numero" data-num="8">8</button>
+                <button class="numero" data-num="9">9</button>
+                <button class="numero" data-num="10">10</button>
+            </div>
+            <div id="imagenes-container" class="imagenes-container"></div>
+            <button id="btn-ir-desafio" class="btn-verificar oculto">Ir al desafío</button>
         </div>
-        <div class="numeros">
-            <button class="numero" data-num="0">0</button>
-            <button class="numero" data-num="1">1</button>
-            <button class="numero" data-num="2">2</button>
-            <button class="numero" data-num="3">3</button>
-            <button class="numero" data-num="4">4</button>
-            <button class="numero" data-num="5">5</button>
-            <button class="numero" data-num="6">6</button>
-            <button class="numero" data-num="7">7</button>
-            <button class="numero" data-num="8">8</button>
-            <button class="numero" data-num="9">9</button>
-            <button class="numero" data-num="10">10</button>
-        </div>
-        <div id="imagenes-container" class="imagenes-container"></div>
-        <button id="btn-ir-desafio" class="btn-verificar oculto">Ir al desafío</button>
         <div id="desafio-contador" class="desafio-contador oculto">
             <p class="texto-desafio">Desafío: escribe el nombre en español del número que aparece aquí:</p>
             <div id="numero-random" class="numero-random">?</div>
@@ -48,14 +50,11 @@
         <button id="btn-volver-lecciones-contar" class="btn-volver-lecciones">Volver a las lecciones</button>
         <button id="completar-leccion" class="btn-completar oculto">Completar lección y volver</button>
     </div>
-    <!-- Imagen lateral de números -->
-    <img id="imagen-numeros" src="img/Numeros.jpg" alt="Números" class="imagen-numeros">
-    
     <!-- Música de fondo -->
     <div id="player"></div>
     
     <!-- Botón de música -->
-    <button id="boton-musica" class="boton-musica">Música ON</button>
+    <button id="boton-musica" class="boton-musica">Música OFF</button>
     
     <script src="js/contar.js"></script>
 </body>

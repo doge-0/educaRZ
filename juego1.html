@@ -14,6 +14,16 @@
 <body>
 
 <div class="game" id="game">
+  <div id="usuario-info" class="usuario-info">
+    <img id="avatarUsuario" alt="Avatar">
+    <span id="nombreUsuario"></span>
+  </div>
+
+  <div class="sea-light sea-light-one"></div>
+  <div class="sea-light sea-light-two"></div>
+  <div class="sand"></div>
+  <div class="seaweed seaweed-one"></div>
+  <div class="seaweed seaweed-two"></div>
 
   <div class="topbar">
 
@@ -32,6 +42,11 @@
       <span id="streak">0</span>
     </div>
 
+    <div class="card lives-card">
+      💙 Vidas:
+      <span id="lives">3</span>
+    </div>
+
     <div class="card">
       ⏰ Tiempo:
       <span id="timer">--</span>
@@ -39,8 +54,12 @@
 
   </div>
 
-  <div class="equation" id="equation">
-    2 + 2
+  <div class="challenge-panel">
+    <div class="challenge-label">Resuelve y pesca esa cantidad</div>
+    <div class="equation" id="equation">
+      2 + 2
+    </div>
+    <div class="round-hint" id="roundHint">Pesca los peces necesarios.</div>
   </div>
 
   <div class="message" id="message">
@@ -49,20 +68,32 @@
 
   <div class="bottom-ui">
 
-    <button class="easy" onclick="setDifficulty('easy')">
+    <button class="easy difficulty-btn active" data-level="easy">
       🟢 Fácil
     </button>
 
-    <button class="medium" onclick="setDifficulty('medium')">
+    <button class="medium difficulty-btn" data-level="medium">
       🟡 Normal
     </button>
 
-    <button class="hard" onclick="setDifficulty('hard')">
+    <button class="hard difficulty-btn" data-level="hard">
       🔴 Difícil
     </button>
 
-    <button class="verify" id="verifyBtn" onclick="verifyAnswer()">
+    <button class="release" id="releaseBtn">
+      ↩ Soltar 1
+    </button>
+
+    <button class="verify" id="verifyBtn">
       ✅ Verificar
+    </button>
+
+    <button class="next-round" id="newRoundBtn">
+      🔄 Nueva ronda
+    </button>
+
+    <button class="back" id="backBtn">
+      Volver
     </button>
 
   </div>
