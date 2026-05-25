@@ -319,8 +319,37 @@ button:disabled{
   background:linear-gradient(180deg, #8aa0ad, #5f7480);
 }
 
-.music{
-  background:linear-gradient(180deg, #ffb75d, #ff7a3d);
+.music-btn{
+  position:absolute;
+  top:80px;
+  right:20px;
+  z-index:30;
+  width:80px;
+  height:80px;
+  padding:0;
+  background:transparent;
+  border:none;
+  box-shadow:none;
+  border-radius:50%;
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform 0.2s ease, filter 0.2s ease;
+}
+
+.music-btn img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
+
+.music-btn:hover:not(:disabled){
+  transform:scale(1.1);
+  filter:brightness(1.1);
+}
+
+.music-btn.inactive img{
+  filter:opacity(0.5);
 }
 
 #player{

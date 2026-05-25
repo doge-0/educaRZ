@@ -409,6 +409,38 @@ h1{
     0 3px 0 #2f9d53;
 }
 
+.numero.bloqueado{
+
+    background:
+    linear-gradient(
+        180deg,
+        #d3d3d3,
+        #a9a9a9
+    );
+
+    box-shadow:
+    0 8px 0 #808080,
+    0 12px 25px rgba(0,0,0,0.18);
+
+    cursor:not-allowed;
+
+    opacity:0.6;
+}
+
+.numero.bloqueado:hover{
+
+    transform:none;
+}
+
+.numero.bloqueado:active{
+
+    transform:none;
+
+    box-shadow:
+    0 8px 0 #808080,
+    0 12px 25px rgba(0,0,0,0.18);
+}
+
 /* =========================================================
    PECES
 ========================================================= */

@@ -23,6 +23,8 @@ const backBtn = document.getElementById('backBtn');
 const messageEl = document.getElementById('message');
 const roundHint = document.getElementById('roundHint');
 const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+const musicBtn = document.getElementById('musicBtn');
+const gameMusic = document.getElementById('gameMusic');
 
 /* ========= VARIABLES ========= */
 
@@ -35,6 +37,7 @@ let fishCount = 10;
 let fishSpeed = 1.2;
 let difficulty = 'easy';
 let roundLocked = false;
+let operationsCompleted = 0;
 
 let timer;
 let timeLeft = 0;
@@ -48,6 +51,25 @@ const sounds = {
 Object.values(sounds).forEach(sound => {
   sound.volume = 0.45;
 });
+
+/* ========= MUSICA ========= */
+
+let isMusicPlaying = false;
+
+function toggleMusic(){
+  if(isMusicPlaying){
+    gameMusic.pause();
+    musicBtn.classList.add('inactive');
+    isMusicPlaying = false;
+  }else{
+    gameMusic.play().catch(() => {});
+    musicBtn.classList.remove('inactive');
+    isMusicPlaying = true;
+  }
+}
+
+musicBtn.addEventListener('click', toggleMusic);
+musicBtn.classList.add('inactive');
 
 /* ========= USUARIO ========= */
 
@@ -284,6 +306,7 @@ function verifyAnswer(){
 
     score += gained;
     streak++;
+    operationsCompleted++;
 
     scoreEl.innerText = score;
     streakEl.innerText = streak;
@@ -293,7 +316,11 @@ function verifyAnswer(){
     createConfetti();
     speak(randomPraise());
 
-    setTimeout(startRound, 1600);
+    if(operationsCompleted >= 3){
+      setTimeout(completeGame, 1600);
+    }else{
+      setTimeout(startRound, 1600);
+    }
     return;
   }
 
@@ -319,7 +346,47 @@ function verifyAnswer(){
   }
 }
 
+function completeGame(){
+  clearFish();
+  roundLocked = true;
+
+  speak('Felicidades, haz completado exitosamente el juego');
+  createConfetti();
+
+  const celebrationDiv = document.createElement('div');
+  celebrationDiv.style.position = 'fixed';
+  celebrationDiv.style.top = '50%';
+  celebrationDiv.style.left = '50%';
+  celebrationDiv.style.transform = 'translate(-50%, -50%)';
+  celebrationDiv.style.zIndex = '1000';
+  celebrationDiv.style.textAlign = 'center';
+
+  const gif = document.createElement('img');
+  gif.src = 'img/pezgirando.gif';
+  gif.style.width = '300px';
+  gif.style.height = '300px';
+  gif.style.marginBottom = '20px';
+
+  const message = document.createElement('div');
+  message.textContent = 'Felicidades, haz completado exitosamente el juego';
+  message.style.fontSize = '2rem';
+  message.style.fontWeight = 'bold';
+  message.style.color = '#2796d1';
+  message.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.3)';
+  message.style.fontFamily = 'Fredoka, Arial, sans-serif';
+
+  celebrationDiv.appendChild(gif);
+  celebrationDiv.appendChild(message);
+  game.appendChild(celebrationDiv);
+
+  setTimeout(() => {
+    celebrationDiv.remove();
+    resetGame();
+  }, 5000);
+}
+
 function resetGame(){
+  operationsCompleted = 0;
   score = 0;
   streak = 0;
   lives = difficulty === 'hard' ? 2 : 3;

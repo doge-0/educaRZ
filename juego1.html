@@ -6,6 +6,8 @@
 
 <title>Pesca Matemática</title>
 
+<link rel="icon" type="image/webp" href="img/null.webp">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/juego1.css" />
@@ -18,6 +20,10 @@
     <img id="avatarUsuario" alt="Avatar">
     <span id="nombreUsuario"></span>
   </div>
+
+  <button class="music-btn" id="musicBtn">
+    <img src="img/Mart.gif" alt="Música">
+  </button>
 
   <div class="sea-light sea-light-one"></div>
   <div class="sea-light sea-light-two"></div>
@@ -99,6 +105,11 @@
   </div>
 
 </div>
+
+<audio id="gameMusic" loop>
+  <source src="sonidos/Ippo.mp3" type="audio/mpeg">
+</audio>
+
 <script src="js/juego1.js"></script>
 </body>
 </html>

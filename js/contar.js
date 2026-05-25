@@ -241,6 +241,8 @@ document.addEventListener(
 
     let numeroDesafio = 0;
 
+    let siguienteNumeroDesbloqueado = 0;
+
     hablarTexto(
         'Hola. Presiona algunos números para aprender a contar.'
     );
@@ -249,15 +251,21 @@ document.addEventListener(
 
     botones.forEach(btn=>{
 
+        const num = parseInt(btn.dataset.num);
+
+        if(num !== 0){
+            btn.disabled = true;
+            btn.classList.add('bloqueado');
+        }
+
         btn.addEventListener(
         'click', ()=>{
 
-            activarMusica();
+            if(btn.disabled){
+                return;
+            }
 
-            const num =
-            parseInt(
-                btn.dataset.num
-            );
+            activarMusica();
 
             hablarTexto(
                 nombresNumeros[num],
@@ -276,6 +284,15 @@ document.addEventListener(
             mostrarNumero(num);
 
             presionados.add(num);
+
+            if(num === siguienteNumeroDesbloqueado && num < 10){
+                siguienteNumeroDesbloqueado++;
+                const botonSiguiente = document.querySelector(`[data-num="${siguienteNumeroDesbloqueado}"]`);
+                if(botonSiguiente){
+                    botonSiguiente.disabled = false;
+                    botonSiguiente.classList.remove('bloqueado');
+                }
+            }
 
             if(
                 presionados.size ===
