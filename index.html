@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -50,14 +50,12 @@
     <div id="gif-burbujas" class="gif-burbujas">
         <img src="img/spongebobo.gif" alt="Burbujas" class="gif-animation">
     </div>
-    
-    <!-- Música de fondo -->
-    <div id="player"></div>
-    
-    <!-- Botón de música -->
-    <button id="boton-musica" class="boton-musica">Música ON</button>
+    <audio id="musica-fondo" src="sonidos/musica1.mp3" loop preload="auto"></audio>
+    <button id="boton-musica" class="boton-musica" type="button" aria-label="Activar musica">
+        <img src="img/Mart.gif" alt="">
+    </button>
     
     <script src="js/cosa.js"></script>
-    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
+

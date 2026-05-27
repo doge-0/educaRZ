@@ -141,9 +141,179 @@ button:disabled{
   animation-delay:0.4s;
 }
 
+.seaweed-three{
+  left:22vw;
+  bottom:28px;
+  width:34px;
+  height:92px;
+  background:linear-gradient(180deg, #8ee57d, #2d9b55);
+  animation-delay:0.9s;
+  opacity:0.88;
+}
+
+.kelp{
+  position:absolute;
+  bottom:38px;
+  width:18px;
+  height:138px;
+  border-radius:999px 999px 30px 30px;
+  background:linear-gradient(180deg, #9ce66d, #167f48);
+  transform-origin:bottom center;
+  animation:kelpWave 3.4s ease-in-out infinite;
+  z-index:3;
+  pointer-events:none;
+}
+
+.kelp::before,
+.kelp::after{
+  content:'';
+  position:absolute;
+  width:34px;
+  height:18px;
+  border-radius:80% 20% 80% 20%;
+  background:linear-gradient(180deg, #a8ef7b, #2fa35a);
+}
+
+.kelp::before{
+  top:34px;
+  left:-26px;
+  transform:rotate(-22deg);
+}
+
+.kelp::after{
+  top:74px;
+  right:-28px;
+  transform:rotate(24deg);
+}
+
+.kelp-one{
+  left:12vw;
+}
+
+.kelp-two{
+  right:18vw;
+  height:112px;
+  animation-delay:0.7s;
+}
+
+.coral{
+  position:absolute;
+  bottom:36px;
+  width:70px;
+  height:70px;
+  z-index:3;
+  pointer-events:none;
+}
+
+.coral::before,
+.coral::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  border-radius:999px 999px 18px 18px;
+  transform-origin:bottom center;
+}
+
+.coral::before{
+  left:22px;
+  width:16px;
+  height:64px;
+  background:linear-gradient(180deg, #ff8aa0, #e64872);
+  box-shadow:
+    -20px 18px 0 -3px #ffbd66,
+    20px 12px 0 -2px #ff7b8d;
+}
+
+.coral::after{
+  left:37px;
+  width:12px;
+  height:48px;
+  background:linear-gradient(180deg, #ffcf73, #f08b42);
+  transform:rotate(28deg);
+}
+
+.coral-one{
+  left:32vw;
+}
+
+.coral-two{
+  right:32vw;
+  transform:scale(0.82);
+  opacity:0.9;
+}
+
+.fish-shadow{
+  position:absolute;
+  width:130px;
+  height:46px;
+  border-radius:60% 45% 45% 60%;
+  background:rgba(0,45,70,0.16);
+  filter:blur(1px);
+  z-index:1;
+  pointer-events:none;
+  animation:shadowSwim 18s linear infinite;
+}
+
+.fish-shadow::after{
+  content:'';
+  position:absolute;
+  right:-24px;
+  top:10px;
+  width:42px;
+  height:28px;
+  background:rgba(0,45,70,0.14);
+  clip-path:polygon(0 50%, 100% 0, 100% 100%);
+}
+
+.shadow-one{
+  top:32vh;
+  left:-14vw;
+}
+
+.shadow-two{
+  top:54vh;
+  left:-24vw;
+  width:92px;
+  height:34px;
+  animation-duration:24s;
+  animation-delay:5s;
+  opacity:0.72;
+}
+
+.shadow-three{
+  top:70vh;
+  left:-18vw;
+  width:160px;
+  height:54px;
+  animation-duration:28s;
+  animation-delay:10s;
+  opacity:0.56;
+}
+
 @keyframes seaweedWave{
   50%{
     transform:rotate(5deg);
+  }
+}
+
+@keyframes kelpWave{
+  50%{
+    transform:rotate(-6deg);
+  }
+}
+
+@keyframes shadowSwim{
+  from{
+    transform:translateX(0) scaleX(1);
+  }
+  49%{
+    transform:translateX(128vw) scaleX(1);
+  }
+  50%{
+    transform:translateX(128vw) scaleX(-1);
+  }
+  to{
+    transform:translateX(0) scaleX(-1);
   }
 }
 
@@ -183,6 +353,17 @@ button:disabled{
   grid-template-columns:repeat(5, minmax(118px, 1fr));
   gap:12px;
   z-index:20;
+}
+
+.topbar.finite-mode{
+  grid-template-columns:repeat(2, minmax(118px, 1fr));
+  width:min(440px, calc(100% - 220px));
+}
+
+.topbar.finite-mode .score-card,
+.topbar.finite-mode .streak-card,
+.topbar.finite-mode .lives-card{
+  display:none;
 }
 
 .card{
@@ -278,6 +459,76 @@ button:disabled{
   font-weight:700;
 }
 
+.aquarium{
+  position:absolute;
+  right:34px;
+  bottom:124px;
+  width:min(30vw, 300px);
+  min-width:220px;
+  aspect-ratio:1.35 / 1;
+  border:5px solid rgba(255,255,255,0.92);
+  border-top-width:10px;
+  border-radius:22px 22px 30px 30px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.36), rgba(255,255,255,0.08)),
+    rgba(31, 166, 214, 0.28);
+  box-shadow:
+    inset 0 0 28px rgba(255,255,255,0.32),
+    0 16px 34px rgba(0,45,70,0.24);
+  overflow:hidden;
+  z-index:14;
+}
+
+.aquarium::before{
+  content:'';
+  position:absolute;
+  left:14px;
+  right:14px;
+  bottom:12px;
+  height:24px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 20% 60%, #f2d88b 0 5px, transparent 6px),
+    radial-gradient(circle at 58% 40%, #edd077 0 4px, transparent 5px),
+    linear-gradient(180deg, #edd284, #caa859);
+  opacity:0.9;
+  z-index:1;
+}
+
+.aquarium-water{
+  position:absolute;
+  inset:14px 10px 10px;
+  border-radius:16px 16px 24px 24px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.35) 0 8px, transparent 10px),
+    radial-gradient(circle at 72% 34%, rgba(255,255,255,0.28) 0 6px, transparent 8px),
+    linear-gradient(180deg, rgba(102,215,247,0.68), rgba(24,128,196,0.45));
+  z-index:0;
+}
+
+.aquarium-label{
+  position:absolute;
+  left:50%;
+  top:10px;
+  transform:translateX(-50%);
+  padding:5px 12px;
+  border-radius:999px;
+  color:#175a7c;
+  font-size:0.9rem;
+  font-weight:800;
+  background:rgba(255,255,255,0.86);
+  box-shadow:0 6px 14px rgba(0,45,70,0.14);
+  z-index:3;
+}
+
+.aquarium.drag-over{
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:
+    inset 0 0 30px rgba(255,255,255,0.42),
+    0 20px 42px rgba(0,45,70,0.3),
+    0 0 0 5px rgba(255,255,255,0.34);
+}
+
 .bottom-ui{
   position:absolute;
   left:50%;
@@ -303,6 +554,10 @@ button:disabled{
   background:linear-gradient(180deg, #ff8277, #e84a5f);
 }
 
+.infinite{
+  background:linear-gradient(180deg, #9b8cff, #5f57d8);
+}
+
 .verify{
   background:linear-gradient(180deg, #55b7ff, #2c75e5);
 }
@@ -317,6 +572,89 @@ button:disabled{
 
 .back{
   background:linear-gradient(180deg, #8aa0ad, #5f7480);
+}
+
+.difficulty-menu{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:linear-gradient(180deg, rgba(18,128,178,0.24), rgba(5,64,102,0.34));
+  backdrop-filter:blur(5px);
+  z-index:70;
+}
+
+.difficulty-menu.hidden{
+  display:none;
+}
+
+.difficulty-panel{
+  position:relative;
+  width:min(92vw, 560px);
+  padding:32px;
+  border:1px solid rgba(255,255,255,0.66);
+  border-radius:28px;
+  text-align:center;
+  background:rgba(255,255,255,0.24);
+  box-shadow:0 24px 58px rgba(0,45,70,0.3);
+  backdrop-filter:blur(18px);
+}
+
+.difficulty-panel h1{
+  margin-bottom:24px;
+  color:white;
+  font-size:clamp(2rem, 7vw, 3rem);
+  line-height:1;
+  text-shadow:0 6px 18px rgba(0,45,70,0.32);
+}
+
+.difficulty-options{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:14px;
+}
+
+.difficulty-options button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:76px;
+  font-size:1.12rem;
+}
+
+.difficulty-options button span{
+  min-width:22px;
+  display:inline-flex;
+  justify-content:center;
+}
+
+.difficulty-options button span:empty{
+  display:none;
+}
+
+.difficulty-btn.locked{
+  background:linear-gradient(180deg, #aab4bd, #6d7d89);
+  box-shadow:0 8px 0 #52616c, 0 14px 24px rgba(0,45,70,0.14);
+}
+
+.difficulty-btn.completed{
+  outline:3px solid rgba(255,255,255,0.78);
+}
+
+.unlock-hint{
+  min-height:22px;
+  margin-top:18px;
+  color:white;
+  font-weight:700;
+  text-shadow:0 3px 10px rgba(0,45,70,0.3);
+}
+
+.menu-back{
+  margin-top:18px;
+  width:100%;
 }
 
 .music-btn{
@@ -352,14 +690,6 @@ button:disabled{
   filter:opacity(0.5);
 }
 
-#player{
-  position:fixed;
-  width:0;
-  height:0;
-  overflow:hidden;
-  pointer-events:none;
-}
-
 .difficulty-btn.active{
   outline:3px solid rgba(255,255,255,0.86);
   transform:translateY(-2px);
@@ -372,10 +702,33 @@ button:disabled{
   z-index:8;
   cursor:pointer;
   transition:filter 0.18s ease;
+  touch-action:none;
 }
 
 .fish:hover{
   filter:drop-shadow(0 10px 14px rgba(0,45,70,0.24));
+}
+
+.fish.dragging{
+  z-index:80;
+  filter:drop-shadow(0 18px 22px rgba(0,45,70,0.32));
+  cursor:grabbing;
+}
+
+.aquarium-fish{
+  position:absolute;
+  width:58px;
+  height:58px;
+  z-index:2;
+  pointer-events:none;
+  filter:drop-shadow(0 8px 10px rgba(0,45,70,0.16));
+}
+
+.aquarium-fish img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
 }
 
 .fish img{
@@ -413,6 +766,65 @@ button:disabled{
   background:rgba(255,255,255,0.95);
   box-shadow:0 20px 48px rgba(0,45,70,0.28);
   z-index:50;
+}
+
+.complete-overlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(0,50,85,0.35);
+  backdrop-filter:blur(4px);
+  z-index:100;
+}
+
+.complete-overlay.show{
+  display:flex;
+}
+
+.complete-card{
+  width:min(90vw, 520px);
+  padding:28px 24px 32px;
+  border:1px solid rgba(255,255,255,0.75);
+  border-radius:30px;
+  text-align:center;
+  color:#173c52;
+  background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(218,248,255,0.94));
+  box-shadow:0 26px 60px rgba(0,45,70,0.34);
+  animation:completePop 0.45s ease both;
+}
+
+.complete-card img{
+  width:min(58vw, 230px);
+  height:min(58vw, 230px);
+  object-fit:contain;
+  margin-bottom:8px;
+  filter:drop-shadow(0 16px 20px rgba(0,45,70,0.18));
+}
+
+.complete-card h2{
+  margin-bottom:8px;
+  color:#1680bd;
+  font-size:clamp(2rem, 7vw, 3rem);
+}
+
+.complete-card p{
+  color:#36596c;
+  font-size:1.1rem;
+  font-weight:700;
+}
+
+@keyframes completePop{
+  from{
+    opacity:0;
+    transform:translateY(18px) scale(0.94);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
 }
 
 .pop{
@@ -504,6 +916,10 @@ button:disabled{
     grid-template-columns:repeat(3, minmax(118px, 1fr));
   }
 
+  .topbar.finite-mode{
+    width:calc(100% - 36px);
+  }
+
   .usuario-info{
     top:14px;
     left:14px;
@@ -512,6 +928,13 @@ button:disabled{
 
   .challenge-panel{
     top:210px;
+  }
+
+  .aquarium{
+    right:18px;
+    bottom:116px;
+    width:230px;
+    min-width:0;
   }
 
   .fish{
@@ -554,6 +977,20 @@ button:disabled{
   .bottom-ui{
     bottom:12px;
     gap:8px;
+  }
+
+  .aquarium{
+    right:12px;
+    bottom:116px;
+    width:170px;
+  }
+
+  .difficulty-panel{
+    padding:24px 18px;
+  }
+
+  .difficulty-options{
+    grid-template-columns:1fr;
   }
 
   button{

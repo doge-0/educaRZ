@@ -1,4 +1,4 @@
-/* ========= IMAGENES ========= */
+﻿/* ========= IMAGENES ========= */
 
 const fishImages = [
   'img/Catfish.webp',
@@ -10,6 +10,10 @@ const fishImages = [
 /* ========= ELEMENTOS ========= */
 
 const game = document.getElementById('game');
+const topbar = document.querySelector('.topbar');
+const difficultyMenu = document.getElementById('difficultyMenu');
+const completeOverlay = document.getElementById('completeOverlay');
+const aquarium = document.getElementById('aquarium');
 const equationEl = document.getElementById('equation');
 const caughtEl = document.getElementById('caught');
 const timerEl = document.getElementById('timer');
@@ -20,11 +24,14 @@ const verifyBtn = document.getElementById('verifyBtn');
 const releaseBtn = document.getElementById('releaseBtn');
 const newRoundBtn = document.getElementById('newRoundBtn');
 const backBtn = document.getElementById('backBtn');
+const menuBackBtn = document.getElementById('menuBackBtn');
 const messageEl = document.getElementById('message');
 const roundHint = document.getElementById('roundHint');
+const unlockHint = document.getElementById('unlockHint');
 const difficultyButtons = document.querySelectorAll('.difficulty-btn');
 const musicBtn = document.getElementById('musicBtn');
 const gameMusic = document.getElementById('gameMusic');
+gameMusic.volume = 0.35;
 
 /* ========= VARIABLES ========= */
 
@@ -36,12 +43,23 @@ let lives = 3;
 let fishCount = 10;
 let fishSpeed = 1.2;
 let difficulty = 'easy';
-let roundLocked = false;
+let roundLocked = true;
 let operationsCompleted = 0;
+let gameStarted = false;
 
 let timer;
 let timeLeft = 0;
 let fishIntervals = [];
+let capturedFish = [];
+let draggedFish = null;
+
+const difficultyOrder = ['easy', 'medium', 'hard', 'infinite'];
+const difficultyLabels = {
+  easy: 'Modo fácil',
+  medium: 'Normal',
+  hard: 'Difícil',
+  infinite: 'Infinito'
+};
 
 const sounds = {
   catch: new Audio('sonidos/click.mp3'),
@@ -134,35 +152,146 @@ function playSound(name){
 
 /* ========= DIFICULTAD ========= */
 
+function isFiniteMode(){
+  return difficulty !== 'infinite';
+}
+
+function getDifficultyKey(level){
+  return `juego_dificultad_${level}_completada`;
+}
+
+function isDifficultyCompleted(level){
+  return localStorage.getItem(getDifficultyKey(level)) === 'true';
+}
+
+function isDifficultyUnlocked(level){
+  const index = difficultyOrder.indexOf(level);
+  if(index <= 0){
+    return true;
+  }
+
+  return isDifficultyCompleted(difficultyOrder[index - 1]);
+}
+
+function saveDifficultyCompletion(level){
+  if(level === 'infinite'){
+    return;
+  }
+
+  localStorage.setItem(getDifficultyKey(level), 'true');
+}
+
+function updateDifficultyLocks(){
+  difficultyButtons.forEach(button => {
+    const level = button.dataset.level;
+    const unlocked = isDifficultyUnlocked(level);
+    const completed = isDifficultyCompleted(level);
+    const label = difficultyLabels[level] || button.textContent.trim();
+
+    button.disabled = !unlocked;
+    button.classList.toggle('locked', !unlocked);
+    button.classList.toggle('completed', completed);
+    button.innerHTML = `${label}<span>${unlocked ? (completed ? '✓' : '') : '🔒'}</span>`;
+    button.setAttribute(
+      'aria-label',
+      unlocked ? label : `${label} bloqueado`
+    );
+  });
+
+  if(unlockHint){
+    unlockHint.textContent = 'Completa 3 preguntas para desbloquear la siguiente dificultad.';
+  }
+}
+
+function updateModeUI(){
+  if(topbar){
+    topbar.classList.toggle('finite-mode', isFiniteMode());
+  }
+
+  if(newRoundBtn){
+    newRoundBtn.style.display = isFiniteMode() ? 'none' : 'inline-flex';
+  }
+}
+
+function hideDifficultyMenu(){
+  if(difficultyMenu){
+    difficultyMenu.classList.add('hidden');
+  }
+}
+
+function showDifficultyMenu(){
+  gameStarted = false;
+  roundLocked = true;
+  operationsCompleted = 0;
+  caught = 0;
+  clearInterval(timer);
+  clearFish();
+
+  caughtEl.innerText = '0';
+  timerEl.innerText = '--';
+  equationEl.textContent = '?';
+  roundHint.textContent = 'Elige una dificultad para comenzar.';
+
+  if(messageEl){
+    messageEl.style.display = 'none';
+  }
+
+  if(completeOverlay){
+    completeOverlay.classList.remove('show');
+  }
+
+  if(difficultyMenu){
+    updateDifficultyLocks();
+    difficultyMenu.classList.remove('hidden');
+  }
+}
+
 function setDifficulty(level){
+  if(!isDifficultyUnlocked(level)){
+    showMessage('Completa la dificultad anterior primero.');
+    speak('Completa la dificultad anterior primero.');
+    return;
+  }
+
   difficulty = level;
+  gameStarted = true;
+  operationsCompleted = 0;
+  score = 0;
+  streak = 0;
 
   if(level === 'easy'){
     fishCount = 8;
     fishSpeed = 1.05;
-    lives = 3;
+    lives = 1;
   }
 
   if(level === 'medium'){
     fishCount = 12;
     fishSpeed = 1.45;
-    lives = 3;
+    lives = 1;
   }
 
   if(level === 'hard'){
     fishCount = 14;
     fishSpeed = 2;
-    lives = 2;
+    lives = 1;
+  }
+
+  if(level === 'infinite'){
+    fishCount = 14;
+    fishSpeed = 1.75;
+    lives = 3;
   }
 
   difficultyButtons.forEach(button => {
-    button.classList.toggle(
-      'active',
-      button.dataset.level === level
-    );
+    button.classList.toggle('active', button.dataset.level === level);
   });
 
+  scoreEl.innerText = score;
+  streakEl.innerText = streak;
   livesEl.innerText = lives;
+  updateModeUI();
+  hideDifficultyMenu();
   startRound();
 }
 
@@ -184,9 +313,12 @@ function generateEquation(){
   }else if(difficulty === 'medium'){
     a = random(3,9);
     b = random(1,8);
-  }else{
+  }else if(difficulty === 'hard'){
     a = random(5,12);
     b = random(1,10);
+  }else{
+    a = random(2,13);
+    b = random(1,12);
   }
 
   const type = Math.random() > 0.48 ? '+' : '-';
@@ -202,7 +334,9 @@ function generateEquation(){
   }
 
   equationEl.textContent = `${a} ${type} ${b}`;
-  roundHint.textContent = 'Calcula la operación, pesca tu respuesta y presiona verificar.';
+  roundHint.textContent = isFiniteMode()
+    ? `Pregunta ${operationsCompleted + 1} de 3: arrastra tu respuesta a la pecera y presiona verificar.`
+    : 'Calcula la operación, arrastra tu respuesta a la pecera y presiona verificar.';
 }
 
 /* ========= PECES ========= */
@@ -210,7 +344,54 @@ function generateEquation(){
 function clearFish(){
   fishIntervals.forEach(interval => clearInterval(interval));
   fishIntervals = [];
+  capturedFish = [];
   document.querySelectorAll('.fish').forEach(fish => fish.remove());
+  document.querySelectorAll('.aquarium-fish').forEach(fish => fish.remove());
+}
+
+function removeFishInterval(fish){
+  if(!fish || !fish.swimInterval) return;
+
+  clearInterval(fish.swimInterval);
+  fishIntervals = fishIntervals.filter(interval => interval !== fish.swimInterval);
+  fish.swimInterval = null;
+}
+
+function startFishSwim(fish){
+  let dx = fish.swimDirectionX || (Math.random() > 0.5 ? 1 : -1);
+  let dy = fish.swimDirectionY || (Math.random() > 0.5 ? 1 : -1);
+
+  fish.swimDirectionX = dx;
+  fish.swimDirectionY = dy;
+
+  removeFishInterval(fish);
+
+  const interval = setInterval(() => {
+    if(!document.body.contains(fish) || fish.classList.contains('dragging')) return;
+
+    let x = parseFloat(fish.style.left);
+    let y = parseFloat(fish.style.top);
+
+    x += dx * fishSpeed * 0.14;
+    y += dy * fishSpeed * 0.08;
+
+    if(x > 90 || x < 2){
+      dx *= -1;
+      fish.swimDirectionX = dx;
+    }
+
+    if(y > 78 || y < 24){
+      dy *= -1;
+      fish.swimDirectionY = dy;
+    }
+
+    fish.style.transform = dx < 0 ? 'scaleX(-1)' : 'scaleX(1)';
+    fish.style.left = x + 'vw';
+    fish.style.top = y + 'vh';
+  }, 30);
+
+  fish.swimInterval = interval;
+  fishIntervals.push(interval);
 }
 
 function createFish(){
@@ -231,61 +412,139 @@ function createFish(){
     fish.style.left = random(6,86) + 'vw';
     fish.style.top = random(26,74) + 'vh';
 
-    let dx = Math.random() > 0.5 ? 1 : -1;
-    let dy = Math.random() > 0.5 ? 1 : -1;
-
-    fish.addEventListener('click', () => catchFish(fish));
+    fish.addEventListener('pointerdown', startDragFish);
 
     game.appendChild(fish);
-
-    const interval = setInterval(() => {
-      if(!document.body.contains(fish)) return;
-
-      let x = parseFloat(fish.style.left);
-      let y = parseFloat(fish.style.top);
-
-      x += dx * fishSpeed * 0.14;
-      y += dy * fishSpeed * 0.08;
-
-      if(x > 90 || x < 2){
-        dx *= -1;
-      }
-
-      if(y > 78 || y < 24){
-        dy *= -1;
-      }
-
-      fish.style.transform = dx < 0 ? 'scaleX(-1)' : 'scaleX(1)';
-      fish.style.left = x + 'vw';
-      fish.style.top = y + 'vh';
-    }, 30);
-
-    fishIntervals.push(interval);
+    startFishSwim(fish);
   }
 }
 
-function catchFish(fish){
-  if(roundLocked || fish.classList.contains('caught')) return;
+function startDragFish(event){
+  const fish = event.currentTarget;
+  if(roundLocked || !gameStarted || fish.classList.contains('caught')) return;
 
+  event.preventDefault();
+  removeFishInterval(fish);
+
+  const rect = fish.getBoundingClientRect();
+  draggedFish = {
+    fish,
+    offsetX: event.clientX - rect.left,
+    offsetY: event.clientY - rect.top,
+    originalLeft: fish.style.left,
+    originalTop: fish.style.top
+  };
+
+  fish.classList.add('dragging');
+  fish.style.left = rect.left + 'px';
+  fish.style.top = rect.top + 'px';
+  fish.style.transform = '';
+
+  document.addEventListener('pointermove', dragFish);
+  document.addEventListener('pointerup', dropFish, { once:true });
+}
+
+function dragFish(event){
+  if(!draggedFish) return;
+
+  const { fish, offsetX, offsetY } = draggedFish;
+  fish.style.left = (event.clientX - offsetX) + 'px';
+  fish.style.top = (event.clientY - offsetY) + 'px';
+
+  if(aquarium){
+    aquarium.classList.toggle('drag-over', isPointInsideAquarium(event.clientX, event.clientY));
+  }
+}
+
+function dropFish(event){
+  if(!draggedFish) return;
+
+  document.removeEventListener('pointermove', dragFish);
+
+  const { fish, originalLeft, originalTop } = draggedFish;
+  const droppedInAquarium = isPointInsideAquarium(event.clientX, event.clientY);
+
+  if(aquarium){
+    aquarium.classList.remove('drag-over');
+  }
+
+  fish.classList.remove('dragging');
+
+  if(droppedInAquarium){
+    catchFish(fish);
+  }else{
+    fish.style.left = originalLeft;
+    fish.style.top = originalTop;
+    startFishSwim(fish);
+  }
+
+  draggedFish = null;
+}
+
+function isPointInsideAquarium(x,y){
+  if(!aquarium) return false;
+
+  const rect = aquarium.getBoundingClientRect();
+  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+}
+
+function catchFish(fish){
+  if(roundLocked || !gameStarted || fish.classList.contains('caught')) return;
+
+  removeFishInterval(fish);
   fish.classList.add('caught');
   caught++;
   caughtEl.innerText = caught;
 
+  const center = getAquariumCenter();
   playSound('catch');
-  createSplash(fish.style.left, fish.style.top);
+  createSplash(center.x, center.y);
   speakNumber(caught);
-  popText('+1', fish.style.left, fish.style.top);
+  popText('+1', center.x, center.y);
 
-  setTimeout(() => fish.remove(), 320);
+  placeFishInAquarium(fish);
 
-  roundHint.textContent = 'Cuando creas que tienes la cantidad correcta, presiona verificar.';
+  roundHint.textContent = 'El pez quedó en la pecera. Sigue arrastrando hasta tener la respuesta.';
+}
+
+function getAquariumCenter(){
+  if(!aquarium){
+    return { x:'76vw', y:'68vh' };
+  }
+
+  const rect = aquarium.getBoundingClientRect();
+  return {
+    x: (rect.left + rect.width / 2) + 'px',
+    y: (rect.top + rect.height / 2) + 'px'
+  };
+}
+
+function placeFishInAquarium(fish){
+  if(!aquarium){
+    fish.remove();
+    return;
+  }
+
+  fish.className = 'aquarium-fish';
+  fish.style.left = random(12,72) + '%';
+  fish.style.top = random(30,66) + '%';
+  fish.style.transform = Math.random() > 0.5 ? 'scaleX(-1)' : 'scaleX(1)';
+  fish.style.animation = 'none';
+  fish.removeEventListener('pointerdown', startDragFish);
+
+  aquarium.appendChild(fish);
+  capturedFish.push(fish);
 }
 
 function releaseFish(){
-  if(roundLocked || caught <= 0) return;
+  if(roundLocked || !gameStarted || caught <= 0) return;
 
   caught--;
   caughtEl.innerText = caught;
+  const fish = capturedFish.pop();
+  if(fish){
+    fish.remove();
+  }
 
   roundHint.textContent = 'Soltaste un pez. Revisa tu cuenta antes de verificar.';
 
@@ -296,7 +555,7 @@ function releaseFish(){
 /* ========= VERIFICAR ========= */
 
 function verifyAnswer(){
-  if(roundLocked) return;
+  if(roundLocked || !gameStarted) return;
 
   roundLocked = true;
   clearInterval(timer);
@@ -308,15 +567,17 @@ function verifyAnswer(){
     streak++;
     operationsCompleted++;
 
-    scoreEl.innerText = score;
-    streakEl.innerText = streak;
+    if(!isFiniteMode()){
+      scoreEl.innerText = score;
+      streakEl.innerText = streak;
+    }
 
-    showMessage(`¡Correcto! +${gained}`);
+    showMessage(isFiniteMode() ? `¡Correcto! ${operationsCompleted}/3` : `¡Correcto! +${gained}`);
     playSound('correct');
     createConfetti();
     speak(randomPraise());
 
-    if(operationsCompleted >= 3){
+    if(isFiniteMode() && operationsCompleted >= 3){
       setTimeout(completeGame, 1600);
     }else{
       setTimeout(startRound, 1600);
@@ -327,19 +588,28 @@ function verifyAnswer(){
   streak = 0;
   lives--;
 
-  streakEl.innerText = streak;
-  livesEl.innerText = Math.max(lives, 0);
+  if(!isFiniteMode()){
+    streakEl.innerText = streak;
+    livesEl.innerText = Math.max(lives, 0);
+  }
 
   const hint = caught < target
     ? `Faltaron ${target - caught} peces.`
     : `Te sobraron ${caught - target} peces.`;
 
-  showMessage(hint);
-  speak(hint);
+  const resetText = isFiniteMode()
+    ? `${hint} Se reinician las preguntas.`
+    : hint;
+
+  showMessage(resetText);
+  speak(resetText);
   game.classList.add('screen-shake');
   setTimeout(() => game.classList.remove('screen-shake'), 300);
 
-  if(lives <= 0){
+  if(isFiniteMode()){
+    operationsCompleted = 0;
+    setTimeout(startRound, 1900);
+  }else if(lives <= 0){
     setTimeout(resetGame, 1700);
   }else{
     setTimeout(startRound, 1700);
@@ -349,54 +619,32 @@ function verifyAnswer(){
 function completeGame(){
   clearFish();
   roundLocked = true;
+  saveDifficultyCompletion(difficulty);
 
-  speak('Felicidades, haz completado exitosamente el juego');
+  speak('Felicidades, has completado las tres preguntas');
   createConfetti();
 
-  const celebrationDiv = document.createElement('div');
-  celebrationDiv.style.position = 'fixed';
-  celebrationDiv.style.top = '50%';
-  celebrationDiv.style.left = '50%';
-  celebrationDiv.style.transform = 'translate(-50%, -50%)';
-  celebrationDiv.style.zIndex = '1000';
-  celebrationDiv.style.textAlign = 'center';
-
-  const gif = document.createElement('img');
-  gif.src = 'img/pezgirando.gif';
-  gif.style.width = '300px';
-  gif.style.height = '300px';
-  gif.style.marginBottom = '20px';
-
-  const message = document.createElement('div');
-  message.textContent = 'Felicidades, haz completado exitosamente el juego';
-  message.style.fontSize = '2rem';
-  message.style.fontWeight = 'bold';
-  message.style.color = '#2796d1';
-  message.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.3)';
-  message.style.fontFamily = 'Fredoka, Arial, sans-serif';
-
-  celebrationDiv.appendChild(gif);
-  celebrationDiv.appendChild(message);
-  game.appendChild(celebrationDiv);
+  if(completeOverlay){
+    completeOverlay.classList.add('show');
+  }
 
   setTimeout(() => {
-    celebrationDiv.remove();
-    resetGame();
-  }, 5000);
+    showDifficultyMenu();
+  }, 4200);
 }
 
 function resetGame(){
   operationsCompleted = 0;
   score = 0;
   streak = 0;
-  lives = difficulty === 'hard' ? 2 : 3;
+  lives = difficulty === 'infinite' ? 3 : 1;
 
   scoreEl.innerText = score;
   streakEl.innerText = streak;
   livesEl.innerText = lives;
 
-  showMessage('Nueva partida');
-  speak('Nueva partida');
+  showMessage(isFiniteMode() ? 'Preguntas reiniciadas' : 'Nueva partida');
+  speak(isFiniteMode() ? 'Preguntas reiniciadas' : 'Nueva partida');
   startRound();
 }
 
@@ -520,6 +768,8 @@ function createBubbles(){
 /* ========= START ========= */
 
 function startRound(){
+  if(!gameStarted) return;
+
   roundLocked = false;
   caught = 0;
 
@@ -535,6 +785,12 @@ function startRound(){
 function bindEvents(){
   difficultyButtons.forEach(button => {
     button.addEventListener('click', () => {
+      if(button.disabled){
+        showMessage('Completa la dificultad anterior primero.');
+        speak('Completa la dificultad anterior primero.');
+        return;
+      }
+
       setDifficulty(button.dataset.level);
     });
   });
@@ -542,18 +798,16 @@ function bindEvents(){
   verifyBtn.addEventListener('click', () => verifyAnswer());
   releaseBtn.addEventListener('click', releaseFish);
   newRoundBtn.addEventListener('click', startRound);
-  backBtn.addEventListener('click', () => {
-    window.location.href = 'aprende1.html';
-  });
-}
+  backBtn.addEventListener('click', showDifficultyMenu);
 
-setTimeout(() => {
-  if(!player && typeof YT !== 'undefined' && YT && YT.Player){
-    onYouTubeIframeAPIReady();
+  if(menuBackBtn){
+    menuBackBtn.addEventListener('click', () => {
+      window.location.href = 'aprende1.html';
+    });
   }
-}, 1200);
+}
 
 loadUser();
 bindEvents();
 createBubbles();
-setDifficulty('easy');
+showDifficultyMenu();

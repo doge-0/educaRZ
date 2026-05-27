@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+﻿document.addEventListener('DOMContentLoaded', function() {
     const botonesNumeros = document.querySelectorAll('.numero');
     const imagenesContainer = document.getElementById('imagenes-container');
 
@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
         window.speechSynthesis.cancel();
 
         const utterance = new SpeechSynthesisUtterance(nombresNumeros[num]);
-        utterance.lang = 'es-ES'; // Español de España
-        utterance.volume = 1; // Volumen máximo
-        utterance.rate = 1; // Velocidad más rápida
+        utterance.lang = 'es-ES'; // EspaÃ±ol de EspaÃ±a
+        utterance.volume = 1; // Volumen mÃ¡ximo
+        utterance.rate = 1; // Velocidad mÃ¡s rÃ¡pida
         utterance.pitch = 1; // Tono normal
         window.speechSynthesis.speak(utterance);
     }
@@ -46,35 +46,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-var player;
-
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-        height: '0',
-        width: '0',
-        videoId: '8EczaHDAcXE',
-        playerVars: {
-            'autoplay': 1,
-            'mute': 1,
-            'loop': 1,
-            'playlist': '8EczaHDAcXE'
-        },
-        events: {
-            'onReady': onPlayerReady
-        }
-    });
-}
-
-function onPlayerReady(event) {
-    event.target.unMute();
-    event.target.playVideo();
-    const btn = document.getElementById('boton-musica');
-    if (btn) {
-        btn.textContent = 'Música ON';
-    }
-}
+let musicaFondo;
+let musicaActiva = false;
 
 document.addEventListener('DOMContentLoaded', () => {
+    musicaFondo = document.getElementById('musica-fondo');
     const btnMusica = document.getElementById('boton-musica');
     if (btnMusica) {
         btnMusica.addEventListener('click', toggleMusica);
@@ -83,16 +59,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function toggleMusica() {
     const btn = document.getElementById('boton-musica');
-    if (!player) {
+    if (!musicaFondo) {
         return;
     }
 
-    if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-        player.pauseVideo();
-        btn.textContent = 'Música OFF';
+    if (musicaActiva) {
+        musicaFondo.pause();
+        musicaActiva = false;
+        if (btn) {
+            btn.setAttribute('aria-label', 'Activar musica');
+        }
     } else {
-        player.unMute();
-        player.playVideo();
-        btn.textContent = 'Música ON';
+        musicaFondo.play().then(() => {
+            musicaActiva = true;
+            if (btn) {
+                btn.setAttribute('aria-label', 'Pausar musica');
+            }
+        }).catch(() => {});
     }
 }

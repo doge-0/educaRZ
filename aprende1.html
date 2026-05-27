@@ -6,7 +6,6 @@
     <title>Menú Aprende</title>
     <link rel="stylesheet" href="css/interfaz.css">
     <link rel="icon" type="image/svg+xml" href="img/marhlogo.jpg">
-    <script src="https://www.youtube.com/iframe_api"></script>
     <style>
         .menu-opciones {
             display: flex;
@@ -255,9 +254,20 @@
         }
         .boton-musica {
             border-radius: 16px;
-            min-height: 46px;
-            background: linear-gradient(180deg, #ffb75d, #ff7a3d);
+            width: 78px;
+            height: 78px;
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid rgba(255, 255, 255, 0.95);
             box-shadow: 0 8px 0 #c95c27, 0 14px 24px rgba(201, 92, 39, 0.18);
+            overflow: hidden;
+        }
+        .boton-musica img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            pointer-events: none;
         }
         @media (max-width: 900px) {
             body {
@@ -333,35 +343,35 @@
     </div>
 
     <!-- Música de fondo -->
-    <div id="player"></div>
-    <button id="boton-musica" class="boton-musica">Música ON</button>
+    <audio id="musica-fondo" src="sonidos/musica2.mp3" loop preload="auto"></audio>
+    <button id="boton-musica" class="boton-musica" type="button" aria-label="Activar musica">
+        <img src="img/Mart.gif" alt="">
+    </button>
 
     <script>
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '0',
-                width: '0',
-                videoId: '3KDxilHdq0M',
-                playerVars: {
-                    autoplay: 1,
-                    mute: 1,
-                    loop: 1,
-                    playlist: '3KDxilHdq0M'
-                },
-                events: {
-                    onReady: onPlayerReady
-                }
-            });
-        }
+        let musicaFondo;
+        let musicaActiva = false;
 
-        function onPlayerReady(event) {
-            event.target.unMute();
-            event.target.playVideo();
-            const btn = document.getElementById('boton-musica');
-            if (btn) {
-                btn.textContent = 'Música ON';
+        function configurarMusica() {
+            musicaFondo = document.getElementById('musica-fondo');
+            const btnMusica = document.getElementById('boton-musica');
+            if (!musicaFondo || !btnMusica) {
+                return;
             }
+
+            btnMusica.addEventListener('click', function() {
+                if (musicaActiva) {
+                    musicaFondo.pause();
+                    musicaActiva = false;
+                    btnMusica.setAttribute('aria-label', 'Activar musica');
+                    return;
+                }
+
+                musicaFondo.play().then(() => {
+                    musicaActiva = true;
+                    btnMusica.setAttribute('aria-label', 'Pausar musica');
+                }).catch(() => {});
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -487,24 +497,10 @@
                     btn.href = 'javascript:void(0);';
                 }
             });
-            
-            const btnMusica = document.getElementById('boton-musica');
-            if (btnMusica) {
-                btnMusica.addEventListener('click', function() {
-                    if (!player) {
-                        return;
-                    }
-                    if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-                        player.pauseVideo();
-                        btnMusica.textContent = 'Música OFF';
-                    } else {
-                        player.unMute();
-                        player.playVideo();
-                        btnMusica.textContent = 'Música ON';
-                    }
-                });
-            }
+            configurarMusica();
         });
     </script>
 </body>
 </html>
+
+

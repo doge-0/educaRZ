@@ -30,20 +30,42 @@
   <div class="sand"></div>
   <div class="seaweed seaweed-one"></div>
   <div class="seaweed seaweed-two"></div>
+  <div class="seaweed seaweed-three"></div>
+  <div class="coral coral-one"></div>
+  <div class="coral coral-two"></div>
+  <div class="kelp kelp-one"></div>
+  <div class="kelp kelp-two"></div>
+  <div class="fish-shadow shadow-one"></div>
+  <div class="fish-shadow shadow-two"></div>
+  <div class="fish-shadow shadow-three"></div>
+
+  <section class="difficulty-menu" id="difficultyMenu">
+    <div class="difficulty-panel">
+      <h1>Elige una dificultad</h1>
+      <div class="difficulty-options">
+        <button class="easy difficulty-btn" data-level="easy">Modo fácil</button>
+        <button class="medium difficulty-btn" data-level="medium">Normal</button>
+        <button class="hard difficulty-btn" data-level="hard">Difícil</button>
+        <button class="infinite difficulty-btn" data-level="infinite">Infinito</button>
+      </div>
+      <p class="unlock-hint" id="unlockHint">Completa una dificultad para desbloquear la siguiente.</p>
+      <button class="back menu-back" id="menuBackBtn">Volver</button>
+    </div>
+  </section>
 
   <div class="topbar">
 
-    <div class="card">
+    <div class="card captured-card">
       🎣 Capturados:
       <span id="caught">0</span>
     </div>
 
-    <div class="card">
+    <div class="card score-card">
       ⭐ Puntaje:
       <span id="score">0</span>
     </div>
 
-    <div class="card">
+    <div class="card streak-card">
       🔥 Racha:
       <span id="streak">0</span>
     </div>
@@ -65,7 +87,12 @@
     <div class="equation" id="equation">
       2 + 2
     </div>
-    <div class="round-hint" id="roundHint">Pesca los peces necesarios.</div>
+    <div class="round-hint" id="roundHint">Arrastra los peces a la pecera.</div>
+  </div>
+
+  <div class="aquarium" id="aquarium" aria-label="Pecera para dejar los peces">
+    <div class="aquarium-water"></div>
+    <div class="aquarium-label">Pecera</div>
   </div>
 
   <div class="message" id="message">
@@ -73,18 +100,6 @@
   </div>
 
   <div class="bottom-ui">
-
-    <button class="easy difficulty-btn active" data-level="easy">
-      🟢 Fácil
-    </button>
-
-    <button class="medium difficulty-btn" data-level="medium">
-      🟡 Normal
-    </button>
-
-    <button class="hard difficulty-btn" data-level="hard">
-      🔴 Difícil
-    </button>
 
     <button class="release" id="releaseBtn">
       ↩ Soltar 1
@@ -104,6 +119,14 @@
 
   </div>
 
+</div>
+
+<div class="complete-overlay" id="completeOverlay">
+  <div class="complete-card">
+    <img src="img/pezgirando.gif" alt="">
+    <h2>¡Lección completada!</h2>
+    <p>Respondiste correctamente las 3 preguntas.</p>
+  </div>
 </div>
 
 <audio id="gameMusic" loop>

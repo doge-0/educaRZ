@@ -1,7 +1,7 @@
 ﻿/* ========= VOZ ========= */
 
 let vozMasculinaContar = null;
-let player;
+let musicaFondo;
 let musicaActiva = false;
 
 function obtenerVozMasculinaEspañolaContar(){
@@ -232,10 +232,8 @@ document.addEventListener(
         'completar-leccion'
     );
 
-    const btnMusica =
-    document.getElementById(
-        'boton-musica'
-    );
+    const btnMusica = document.getElementById('boton-musica');
+    musicaFondo = document.getElementById('musica-fondo');
 
     let presionados = new Set();
 
@@ -467,40 +465,6 @@ document.addEventListener(
     );
 });
 
-function onYouTubeIframeAPIReady(){
-
-    player =
-    new YT.Player('player', {
-        height:'0',
-        width:'0',
-        videoId:'8EczaHDAcXE',
-        playerVars:{
-            autoplay:1,
-            mute:1,
-            loop:1,
-            playlist:'8EczaHDAcXE'
-        },
-        events:{
-            onReady:onPlayerReady
-        }
-    });
-}
-
-function onPlayerReady(event){
-
-    event.target.playVideo();
-
-    const btn =
-    document.getElementById(
-        'boton-musica'
-    );
-
-    if(btn){
-        btn.textContent =
-        'Música OFF';
-    }
-}
-
 function toggleMusica(){
 
     const btn =
@@ -508,24 +472,16 @@ function toggleMusica(){
         'boton-musica'
     );
 
-    if(!player){
-        if(
-            typeof YT !== 'undefined' &&
-            YT &&
-            YT.Player
-        ){
-            onYouTubeIframeAPIReady();
-        }
+    if(!musicaFondo){
         return;
     }
 
     if(musicaActiva){
-        player.pauseVideo();
+        musicaFondo.pause();
         musicaActiva = false;
 
         if(btn){
-            btn.textContent =
-            'Música OFF';
+            btn.setAttribute('aria-label', 'Activar musica');
         }
     }else{
         activarMusica();
@@ -539,22 +495,19 @@ function activarMusica(){
         'boton-musica'
     );
 
-    if(!player){
+    if(!musicaFondo){
         return false;
     }
 
-    player.unMute();
-    player.playVideo();
-    musicaActiva = true;
-
-    if(btn){
-        btn.textContent =
-        'Música ON';
-    }
+    musicaFondo.play().then(()=>{
+        musicaActiva = true;
+        if(btn){
+            btn.setAttribute('aria-label', 'Pausar musica');
+        }
+    }).catch(()=>{});
 
     return true;
 }
-
 /* ========= MOSTRAR PECES ========= */
 
 function mostrarNumero(num){
@@ -665,3 +618,4 @@ function crearConfetti(){
         },3000);
     }
 }
+

@@ -1,18 +1,18 @@
-const sonidoClick = new Audio('sonidos/click.mp3');
+﻿const sonidoClick = new Audio('sonidos/click.mp3');
 const sonidoBurbujaPez = new Audio('sonidos/burbujapez.mp3');
 const sonidoConfeti = new Audio('sonidos/confetiburbuja.mp3');
 
 function reproducirClick() {
     sonidoClick.currentTime = 0;
     sonidoClick.play().catch(() => {
-        // El navegador puede bloquear reproducción automática hasta que el usuario interactúe
+        // El navegador puede bloquear reproducciÃ³n automÃ¡tica hasta que el usuario interactÃºe
     });
 }
 
 function reproducirBurbujaPez() {
     sonidoBurbujaPez.currentTime = 0;
     sonidoBurbujaPez.play().catch(() => {
-        // El navegador puede bloquear reproducción automática hasta que el usuario interactúe
+        // El navegador puede bloquear reproducciÃ³n automÃ¡tica hasta que el usuario interactÃºe
     });
 }
 
@@ -53,7 +53,7 @@ function obtenerMensajePezAleatorio() {
 function reproducirConfeti() {
     sonidoConfeti.currentTime = 0;
     sonidoConfeti.play().catch(() => {
-        // El navegador puede bloquear reproducción automática
+        // El navegador puede bloquear reproducciÃ³n automÃ¡tica
     });
 }
 
@@ -172,43 +172,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-var player;
-var musicRequested = false;
-
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-        height: '0',
-        width: '0',
-        videoId: '3KDxilHdq0M',
-        playerVars: {
-            autoplay: 1,
-            mute: 1,
-            loop: 1,
-            playlist: '3KDxilHdq0M'
-        },
-        events: {
-            onReady: onPlayerReady
-        }
-    });
-}
-
-function onPlayerReady(event) {
-    const btn = document.getElementById('boton-musica');
-    if (musicRequested) {
-        event.target.unMute();
-        event.target.playVideo();
-        if (btn) {
-            btn.textContent = 'Música ON';
-        }
-        musicRequested = false;
-    } else {
-        if (btn) {
-            btn.textContent = 'Música OFF';
-        }
-    }
-}
+let musicaFondo;
+let musicaActiva = false;
 
 document.addEventListener('DOMContentLoaded', () => {
+    musicaFondo = document.getElementById('musica-fondo');
     const btnMusica = document.getElementById('boton-musica');
     if (btnMusica) {
         btnMusica.addEventListener('click', toggleMusica);
@@ -217,28 +185,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function toggleMusica() {
     const btn = document.getElementById('boton-musica');
-    if (!player) {
-        musicRequested = true;
-        if (typeof YT !== 'undefined' && YT && YT.Player) {
-            onYouTubeIframeAPIReady();
-        }
-        if (btn) {
-            btn.textContent = 'Música ON';
-        }
+    if (!musicaFondo) {
         return;
     }
 
-    const estado = player.getPlayerState();
-    if (estado === YT.PlayerState.PLAYING) {
-        player.pauseVideo();
+    if (musicaActiva) {
+        musicaFondo.pause();
+        musicaActiva = false;
         if (btn) {
-            btn.textContent = 'Música OFF';
+            btn.setAttribute('aria-label', 'Activar musica');
         }
     } else {
-        player.unMute();
-        player.playVideo();
-        if (btn) {
-            btn.textContent = 'Música ON';
-        }
+        musicaFondo.play().then(() => {
+            musicaActiva = true;
+            if (btn) {
+                btn.setAttribute('aria-label', 'Pausar musica');
+            }
+        }).catch(() => {});
     }
 }

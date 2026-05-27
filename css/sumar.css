@@ -850,8 +850,22 @@ body::before {
 }
 
 .boton-musica {
-    background: linear-gradient(180deg, #ffb75d, #ff7a3d);
+    width: 78px;
+    height: 78px;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 3px solid rgba(255, 255, 255, 0.95);
+    border-radius: 18px;
     box-shadow: 0 8px 0 #c95c27, 0 14px 24px rgba(201, 92, 39, 0.18);
+    overflow: hidden;
+}
+
+.boton-musica img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
 }
 
 button:hover:not(:disabled) {

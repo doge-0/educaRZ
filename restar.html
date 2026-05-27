@@ -6,7 +6,6 @@
     <title>Resta los peces</title>
     <link rel="stylesheet" href="css/sumar.css">
     <link rel="icon" type="image/svg+xml" href="img/marhlogo.jpg">
-    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
     <div id="usuario-info" class="usuario-info">
@@ -78,8 +77,11 @@
             </div>
         </div>
     </div>
-    <div id="player"></div>
-    <button id="boton-musica" class="boton-musica">Música ON</button>
+    <audio id="musica-fondo" src="sonidos/musica2.mp3" loop preload="auto"></audio>
+    <button id="boton-musica" class="boton-musica" type="button" aria-label="Activar musica">
+        <img src="img/Mart.gif" alt="">
+    </button>
     <script src="js/restar.js"></script>
 </body>
 </html>
+

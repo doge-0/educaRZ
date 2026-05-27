@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -22,6 +22,11 @@
         
         <button class="boton-entrar" onclick="continuar()">Continuar</button>
     </div>
+
+    <audio id="musica-fondo" src="sonidos/musica1.mp3" loop preload="auto"></audio>
+    <button id="boton-musica" class="boton-musica" type="button" aria-label="Activar musica">
+        <img src="img/Mart.gif" alt="">
+    </button>
     
     <script>
         window.addEventListener('DOMContentLoaded', () => {
@@ -42,10 +47,29 @@
             
             document.getElementById('avatarImg').src = 'img/' + avatarMap[avatar];
             document.getElementById('mensajeBienvenida').textContent = `Bienvenido ${nombre}, ¿estás listo para aprender?`;
+
+            const musica = document.getElementById('musica-fondo');
+            const boton = document.getElementById('boton-musica');
+            let activa = false;
+
+            if (musica && boton) {
+                boton.addEventListener('click', () => {
+                    if (activa) {
+                        musica.pause();
+                        activa = false;
+                        boton.setAttribute('aria-label', 'Activar musica');
+                        return;
+                    }
+
+                    musica.play().then(() => {
+                        activa = true;
+                        boton.setAttribute('aria-label', 'Pausar musica');
+                    }).catch(() => {});
+                });
+            }
         });
         
         function continuar() {
-            // Aquí puedes redirigir a la siguiente página, por ejemplo, la lección principal
             window.location.href = 'aprende1.html';
         }
     </script>
