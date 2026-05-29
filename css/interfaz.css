@@ -196,6 +196,11 @@ body::before {
     border-color: #55b7ff;
 }
 
+.acciones-bienvenida {
+    display: grid;
+    gap: 14px;
+}
+
 .boton-entrar {
     width: 100%;
     padding: 16px;
@@ -219,6 +224,15 @@ body::before {
 
 .boton-entrar:active {
     transform: translateY(-1px);
+}
+
+.boton-cuarto {
+    background: linear-gradient(180deg, #ffb54f 0%, #f07828 100%);
+    box-shadow: 0 8px 0 #c95c27, 0 14px 24px rgba(0, 45, 70, 0.18);
+}
+
+.boton-cuarto:hover {
+    box-shadow: 0 10px 0 #c95c27, 0 18px 30px rgba(0, 45, 70, 0.22);
 }
 .usuario-info {
     position: fixed;

@@ -20,7 +20,10 @@
             </div>
         </div>
         
-        <button class="boton-entrar" onclick="continuar()">Continuar</button>
+        <div class="acciones-bienvenida">
+            <button class="boton-entrar" onclick="continuar()">Continuar</button>
+            <button class="boton-entrar boton-cuarto" onclick="irCuartoBasico()">4 Basico</button>
+        </div>
     </div>
 
     <audio id="musica-fondo" src="sonidos/musica1.mp3" loop preload="auto"></audio>
@@ -71,6 +74,10 @@
         
         function continuar() {
             window.location.href = 'aprende1.html';
+        }
+
+        function irCuartoBasico() {
+            window.location.href = 'cuarto-basico.html';
         }
     </script>
 </body>

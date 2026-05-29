@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego 4 Básico</title>
+  <link rel="icon" type="image/svg+xml" href="img/marhlogo.jpg">
+  <link rel="stylesheet" href="css/cuarto-basico.css">
+</head>
+<body class="game-page">
+  <main class="game-shell">
+    <header class="game-header">
+      <button class="icon-btn" id="backMenu" aria-label="Volver a selección">←</button>
+      <div>
+        <p class="eyebrow" id="gameStep">Juego 1 de 6</p>
+        <h1 id="gameTitle">Cargando...</h1>
+      </div>
+      <div class="score-pill">
+        <span>Puntos</span>
+        <strong id="score">0</strong>
+      </div>
+    </header>
+
+    <section class="student-goal">
+      <p id="studentGoal">Aprender a ordenar números de menor a mayor y reconocer cuál número es más grande o más pequeño.</p>
+    </section>
+
+    <section class="activity-board" id="activityBoard"></section>
+
+    <p class="feedback" id="feedback" role="status"></p>
+
+    <nav class="game-actions" aria-label="Controles del juego">
+      <button class="secondary-btn" id="restartBtn">Reiniciar</button>
+      <button class="primary-btn" id="verifyBtn">Verificar</button>
+      <button class="secondary-btn" id="selectBtn">Selección de juegos</button>
+      <button class="primary-btn" id="nextBtn" disabled>Siguiente juego</button>
+    </nav>
+  </main>
+
+  <script src="js/cuarto-basico-juegos.js"></script>
+</body>
+</html>
