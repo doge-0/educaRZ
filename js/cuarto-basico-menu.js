@@ -1,27 +1,45 @@
 const games = [
   {
     title: 'Tienda ordenada',
-    text: 'Ordena productos desde el menor precio hasta el mayor.'
+    text: 'Ordena productos desde el menor precio hasta el mayor.',
+    page: 'juego-tienda-ordenada.html',
+    theme: 'store',
+    icon: '🛒'
   },
   {
-    title: 'Recta numérica',
-    text: 'Ubica números naturales de menor a mayor en la recta.'
+    title: 'Recta numerica',
+    text: 'Ubica numeros naturales de menor a mayor en la recta.',
+    page: 'juego-recta.html',
+    theme: 'line',
+    icon: '↔'
   },
   {
-    title: 'Tabla posicional',
-    text: 'Forma números usando unidad de mil, centena, decena y unidad.'
+    title: 'Reloj de memoria',
+    text: 'Memoriza una hora digital y escribe el numero antes de avanzar.',
+    page: 'juego-tabla-posicional.html',
+    theme: 'clock',
+    icon: '12:45'
   },
   {
     title: 'Mayor o menor',
-    text: 'Compara números y escoge el signo correcto.'
+    text: 'Compara numeros y escoge el signo correcto.',
+    page: 'juego-mayor-menor.html',
+    theme: 'compare',
+    icon: '>'
   },
   {
     title: 'Representaciones',
-    text: 'Relaciona números con su descomposición o lectura.'
+    text: 'Relaciona numeros con su descomposicion o lectura.',
+    page: 'juego-representaciones.html',
+    theme: 'represent',
+    icon: '▣'
   },
   {
-    title: 'Sudoku matemático',
-    text: 'Completa la cuadrícula con números sin repetir.'
+    title: 'Sudoku matematico',
+    text: 'Completa la cuadricula con numeros sin repetir.',
+    page: 'juego-sudoku.html',
+    theme: 'sudoku',
+    icon: '4×4'
   }
 ];
 
@@ -49,10 +67,11 @@ function renderMenu(){
     const completed = gameNumber < unlocked;
     const available = gameNumber <= unlocked;
 
-    button.className = 'game-card';
+    button.className = `game-card menu-theme-${game.theme}`;
     button.disabled = !available;
     button.innerHTML = `
       <span class="number">${gameNumber}</span>
+      <span class="game-card-icon" aria-hidden="true">${game.icon}</span>
       <h2>${game.title}</h2>
       <p>${game.text}</p>
       <span class="state">${completed ? 'Completado' : available ? 'Disponible' : 'Bloqueado'}</span>
@@ -60,7 +79,7 @@ function renderMenu(){
 
     button.addEventListener('click', () => {
       if(!available) return;
-      window.location.href = `cuarto-basico-juegos.html?juego=${gameNumber}`;
+      window.location.href = game.page;
     });
 
     grid.appendChild(button);

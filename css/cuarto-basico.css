@@ -99,6 +99,8 @@ h1 {
 }
 
 .game-card {
+  position: relative;
+  overflow: hidden;
   display: grid;
   min-height: 210px;
   padding: 22px;
@@ -110,6 +112,32 @@ h1 {
   cursor: pointer;
   box-shadow: 0 12px 0 rgba(17, 93, 120, 0.2), 0 18px 35px rgba(21, 73, 92, 0.2);
   transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.game-card::before,
+.game-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.game-card::before {
+  inset: 0;
+  opacity: 0.2;
+}
+
+.game-card::after {
+  right: 16px;
+  bottom: 12px;
+  color: rgba(23, 50, 77, 0.13);
+  font-size: clamp(4rem, 8vw, 7rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.game-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .game-card:hover:not(:disabled) {
@@ -135,6 +163,24 @@ h1 {
   font-weight: 900;
 }
 
+.game-card-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1;
+  display: grid;
+  min-width: 50px;
+  min-height: 42px;
+  place-items: center;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #17324d;
+  font-size: 1.25rem;
+  font-weight: 900;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.7);
+}
+
 .game-card h2 {
   margin-bottom: 8px;
   font-size: 1.35rem;
@@ -149,6 +195,155 @@ h1 {
   align-self: end;
   font-weight: 900;
   color: #178545;
+}
+
+.menu-theme-store {
+  background:
+    linear-gradient(180deg, rgba(255, 252, 232, 0.95), rgba(255, 235, 190, 0.94)),
+    url("../img/tiendafondo.jpg") center / cover;
+  box-shadow: 0 12px 0 rgba(212, 91, 42, 0.28), 0 18px 35px rgba(21, 73, 92, 0.2);
+}
+
+.menu-theme-store::before {
+  height: 42px;
+  background: repeating-linear-gradient(90deg, #d45b2a 0 28px, #ffb54f 28px 56px);
+}
+
+.menu-theme-store::after {
+  content: "$";
+}
+
+.menu-theme-store .number,
+.menu-theme-store .game-card-icon {
+  background: #d45b2a;
+  color: white;
+}
+
+.menu-theme-line {
+  background:
+    linear-gradient(180deg, rgba(237, 251, 255, 0.96), rgba(220, 246, 255, 0.94)),
+    url("../img/recta.jpg") center / cover;
+  box-shadow: 0 12px 0 rgba(21, 119, 168, 0.3), 0 18px 35px rgba(21, 73, 92, 0.2);
+}
+
+.menu-theme-line::before {
+  top: 50%;
+  left: 22px;
+  right: 22px;
+  height: 7px;
+  background: #17324d;
+  border-radius: 999px;
+  opacity: 0.16;
+}
+
+.menu-theme-line::after {
+  content: "1 2 3";
+}
+
+.menu-theme-line .number,
+.menu-theme-line .game-card-icon {
+  background: #1577a8;
+  color: white;
+}
+
+.menu-theme-clock {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(22, 242, 179, 0.2), transparent 32%),
+    linear-gradient(160deg, rgba(7, 20, 32, 0.96), rgba(9, 50, 68, 0.95));
+  color: #e8fbff;
+  box-shadow: 0 12px 0 rgba(2, 7, 11, 0.42), 0 18px 35px rgba(21, 73, 92, 0.24);
+}
+
+.menu-theme-clock::before {
+  inset: 14px;
+  border: 2px solid rgba(127, 255, 212, 0.24);
+  border-radius: 8px;
+  opacity: 1;
+}
+
+.menu-theme-clock::after {
+  content: "03";
+  color: rgba(127, 255, 212, 0.16);
+  font-family: "Consolas", "Courier New", monospace;
+}
+
+.menu-theme-clock .number,
+.menu-theme-clock .game-card-icon {
+  background: #02070b;
+  color: #7fffd4;
+  border: 2px solid rgba(127, 255, 212, 0.45);
+}
+
+.menu-theme-clock .state {
+  color: #7fffd4;
+}
+
+.menu-theme-compare {
+  background: linear-gradient(135deg, rgba(255, 248, 217, 0.96), rgba(232, 248, 255, 0.96));
+  box-shadow: 0 12px 0 rgba(255, 181, 79, 0.34), 0 18px 35px rgba(21, 73, 92, 0.2);
+}
+
+.menu-theme-compare::before {
+  inset: auto 16px 20px 16px;
+  height: 40px;
+  background: linear-gradient(90deg, transparent 0 44%, rgba(23, 50, 77, 0.14) 44% 56%, transparent 56%);
+  opacity: 1;
+}
+
+.menu-theme-compare::after {
+  content: "< > =";
+}
+
+.menu-theme-compare .number,
+.menu-theme-compare .game-card-icon {
+  background: #ffb54f;
+  color: #17324d;
+}
+
+.menu-theme-represent {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(237, 251, 255, 0.92)),
+    url("../img/rompecabezas.webp") center / cover;
+  box-shadow: 0 12px 0 rgba(32, 168, 93, 0.26), 0 18px 35px rgba(21, 73, 92, 0.2);
+}
+
+.menu-theme-represent::before {
+  inset: 18px auto auto 18px;
+  width: 86px;
+  height: 54px;
+  border: 3px dashed rgba(21, 119, 168, 0.26);
+  border-radius: 8px;
+  opacity: 1;
+}
+
+.menu-theme-represent::after {
+  content: "UM";
+}
+
+.menu-theme-represent .number,
+.menu-theme-represent .game-card-icon {
+  background: #20a85d;
+  color: white;
+}
+
+.menu-theme-sudoku {
+  background:
+    linear-gradient(90deg, rgba(23, 50, 77, 0.07) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(23, 50, 77, 0.07) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(232, 250, 242, 0.95)),
+    url("../img/sudoku.jpg") center / cover;
+  background-size: 42px 42px, 42px 42px, auto, cover;
+  box-shadow: 0 12px 0 rgba(23, 50, 77, 0.28), 0 18px 35px rgba(21, 73, 92, 0.2);
+}
+
+.menu-theme-sudoku::after {
+  content: "4";
+}
+
+.menu-theme-sudoku .number,
+.menu-theme-sudoku .game-card-icon {
+  background: #17324d;
+  color: white;
 }
 
 .menu-actions,
@@ -627,6 +822,35 @@ h1 {
   animation: confettiFall 2.4s linear forwards;
 }
 
+.victory-dancers {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+}
+
+.victory-dancer {
+  position: absolute;
+  bottom: 64px;
+  width: clamp(110px, 16vw, 190px);
+  max-height: 42vh;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.28));
+  animation: victoryDanceIn 0.35s ease both, victoryDanceBounce 0.9s ease-in-out 0.35s infinite;
+}
+
+.victory-dancer-left {
+  left: clamp(10px, 3vw, 36px);
+}
+
+.victory-dancer-right {
+  right: clamp(10px, 3vw, 36px);
+}
+
+.victory-dancers.is-leaving .victory-dancer {
+  animation: victoryDanceOut 0.5s ease forwards;
+}
+
 .final-page {
   display: grid;
   min-height: 100vh;
@@ -703,6 +927,26 @@ h1 {
   }
 }
 
+@keyframes victoryDanceIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+}
+
+@keyframes victoryDanceBounce {
+  50% {
+    transform: translateY(-12px) scale(1.04);
+  }
+}
+
+@keyframes victoryDanceOut {
+  to {
+    opacity: 0;
+    transform: translateY(28px) scale(0.9);
+  }
+}
+
 @keyframes starDance {
   50% {
     transform: translateY(-12px) rotate(8deg) scale(1.12);
@@ -737,6 +981,11 @@ h1 {
 
   .activity-board {
     padding: 14px;
+  }
+
+  .victory-dancer {
+    bottom: 96px;
+    width: clamp(82px, 22vw, 118px);
   }
 
   .drop-row,

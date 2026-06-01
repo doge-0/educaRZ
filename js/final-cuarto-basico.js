@@ -30,7 +30,7 @@ setTimeout(() => speak('Felicitaciones, completaste todos los juegos'), 400);
 playAgain.addEventListener('click', () => {
   localStorage.setItem('cuartoBasicoScore', '0');
   localStorage.setItem('cuartoBasicoUnlocked', '1');
-  window.location.href = 'cuarto-basico-juegos.html?juego=1';
+  window.location.href = 'juego-tienda-ordenada.html';
 });
 
 menuBtn.addEventListener('click', () => {

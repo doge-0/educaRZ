@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recta numerica</title>
+  <link rel="icon" type="image/svg+xml" href="img/marhlogo.jpg">
+  <link rel="stylesheet" href="css/cuarto-basico.css">
+  <link rel="stylesheet" href="css/juego-recta.css">
+</head>
+<body class="game-page line-page">
+  <main class="game-shell">
+    <header class="game-header">
+      <button class="icon-btn" id="backMenu" aria-label="Volver a seleccion">←</button>
+      <div>
+        <p class="eyebrow" id="gameStep">Juego 2 de 6</p>
+        <h1 id="gameTitle">Recta numerica</h1>
+      </div>
+      <div class="score-pill">
+        <span>Puntos</span>
+        <strong id="score">0</strong>
+      </div>
+    </header>
+
+    <section class="student-goal">
+      <p id="studentGoal"></p>
+    </section>
+
+    <section class="activity-board" id="activityBoard"></section>
+
+    <p class="feedback" id="feedback" role="status"></p>
+
+    <nav class="game-actions" aria-label="Controles del juego">
+      <button class="secondary-btn" id="restartBtn">Reiniciar</button>
+      <button class="primary-btn" id="verifyBtn">Verificar</button>
+      <button class="secondary-btn" id="selectBtn">Seleccion de juegos</button>
+      <button class="primary-btn" id="nextBtn" disabled>Siguiente juego</button>
+    </nav>
+  </main>
+
+  <script src="js/cuarto-basico-game-core.js"></script>
+  <script src="js/juego-recta.js"></script>
+</body>
+</html>

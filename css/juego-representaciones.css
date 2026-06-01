@@ -1,0 +1,7 @@
+body.represent-page {
+  background: url("../img/rompecabezas.webp") center / cover fixed;
+}
+
+.represent-page .theme-represent {
+  background: rgba(255, 255, 255, 0.9);
+}

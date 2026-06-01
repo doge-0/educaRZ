@@ -1,0 +1,7 @@
+body.store-page {
+  background: url("../img/tiendafondo.jpg") center / cover fixed;
+}
+
+.store-page .theme-store {
+  background: rgba(255, 255, 255, 0.9);
+}

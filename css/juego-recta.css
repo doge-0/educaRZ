@@ -1,0 +1,7 @@
+body.line-page {
+  background: url("../img/recta.jpg") center / cover fixed;
+}
+
+.line-page .theme-line {
+  background: rgba(255, 255, 255, 0.9);
+}

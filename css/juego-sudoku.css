@@ -1,0 +1,7 @@
+body.sudoku-page {
+  background: url("../img/sudoku.jpg") center / cover fixed;
+}
+
+.sudoku-page .theme-sudoku {
+  background: rgba(255, 255, 255, 0.9);
+}

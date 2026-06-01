@@ -1,0 +1,5 @@
+body.compare-page {
+  background:
+    linear-gradient(160deg, rgba(16, 145, 184, 0.82), rgba(255, 199, 89, 0.7)),
+    url("../img/fondo.jpeg") center / cover fixed;
+}
