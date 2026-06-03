@@ -1,4 +1,10 @@
 function renderStore(){
+  const crowd = document.createElement('div');
+  crowd.className = 'store-crowd';
+  crowd.setAttribute('aria-hidden', 'true');
+  crowd.innerHTML = '<span></span><span></span><span></span>';
+  board.appendChild(crowd);
+
   const products = shuffle([
     ['📘', 'Cuaderno'],
     ['✏️', 'Lapices'],
@@ -19,7 +25,7 @@ function renderStore(){
   }))));
 
   const row = document.createElement('div');
-  row.className = 'drop-row';
+  row.className = 'store-cart';
   ['1 menor precio', '2', '3', '4', '5', '6 mayor precio'].forEach((label, index) => {
     row.appendChild(makeZone(label, String(prices[index])));
   });
@@ -33,6 +39,7 @@ startSingleGame({
   scene: 'Mini tienda',
   goal: 'Aprender a ordenar numeros de menor a mayor y reconocer cual numero es mas grande o mas pequeno.',
   instruction: 'Arrastra los productos desde el precio menor hasta el precio mayor. Fijate bien: algunos precios son muy parecidos.',
+  music: 'sonidos/supermercado.mp3',
   nextPage: 'juego-recta.html',
   render: renderStore
 });

@@ -1,5 +1,7 @@
 body.line-page {
-  background: url("../img/recta.jpg") center / cover fixed;
+  background:
+    linear-gradient(rgba(70, 70, 70, 0.34), rgba(70, 70, 70, 0.34)),
+    url("../img/recta.jpg") center / cover fixed;
 }
 
 .line-page .theme-line {

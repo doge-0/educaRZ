@@ -13,6 +13,11 @@ const backMenu = document.getElementById('backMenu');
 let completedCurrent = false;
 let dragging = null;
 let activeGame = null;
+let ambientMusic = null;
+let pendingAmbientStart = false;
+let ambientWasPlayingBeforeCelebration = false;
+let activeInstructionWord = null;
+let instructionFallbackTimer = null;
 
 function getScore(){
   return Number(localStorage.getItem('cuartoBasicoScore') || '0');
@@ -33,12 +38,257 @@ function setUnlocked(value){
 
 function speak(text){
   if(typeof speechSynthesis === 'undefined') return;
+  clearInstructionHighlight();
   speechSynthesis.cancel();
   const voice = new SpeechSynthesisUtterance(text);
   voice.lang = 'es-ES';
   voice.pitch = 1;
   voice.rate = 0.92;
   speechSynthesis.speak(voice);
+}
+
+function clearInstructionHighlight(){
+  if(activeInstructionWord){
+    activeInstructionWord.classList.remove('is-active');
+    activeInstructionWord = null;
+  }
+
+  if(instructionFallbackTimer){
+    clearTimeout(instructionFallbackTimer);
+    instructionFallbackTimer = null;
+  }
+
+  if(activeGame && typeof activeGame.onInstructionCue === 'function'){
+    activeGame.onInstructionCue(null);
+  }
+}
+
+function highlightInstructionWord(wordElement){
+  if(activeInstructionWord === wordElement) return;
+
+  if(activeInstructionWord){
+    activeInstructionWord.classList.remove('is-active');
+  }
+
+  activeInstructionWord = wordElement || null;
+
+  if(activeInstructionWord){
+    activeInstructionWord.classList.add('is-active');
+  }
+}
+
+function normalizeInstructionWord(text){
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '');
+}
+
+function cueInstructionWord(word){
+  if(!activeGame || typeof activeGame.onInstructionCue !== 'function') return;
+
+  activeGame.onInstructionCue(normalizeInstructionWord(word));
+}
+
+function cueInstructionPhrase(cue){
+  if(!activeGame || typeof activeGame.onInstructionCue !== 'function') return;
+
+  activeGame.onInstructionCue(cue ? normalizeInstructionWord(cue) : null);
+}
+
+function findInstructionWordByChar(words, charIndex){
+  return words.find(word => charIndex >= word.start && charIndex <= word.end) || null;
+}
+
+function findInstructionWordByGlobalChar(words, charIndex){
+  return words.find(word => charIndex >= word.start && charIndex < word.end) || null;
+}
+
+function getInstructionWords(){
+  return [...document.querySelectorAll('.instruction-word')].map(element => ({
+    element,
+    text: element.dataset.word || element.textContent,
+    start: Number(element.dataset.start),
+    end: Number(element.dataset.end)
+  }));
+}
+
+function startInstructionFallback(words){
+  let index = 0;
+
+  const advance = () => {
+    const word = words[index];
+
+    if(!word){
+      clearInstructionHighlight();
+      return;
+    }
+
+    highlightInstructionWord(word.element);
+    cueInstructionWord(word.text);
+    index++;
+    instructionFallbackTimer = setTimeout(advance, 360);
+  };
+
+  advance();
+}
+
+function buildInstructionChunks(text){
+  const emphasis = activeGame && Array.isArray(activeGame.instructionEmphasis)
+    ? activeGame.instructionEmphasis
+    : [];
+
+  if(!emphasis.length){
+    return [{
+      text,
+      offset: 0,
+      rate: 0.92,
+      holdAfter: 0,
+      cue: null
+    }];
+  }
+
+  const chunks = [];
+  let cursor = 0;
+
+  emphasis.forEach(item => {
+    const phrase = item.text || '';
+    const index = text.indexOf(phrase, cursor);
+
+    if(!phrase || index < 0) return;
+
+    if(index > cursor){
+      chunks.push({
+        text: text.slice(cursor, index),
+        offset: cursor,
+        rate: 0.92,
+        holdAfter: 0,
+        cue: null
+      });
+    }
+
+    chunks.push({
+      text: phrase,
+      offset: index,
+      rate: item.rate || 0.72,
+      holdAfter: item.holdAfter || 1500,
+      cue: item.cue || phrase
+    });
+    cursor = index + phrase.length;
+  });
+
+  if(cursor < text.length){
+    chunks.push({
+      text: text.slice(cursor),
+      offset: cursor,
+      rate: 0.92,
+      holdAfter: 0,
+      cue: null
+    });
+  }
+
+  return chunks;
+}
+
+function speakInstructionChunks(chunks, words, index = 0){
+  const chunk = chunks[index];
+
+  if(!chunk){
+    clearInstructionHighlight();
+    return;
+  }
+
+  const voice = new SpeechSynthesisUtterance(chunk.text);
+  let receivedBoundary = false;
+
+  voice.lang = 'es-ES';
+  voice.pitch = 1;
+  voice.rate = chunk.rate;
+  voice.onstart = () => {
+    if(chunk.cue){
+      cueInstructionPhrase(chunk.cue);
+      const firstWord = findInstructionWordByGlobalChar(words, chunk.offset);
+      highlightInstructionWord(firstWord ? firstWord.element : null);
+    }else{
+      cueInstructionPhrase(null);
+    }
+  };
+  voice.onboundary = event => {
+    if(event.name && event.name !== 'word') return;
+
+    const word = findInstructionWordByGlobalChar(words, chunk.offset + event.charIndex);
+    if(!word) return;
+
+    receivedBoundary = true;
+    highlightInstructionWord(word.element);
+
+    if(chunk.cue){
+      cueInstructionPhrase(chunk.cue);
+    }else{
+      cueInstructionWord(word.text);
+    }
+  };
+  voice.onend = () => {
+    if(!receivedBoundary){
+      const word = findInstructionWordByGlobalChar(words, chunk.offset);
+      highlightInstructionWord(word ? word.element : null);
+    }
+
+    instructionFallbackTimer = setTimeout(() => {
+      if(!chunk.cue){
+        clearInstructionHighlight();
+      }
+      speakInstructionChunks(chunks, words, index + 1);
+    }, chunk.holdAfter);
+  };
+  voice.onerror = clearInstructionHighlight;
+
+  speechSynthesis.speak(voice);
+}
+
+function speakInstruction(text){
+  if(typeof speechSynthesis === 'undefined'){
+    return;
+  }
+
+  clearInstructionHighlight();
+  speechSynthesis.cancel();
+
+  const words = getInstructionWords();
+  const chunks = buildInstructionChunks(text);
+
+  if(chunks.length > 1){
+    speakInstructionChunks(chunks, words);
+    return;
+  }
+
+  const voice = new SpeechSynthesisUtterance(text);
+  let receivedBoundary = false;
+
+  voice.lang = 'es-ES';
+  voice.pitch = 1;
+  voice.rate = 0.92;
+  voice.onboundary = event => {
+    if(event.name && event.name !== 'word') return;
+
+    const word = findInstructionWordByChar(words, event.charIndex);
+    if(!word) return;
+
+    receivedBoundary = true;
+    highlightInstructionWord(word.element);
+    cueInstructionWord(word.text);
+  };
+  voice.onend = clearInstructionHighlight;
+  voice.onerror = clearInstructionHighlight;
+
+  speechSynthesis.speak(voice);
+
+  instructionFallbackTimer = setTimeout(() => {
+    if(!receivedBoundary){
+      startInstructionFallback(words);
+    }
+  }, 700);
 }
 
 function praise(){
@@ -69,6 +319,7 @@ function createConfetti(){
 
 function showVictoryDancers(){
   document.querySelector('.victory-dancers')?.remove();
+  pauseAmbientForCelebration();
 
   const wrap = document.createElement('div');
   wrap.className = 'victory-dancers';
@@ -88,9 +339,64 @@ function showVictoryDancers(){
       audio.pause();
       audio.currentTime = 0;
       wrap.remove();
+      resumeAmbientAfterCelebration();
     }, 500);
   }, 7600);
 }
+
+function pauseAmbientForCelebration(){
+  ambientWasPlayingBeforeCelebration = !!ambientMusic && !ambientMusic.paused;
+
+  if(ambientMusic){
+    ambientMusic.pause();
+  }
+}
+
+function resumeAmbientAfterCelebration(){
+  if(!ambientMusic || !ambientWasPlayingBeforeCelebration) return;
+
+  ambientMusic.play().then(() => {
+    pendingAmbientStart = false;
+  }).catch(() => {
+    pendingAmbientStart = true;
+  });
+}
+
+function startAmbientMusic(src){
+  if(!src) return;
+
+  if(!ambientMusic){
+    ambientMusic = document.getElementById('ambientMusic') || document.createElement('audio');
+    ambientMusic.id = 'ambientMusic';
+    ambientMusic.loop = true;
+    ambientMusic.volume = 0.35;
+    if(!ambientMusic.parentElement){
+      document.body.appendChild(ambientMusic);
+    }
+    ambientMusic.src = src;
+  }else if(!ambientMusic.src.endsWith(src)){
+    ambientMusic.pause();
+    ambientMusic.src = src;
+    ambientMusic.currentTime = 0;
+  }
+
+  ambientMusic.play().then(() => {
+    pendingAmbientStart = false;
+  }).catch(() => {
+    pendingAmbientStart = true;
+  });
+}
+
+function resumeAmbientMusic(){
+  if(!pendingAmbientStart || !ambientMusic) return;
+
+  ambientMusic.play().then(() => {
+    pendingAmbientStart = false;
+  }).catch(() => {});
+}
+
+document.addEventListener('click', resumeAmbientMusic);
+document.addEventListener('touchstart', resumeAmbientMusic);
 
 function shuffle(items){
   return [...items].sort(() => Math.random() - 0.5);
@@ -243,7 +549,29 @@ function renderShell(instruction, themeLabel, theme){
   board.appendChild(scene);
   const title = document.createElement('p');
   title.className = 'instruction';
-  title.textContent = instruction;
+  let match;
+  let lastIndex = 0;
+  const wordPattern = /[A-Za-z0-9]+/g;
+
+  while((match = wordPattern.exec(instruction))){
+    if(match.index > lastIndex){
+      title.appendChild(document.createTextNode(instruction.slice(lastIndex, match.index)));
+    }
+
+    const word = document.createElement('span');
+    word.className = 'instruction-word';
+    word.dataset.word = match[0];
+    word.dataset.start = String(match.index);
+    word.dataset.end = String(match.index + match[0].length);
+    word.textContent = match[0];
+    title.appendChild(word);
+    lastIndex = match.index + match[0].length;
+  }
+
+  if(lastIndex < instruction.length){
+    title.appendChild(document.createTextNode(instruction.slice(lastIndex)));
+  }
+
   board.appendChild(title);
 }
 
@@ -297,9 +625,10 @@ function loadGame(){
   gameStep.textContent = `Juego ${activeGame.number} de 6`;
   gameTitle.textContent = activeGame.title;
   studentGoal.textContent = activeGame.goal;
+  startAmbientMusic(activeGame.music);
   renderShell(activeGame.instruction, activeGame.scene, activeGame.theme);
   activeGame.render();
-  speak(activeGame.instruction);
+  speakInstruction(activeGame.instruction);
 }
 
 function startSingleGame(game){

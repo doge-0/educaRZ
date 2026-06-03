@@ -44,6 +44,7 @@ startSingleGame({
   scene: 'Galeria de representaciones',
   goal: 'Aprender a relacionar un numero con su descomposicion y representacion posicional.',
   instruction: 'Une cada numero con su forma escrita o descompuesta. Lee con calma antes de soltar.',
+  music: 'sonidos/representaciones.mp3',
   nextPage: 'juego-sudoku.html',
   render: renderRepresentations
 });

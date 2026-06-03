@@ -13,42 +13,50 @@ const urlGame = Number(new URLSearchParams(window.location.search).get('juego') 
 let currentGame = Math.min(Math.max(urlGame, 1), 6);
 let completedCurrent = false;
 let dragging = null;
+let ambientMusic = null;
+let pendingAmbientStart = false;
 
 const gameData = [
   {
     title: 'Tienda ordenada',
     theme: 'store',
     instruction: 'Arrastra los productos desde el precio menor hasta el precio mayor. Fijate bien: algunos precios son muy parecidos.',
+    music: 'sonidos/supermercado.mp3',
     render: renderStore
   },
   {
     title: 'Recta numérica',
     theme: 'line',
     instruction: 'Ubica cada número en la recta numérica, de menor a mayor. Compara millares, centenas, decenas y unidades.',
+    music: 'sonidos/carretera.mp3',
     render: renderNumberLine
   },
   {
     title: 'Tabla posicional',
     theme: 'place',
     instruction: 'Forma el número indicado poniendo cada dígito en su posición.',
+    music: 'sonidos/reloj.mp3',
     render: renderPlaceValue
   },
   {
     title: 'Mayor o menor',
     theme: 'compare',
     instruction: 'Arrastra el signo correcto en cada comparacion. Hay mas de una respuesta que resolver.',
+    music: 'sonidos/mayor.mp3',
     render: renderCompare
   },
   {
     title: 'Representaciones',
     theme: 'represent',
     instruction: 'Une cada número con su forma escrita o descompuesta. Lee con calma antes de soltar.',
+    music: 'sonidos/representaciones.mp3',
     render: renderRepresentations
   },
   {
     title: 'Sudoku matemático',
     theme: 'sudoku',
     instruction: 'Completa la cuadrícula con operaciones. En cada fila, columna y bloque de 2 por 2 deben quedar 1, 2, 3 y 4 sin repetir.',
+    music: 'sonidos/sudoku.mp3',
     render: renderSudoku
   }
 ];
@@ -114,6 +122,42 @@ function createConfetti(){
   }
 }
 
+function startAmbientMusic(src){
+  if(!src) return;
+
+  if(!ambientMusic){
+    ambientMusic = document.getElementById('ambientMusic') || document.createElement('audio');
+    ambientMusic.id = 'ambientMusic';
+    ambientMusic.loop = true;
+    ambientMusic.volume = 0.35;
+    if(!ambientMusic.parentElement){
+      document.body.appendChild(ambientMusic);
+    }
+    ambientMusic.src = src;
+  }else if(!ambientMusic.src.endsWith(src)){
+    ambientMusic.pause();
+    ambientMusic.src = src;
+    ambientMusic.currentTime = 0;
+  }
+
+  ambientMusic.play().then(() => {
+    pendingAmbientStart = false;
+  }).catch(() => {
+    pendingAmbientStart = true;
+  });
+}
+
+function resumeAmbientMusic(){
+  if(!pendingAmbientStart || !ambientMusic) return;
+
+  ambientMusic.play().then(() => {
+    pendingAmbientStart = false;
+  }).catch(() => {});
+}
+
+document.addEventListener('click', resumeAmbientMusic);
+document.addEventListener('touchstart', resumeAmbientMusic);
+
 function shuffle(items){
   return [...items].sort(() => Math.random() - 0.5);
 }
@@ -152,6 +196,24 @@ function compareSign(left, right){
   return '=';
 }
 
+function makeNumberCard(number, side){
+  const digits = String(number).padStart(4, '0').split('');
+  const bars = digits.map((digit, index) => {
+    const value = Number(digit);
+    const height = 24 + value * 6;
+    const label = ['UM', 'C', 'D', 'U'][index];
+    return `<span style="height:${height}px"><small>${label}</small></span>`;
+  }).join('');
+
+  return `
+    <div class="compare-card compare-card-${side}">
+      <span class="number-label">${side === 'left' ? 'Numero A' : 'Numero B'}</span>
+      <strong class="number-digits">${formatNumber(number)}</strong>
+      <div class="place-bars" aria-hidden="true">${bars}</div>
+    </div>
+  `;
+}
+
 function placeValueText(number){
   const [um, c, d, u] = splitDigits(number).map(Number);
   const parts = [];
@@ -170,25 +232,15 @@ function placeValueShort(number){
 }
 
 function makeOperationForResult(result, index){
-  const type = index % 4;
+  const type = index % 2;
 
   if(type === 0){
-    const add = randomInt(1, 4);
+    const add = randomInt(1, 2);
     return `${result + add} - ${add}`;
   }
 
-  if(type === 1){
-    const add = randomInt(1, 4);
-    return `${result} + ${add} - ${add}`;
-  }
-
-  if(type === 2){
-    const factor = randomInt(2, 4);
-    return `${result} x ${factor} ÷ ${factor}`;
-  }
-
-  const divisor = randomInt(2, 4);
-  return `${result * divisor} ÷ ${divisor}`;
+  const add = randomInt(1, Math.min(2, result));
+  return `${result - add} + ${add}`;
 }
 
 function makeSudokuSolution(){
@@ -336,6 +388,12 @@ function renderShell(instruction, themeLabel){
 
 function renderStore(){
   renderShell(gameData[0].instruction, 'Mini tienda');
+  const crowd = document.createElement('div');
+  crowd.className = 'store-crowd';
+  crowd.setAttribute('aria-hidden', 'true');
+  crowd.innerHTML = '<span></span><span></span><span></span>';
+  board.appendChild(crowd);
+
   const products = shuffle([
     ['📘', 'Cuaderno'],
     ['✏️', 'Lapices'],
@@ -356,7 +414,7 @@ function renderStore(){
   }))));
 
   const row = document.createElement('div');
-  row.className = 'drop-row';
+  row.className = 'store-cart';
   ['1 menor precio', '2', '3', '4', '5', '6 mayor precio'].forEach((label, index) => {
     row.appendChild(makeZone(label, String(prices[index])));
   });
@@ -451,9 +509,9 @@ function renderCompare(){
   rows.forEach(([left, right, answer]) => {
     const layout = document.createElement('div');
     layout.className = 'compare-layout';
-    layout.innerHTML = `<div class="big-number">${formatNumber(left)}</div>`;
+    layout.innerHTML = makeNumberCard(left, 'left');
     layout.appendChild(makeZone('Signo', answer));
-    layout.insertAdjacentHTML('beforeend', `<div class="big-number">${formatNumber(right)}</div>`);
+    layout.insertAdjacentHTML('beforeend', makeNumberCard(right, 'right'));
     wrap.appendChild(layout);
   });
   board.appendChild(wrap);
@@ -485,7 +543,7 @@ function renderRepresentations(){
 function renderSudoku(){
   renderShell(gameData[5].instruction, 'Sudoku 4 x 4');
   const solution = makeSudokuSolution();
-  const fixedIndexes = shuffle([0, 2, 5, 7, 8, 10, 13, 15]).slice(0, 6);
+  const fixedIndexes = shuffle([0, 1, 2, 5, 7, 8, 10, 13, 14, 15]).slice(0, 8);
   const emptyCells = [];
 
   const grid = document.createElement('div');
@@ -563,6 +621,7 @@ function loadGame(){
   scoreEl.textContent = getScore();
   gameStep.textContent = `Juego ${currentGame} de 6`;
   gameTitle.textContent = gameData[currentGame - 1].title;
+  startAmbientMusic(gameData[currentGame - 1].music);
   gameData[currentGame - 1].render();
   speak(gameData[currentGame - 1].instruction);
 }

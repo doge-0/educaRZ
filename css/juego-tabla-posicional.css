@@ -1,5 +1,6 @@
 body.place-page {
   background:
+    linear-gradient(rgba(70, 70, 70, 0.24), rgba(70, 70, 70, 0.24)),
     radial-gradient(circle at 20% 18%, rgba(0, 255, 190, 0.24), transparent 28%),
     linear-gradient(160deg, #071420, #123f54 52%, #0b1f2d);
 }

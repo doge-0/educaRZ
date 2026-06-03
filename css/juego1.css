@@ -10,6 +10,7 @@ body{
   min-height:100vh;
   font-family:'Fredoka', 'Segoe UI', Arial, sans-serif;
   background:
+    linear-gradient(rgba(70,70,70,0.24), rgba(70,70,70,0.24)),
     radial-gradient(circle at 20% 12%, rgba(255,255,255,0.36), transparent 18%),
     linear-gradient(180deg, #7bdaf5 0%, #2796d1 48%, #0a5f91 100%);
 }

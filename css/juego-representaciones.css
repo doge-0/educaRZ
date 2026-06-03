@@ -1,5 +1,7 @@
 body.represent-page {
-  background: url("../img/rompecabezas.webp") center / cover fixed;
+  background:
+    linear-gradient(rgba(70, 70, 70, 0.34), rgba(70, 70, 70, 0.34)),
+    url("../img/rompecabezas.webp") center / cover fixed;
 }
 
 .represent-page .theme-represent {

@@ -22,6 +22,7 @@ startSingleGame({
   scene: 'Recta viajera',
   goal: 'Aprender a ubicar numeros naturales de menor a mayor en una recta numerica.',
   instruction: 'Ubica cada numero en la recta numerica, de menor a mayor. Compara millares, centenas, decenas y unidades.',
+  music: 'sonidos/carretera.mp3',
   nextPage: 'juego-tabla-posicional.html',
   render: renderNumberLine
 });

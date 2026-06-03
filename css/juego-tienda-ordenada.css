@@ -1,7 +1,12 @@
 body.store-page {
-  background: url("../img/tiendafondo.jpg") center / cover fixed;
+  background:
+    linear-gradient(rgba(70, 70, 70, 0.34), rgba(70, 70, 70, 0.34)),
+    url("../img/tiendafondo.jpg") center / cover fixed;
 }
 
 .store-page .theme-store {
-  background: rgba(255, 255, 255, 0.9);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 243, 207, 0.34)),
+    linear-gradient(180deg, rgba(255, 250, 226, 0.94), rgba(255, 236, 195, 0.92)),
+    repeating-linear-gradient(90deg, rgba(212, 91, 42, 0.18) 0 28px, rgba(255, 181, 79, 0.18) 28px 56px);
 }

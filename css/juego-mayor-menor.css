@@ -1,5 +1,13 @@
 body.compare-page {
   background:
+    linear-gradient(rgba(70, 70, 70, 0.28), rgba(70, 70, 70, 0.28)),
     linear-gradient(160deg, rgba(16, 145, 184, 0.82), rgba(255, 199, 89, 0.7)),
     url("../img/fondo.jpeg") center / cover fixed;
+}
+
+.compare-page .theme-compare {
+  background:
+    radial-gradient(circle at 14% 18%, rgba(255, 181, 79, 0.22) 0 42px, transparent 43px),
+    radial-gradient(circle at 88% 78%, rgba(21, 119, 168, 0.2) 0 54px, transparent 55px),
+    linear-gradient(135deg, rgba(255, 247, 214, 0.96), rgba(233, 248, 255, 0.96));
 }

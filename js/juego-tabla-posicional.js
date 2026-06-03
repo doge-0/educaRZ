@@ -80,6 +80,7 @@ startSingleGame({
   scene: 'Reloj digital',
   goal: 'Memorizar numeros en formato de hora digital y escribirlos despues de una cuenta regresiva.',
   instruction: 'Mira el numero del reloj durante 3 segundos. Cuando desaparezca, escribe exactamente el numero que memorizaste.',
+  music: 'sonidos/reloj.mp3',
   nextPage: 'juego-mayor-menor.html',
   render: renderPlaceMemory,
   validate: validatePlaceMemory

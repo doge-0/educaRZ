@@ -4,6 +4,24 @@ function compareSign(left, right){
   return '=';
 }
 
+function makeNumberCard(number, side){
+  const digits = String(number).padStart(4, '0').split('');
+  const bars = digits.map((digit, index) => {
+    const value = Number(digit);
+    const height = 24 + value * 6;
+    const label = ['UM', 'C', 'D', 'U'][index];
+    return `<span style="height:${height}px"><small>${label}</small></span>`;
+  }).join('');
+
+  return `
+    <div class="compare-card compare-card-${side}">
+      <span class="number-label">${side === 'left' ? 'Numero A' : 'Numero B'}</span>
+      <strong class="number-digits">${formatNumber(number)}</strong>
+      <div class="place-bars" aria-hidden="true">${bars}</div>
+    </div>
+  `;
+}
+
 function renderCompare(){
   const rows = [];
 
@@ -37,9 +55,9 @@ function renderCompare(){
   rows.forEach(([left, right, answer]) => {
     const layout = document.createElement('div');
     layout.className = 'compare-layout';
-    layout.innerHTML = `<div class="big-number">${formatNumber(left)}</div>`;
+    layout.innerHTML = makeNumberCard(left, 'left');
     layout.appendChild(makeZone('Signo', answer));
-    layout.insertAdjacentHTML('beforeend', `<div class="big-number">${formatNumber(right)}</div>`);
+    layout.insertAdjacentHTML('beforeend', makeNumberCard(right, 'right'));
     wrap.appendChild(layout);
   });
   board.appendChild(wrap);
@@ -52,6 +70,7 @@ startSingleGame({
   scene: 'Duelo de numeros',
   goal: 'Aprender a comparar numeros usando los signos mayor que, menor que e igual.',
   instruction: 'Arrastra el signo correcto en cada comparacion. Hay mas de una respuesta que resolver.',
+  music: 'sonidos/mayor.mp3',
   nextPage: 'juego-representaciones.html',
   render: renderCompare
 });
