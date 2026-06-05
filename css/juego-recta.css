@@ -1,9 +1,248 @@
-body.line-page {
+body.line-page{
   background:
-    linear-gradient(rgba(70, 70, 70, 0.34), rgba(70, 70, 70, 0.34)),
-    url("../img/recta.jpg") center / cover fixed;
+    linear-gradient(
+      rgba(50,50,50,.35),
+      rgba(50,50,50,.35)
+    ),
+    url("../img/recta.jpg") center/cover fixed;
 }
 
-.line-page .theme-line {
-  background: rgba(255, 255, 255, 0.9);
+/* =========================
+   CARRETERA
+========================= */
+
+.race-road{
+
+  width:100%;
+
+  min-height:220px;
+
+  padding:35px 20px;
+
+  margin-top:20px;
+
+  background:#4d4d4d;
+
+  border-radius:25px;
+
+  position:relative;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+
+  box-shadow:
+    inset 0 0 15px rgba(0,0,0,.3),
+    0 8px 20px rgba(0,0,0,.25);
+}
+
+/* línea central */
+
+.race-road::before{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+
+  top:50%;
+
+  height:8px;
+
+  transform:translateY(-50%);
+
+  background:
+    repeating-linear-gradient(
+      to right,
+      white 0 40px,
+      transparent 40px 80px
+    );
+}
+
+/* =========================
+   ESPACIOS DE AUTOS
+========================= */
+
+.road-slot{
+
+  width:120px;
+  height:120px;
+
+  background:rgba(255,255,255,.12);
+
+  border:3px dashed rgba(255,255,255,.7);
+
+  border-radius:18px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  color:white;
+  font-weight:bold;
+
+  text-align:center;
+
+  position:relative;
+
+  z-index:2;
+
+  transition:.2s;
+}
+
+.road-slot.over{
+  background:rgba(255,255,255,.3);
+  transform:scale(1.05);
+}
+
+.road-slot:first-child{
+  border-color:#6cff6c;
+}
+
+.road-slot:last-child{
+  border-color:#ffd84d;
+}
+
+/* =========================
+   BANCO DE AUTOS
+========================= */
+
+.drag-bank{
+
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+
+  gap:18px;
+
+  margin-bottom:25px;
+}
+
+/* =========================
+   AUTO
+========================= */
+
+.draggable.car-card{
+
+  width:130px;
+  height:70px;
+
+  border:none;
+
+  background:transparent;
+
+  cursor:grab;
+
+  padding:0;
+}
+
+/* carrocería */
+
+.car-body{
+
+  width:130px;
+  height:55px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff5252,
+      #d61f1f
+    );
+
+  border-radius:
+    20px 20px 12px 12px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color:white;
+  font-weight:700;
+
+  font-size:1rem;
+
+  position:relative;
+
+  box-shadow:
+    0 5px 12px rgba(0,0,0,.25);
+}
+
+/* techo */
+
+.car-body::before{
+
+  content:"";
+
+  position:absolute;
+
+  top:-12px;
+  left:22px;
+
+  width:85px;
+  height:20px;
+
+  background:#ff6666;
+
+  border-radius:
+    12px 12px 0 0;
+}
+
+/* ruedas */
+
+.car-body::after{
+
+  content:"";
+
+  position:absolute;
+
+  width:100%;
+
+  height:20px;
+
+  left:0;
+  bottom:-12px;
+
+  background:
+    radial-gradient(circle at 25% center,#222 0 10px,transparent 11px),
+    radial-gradient(circle at 75% center,#222 0 10px,transparent 11px);
+}
+
+/* =========================
+   ARRASTRANDO
+========================= */
+
+.draggable.dragging{
+
+  position:fixed;
+
+  z-index:9999;
+
+  pointer-events:none;
+
+  transform:scale(1.08);
+}
+
+/* =========================
+  RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+  .race-road{
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  .road-slot{
+    width:100px;
+    height:100px;
+  }
+
+  .car-body{
+    width:110px;
+  }
 }

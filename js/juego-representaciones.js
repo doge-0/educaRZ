@@ -1,5 +1,8 @@
 function placeValueText(number){
-  const [um, c, d, u] = splitDigits(number).map(Number);
+
+  const [um, c, d, u] =
+    splitDigits(number).map(Number);
+
   const parts = [];
 
   if(um) parts.push(`${um}.000`);
@@ -11,39 +14,134 @@ function placeValueText(number){
 }
 
 function placeValueShort(number){
-  const [um, c, d, u] = splitDigits(number);
+
+  const [um, c, d, u] =
+    splitDigits(number);
+
   return `${um} UM + ${c} C + ${d} D + ${u} U`;
 }
 
+/* ==================================
+   LECTURA PEDAGÓGICA
+================================== */
+
+function speakPlaceValue(number){
+
+  const [um, c, d, u] =
+    splitDigits(number).map(Number);
+
+  const parts = [];
+
+  if(um){
+    parts.push(
+      `${um} unidades de mil`
+    );
+  }
+
+  if(c){
+    parts.push(
+      `${c} centenas`
+    );
+  }
+
+  if(d){
+    parts.push(
+      `${d} decenas`
+    );
+  }
+
+  if(u){
+    parts.push(
+      `${u} unidades`
+    );
+  }
+
+  return `Representación formada por ${parts.join(', ')}`;
+}
+
+/* ==================================
+   RENDER DEL JUEGO
+================================== */
+
 function renderRepresentations(){
-  const numbers = uniqueRandomNumbers(6, 1000, 9999, 40);
-  const cards = numbers.map((number, index) => ({
-    label: index % 2 === 0 ? placeValueText(number) : placeValueShort(number),
+
+  const numbers =
+    uniqueRandomNumbers(
+      6,
+      1000,
+      9999,
+      40
+    );
+
+  const cards = numbers.map(number => ({
+
+    label:
+      Math.random() < 0.5
+        ? placeValueText(number)
+        : placeValueShort(number),
+
     value: String(number),
-    speak: formatNumber(number)
+
+    speak: speakPlaceValue(number),
+
+    className: 'puzzle-piece'
+
   }));
 
-  board.appendChild(makeBank(cards));
+  board.appendChild(
+    makeBank(cards)
+  );
 
-  const grid = document.createElement('div');
-  grid.className = 'match-grid';
+  const grid =
+    document.createElement('div');
+
+  grid.className =
+    'puzzle-board-grid';
+
   numbers.forEach(number => {
-    const target = document.createElement('div');
-    target.className = 'match-target';
-    target.innerHTML = `<strong>${formatNumber(number)}</strong>`;
-    target.appendChild(makeZone('Representacion', String(number)));
+
+    const target =
+      document.createElement('div');
+
+    target.className =
+      'puzzle-board';
+
+    target.innerHTML = `
+      <div class="board-header">
+        🧩 Número secreto
+      </div>
+
+      <div class="board-number">
+        ${formatNumber(number)}
+      </div>
+    `;
+
+    target.appendChild(
+      makeZone(
+        'Encaja aquí',
+        String(number),
+        'puzzle-zone'
+      )
+    );
+
     grid.appendChild(target);
+
   });
+
   board.appendChild(grid);
 }
 
+/* ==================================
+   INICIO DEL JUEGO
+================================== */
+
 startSingleGame({
   number: 5,
-  title: 'Representaciones',
+  title: 'Rompecabezas numérico',
   theme: 'represent',
-  scene: 'Galeria de representaciones',
-  goal: 'Aprender a relacionar un numero con su descomposicion y representacion posicional.',
-  instruction: 'Une cada numero con su forma escrita o descompuesta. Lee con calma antes de soltar.',
+  scene: 'Taller de rompecabezas',
+  goal: 'Relacionar cada número con su representación posicional.',
+  instruction: 'Arrastra cada pieza del rompecabezas hasta el número correcto.',
   music: 'sonidos/representaciones.mp3',
   nextPage: 'juego-sudoku.html',
   render: renderRepresentations

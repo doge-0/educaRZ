@@ -4,73 +4,236 @@ function compareSign(left, right){
   return '=';
 }
 
-function makeNumberCard(number, side){
-  const digits = String(number).padStart(4, '0').split('');
-  const bars = digits.map((digit, index) => {
-    const value = Number(digit);
-    const height = 24 + value * 6;
-    const label = ['UM', 'C', 'D', 'U'][index];
-    return `<span style="height:${height}px"><small>${label}</small></span>`;
-  }).join('');
+function makeTeamCard(number, side){
 
   return `
-    <div class="compare-card compare-card-${side}">
-      <span class="number-label">${side === 'left' ? 'Numero A' : 'Numero B'}</span>
-      <strong class="number-digits">${formatNumber(number)}</strong>
-      <div class="place-bars" aria-hidden="true">${bars}</div>
+    <div class="team-card team-${side}">
+      <div class="team-avatar">
+        ${side === 'left' ? '🐘' : '🦁'}
+      </div>
+
+      <div class="team-label">
+        ${side === 'left'
+          ? 'Equipo Elefante'
+          : 'Equipo León'}
+      </div>
+
+      <strong class="team-number">
+        ${formatNumber(number)}
+      </strong>
     </div>
   `;
 }
 
 function renderCompare(){
+
   const rows = [];
 
-  while(rows.length < 4){
-    const left = randomInt(1000, 9999);
-    const mode = rows.length % 4;
-    let right = left;
+  const patterns = [
+    '>',
+    '<',
+    '=',
+    ['>', '<', '='][randomInt(0, 2)]
+  ];
 
-    if(mode === 0){
-      right = Math.max(1000, left - randomInt(1, 380));
-    }else if(mode === 1){
-      right = Math.min(9999, left + randomInt(1, 380));
-    }else if(mode === 2){
-      right = left;
+  const shuffledPatterns = shuffle(patterns);
+
+  shuffledPatterns.forEach(sign => {
+
+    const left = randomInt(1000, 9999);
+
+    let right;
+
+    if(sign === '>'){
+
+      right = left - randomInt(1, 500);
+
+      if(right < 1000){
+        right = 1000;
+      }
+
+    }else if(sign === '<'){
+
+      right = left + randomInt(1, 500);
+
+      if(right > 9999){
+        right = 9999;
+      }
+
     }else{
-      right = randomInt(1000, 9999);
-      if(right === left) right += right < 9999 ? 1 : -1;
+
+      right = left;
+
     }
 
-    rows.push([left, right, compareSign(left, right)]);
+    rows.push([
+      left,
+      right,
+      sign
+    ]);
+
+  });
+
+  const signs = [];
+
+  rows.forEach(row => {
+
+    signs.push({
+      label: row[2],
+      value: row[2],
+      speak:
+        row[2] === '>'
+          ? 'mayor que'
+          : row[2] === '<'
+            ? 'menor que'
+            : 'igual que',
+      className: 'sign-token'
+    });
+
+  });
+
+  board.appendChild(
+    makeBank(shuffle(signs))
+  );
+
+  const arena = document.createElement('div');
+  arena.className = 'tug-arena';
+
+  rows.forEach(([left, right, answer]) => {
+
+    const row = document.createElement('div');
+
+    row.className = 'tug-row';
+    row.dataset.answer = answer;
+
+    row.innerHTML = `
+      ${makeTeamCard(left, 'left')}
+      <div class="rope"></div>
+    `;
+
+    const zone = makeZone(
+      '?',
+      answer,
+      'sign-zone'
+    );
+
+    row.appendChild(zone);
+
+    row.insertAdjacentHTML(
+      'beforeend',
+      `
+      <div class="rope"></div>
+      ${makeTeamCard(right, 'right')}
+      `
+    );
+
+    arena.appendChild(row);
+
+  });
+
+  board.appendChild(arena);
+}
+
+/* ==============================
+   ANIMACIÓN TIRA Y AFLOJA
+============================== */
+
+window.animateTugBattle = function(){
+
+  const rows =
+    document.querySelectorAll('.tug-row');
+
+  rows.forEach(row => {
+
+    row.classList.remove(
+      'pulling',
+      'left-win',
+      'right-win',
+      'draw'
+    );
+
+    row.classList.add('pulling');
+
+    const answer = row.dataset.answer;
+
+    setTimeout(() => {
+
+      row.classList.remove('pulling');
+
+      if(answer === '>'){
+
+        row.classList.add('left-win');
+
+      }else if(answer === '<'){
+
+        row.classList.add('right-win');
+
+      }else{
+
+        row.classList.add('draw');
+      }
+
+    }, 800);
+
+  });
+
+};
+
+/* ==============================
+   VALIDACIÓN PERSONALIZADA
+============================== */
+
+function validateCompareGame(){
+
+  const zones = [
+    ...document.querySelectorAll(
+      '.sign-zone[data-answer]'
+    )
+  ];
+
+  const allAnswered =
+    zones.every(
+      zone => zone.querySelector('.draggable')
+    );
+
+  if(!allAnswered){
+
+    speak(
+      'Completa todas las comparaciones'
+    );
+
+    return false;
   }
 
-  board.appendChild(makeBank(rows.map(row => ({
-    label: row[2],
-    value: row[2],
-    speak: row[2] === '>' ? 'mayor que' : row[2] === '<' ? 'menor que' : 'igual que'
-  }))));
+  window.animateTugBattle();
 
-  const wrap = document.createElement('div');
-  wrap.className = 'compare-stack';
-  rows.forEach(([left, right, answer]) => {
-    const layout = document.createElement('div');
-    layout.className = 'compare-layout';
-    layout.innerHTML = makeNumberCard(left, 'left');
-    layout.appendChild(makeZone('Signo', answer));
-    layout.insertAdjacentHTML('beforeend', makeNumberCard(right, 'right'));
-    wrap.appendChild(layout);
+  return zones.every(zone => {
+
+    const sign =
+      zone.querySelector('.draggable');
+
+    return (
+      sign &&
+      sign.dataset.value === zone.dataset.answer
+    );
+
   });
-  board.appendChild(wrap);
+
 }
+
+/* ==============================
+   INICIO DEL JUEGO
+============================== */
 
 startSingleGame({
   number: 4,
-  title: 'Mayor o menor',
+  title: 'Tira y afloja numérico',
   theme: 'compare',
-  scene: 'Duelo de numeros',
-  goal: 'Aprender a comparar numeros usando los signos mayor que, menor que e igual.',
-  instruction: 'Arrastra el signo correcto en cada comparacion. Hay mas de una respuesta que resolver.',
+  scene: 'Desafío de fuerza',
+  goal: 'Comparar números usando los signos mayor que, menor que e igual.',
+  instruction: 'Arrastra el signo correcto al centro de cada tira y afloja.',
   music: 'sonidos/mayor.mp3',
   nextPage: 'juego-representaciones.html',
-  render: renderCompare
+  render: renderCompare,
+  validate: validateCompareGame
 });

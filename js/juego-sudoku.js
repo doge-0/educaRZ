@@ -1,42 +1,72 @@
 function makeOperationForResult(result, index){
-  const type = index % 2;
+  const type = index % 4;
 
-  if(type === 0){
-    const add = randomInt(1, 2);
-    return `${result + add} - ${add}`;
+  switch(type){
+
+    // SUMA
+    case 0:{
+      const a = randomInt(1, result);
+      const b = result - a;
+      return `${a} + ${b}`;
+    }
+
+    // RESTA
+    case 1:{
+      const add = randomInt(1, 4);
+      return `${result + add} - ${add}`;
+    }
+
+    // MULTIPLICACION
+    case 2:{
+      const factors = [];
+
+      for(let i = 1; i <= result; i++){
+        if(result % i === 0){
+          factors.push(i);
+        }
+      }
+
+      const a = factors[randomInt(0, factors.length - 1)];
+      const b = result / a;
+
+      return `${a} × ${b}`;
+    }
+
+    // DIVISION
+    default:{
+      const multiplier = randomInt(1, 5);
+      return `${result * multiplier} ÷ ${multiplier}`;
+    }
   }
-
-  const add = randomInt(1, Math.min(2, result));
-  return `${result - add} + ${add}`;
 }
 
 function makeSudokuSolution(){
+
   const base = [
-    [1, 2, 3, 4],
-    [3, 4, 1, 2],
-    [2, 1, 4, 3],
-    [4, 3, 2, 1]
-  ];
-  const symbols = shuffle([1, 2, 3, 4]);
-  const rowOrder = [
-    ...shuffle([0, 1]),
-    ...shuffle([2, 3])
-  ];
-  const colOrder = [
-    ...shuffle([0, 1]),
-    ...shuffle([2, 3])
+    [1,2,3,4,5],
+    [2,3,4,5,1],
+    [3,4,5,1,2],
+    [4,5,1,2,3],
+    [5,1,2,3,4]
   ];
 
-  return rowOrder.map(row => colOrder.map(col => symbols[base[row][col] - 1]));
+  const symbols = shuffle([1,2,3,4,5]);
+
+  return base.map(row =>
+    row.map(value => symbols[value - 1])
+  );
 }
 
 function clearSudokuGuide(){
-  document.querySelectorAll('.sudoku-cell.is-guide-highlight').forEach(cell => {
-    cell.classList.remove('is-guide-highlight');
-  });
+  document
+    .querySelectorAll('.sudoku-cell.is-guide-highlight')
+    .forEach(cell => {
+      cell.classList.remove('is-guide-highlight');
+    });
 }
 
 function highlightSudokuGuide(type){
+
   clearSudokuGuide();
 
   if(!type) return;
@@ -45,10 +75,9 @@ function highlightSudokuGuide(type){
 
   if(type.startsWith('fila')){
     selector = '.sudoku-cell[data-row="0"]';
-  }else if(type.startsWith('columna')){
+  }
+  else if(type.startsWith('columna')){
     selector = '.sudoku-cell[data-col="0"]';
-  }else if(type.startsWith('bloque')){
-    selector = '.sudoku-cell[data-block="0"]';
   }
 
   if(!selector) return;
@@ -59,40 +88,68 @@ function highlightSudokuGuide(type){
 }
 
 function renderSudoku(){
+
   const solution = makeSudokuSolution();
-  const fixedIndexes = shuffle([0, 1, 2, 5, 7, 8, 10, 13, 14, 15]).slice(0, 8);
+
+  const fixedIndexes = shuffle([
+    0,1,2,3,4,
+    5,6,7,8,9,
+    10,11,12,13,14,
+    15,16,17,18,19,
+    20,21,22,23,24
+  ]).slice(0, 12);
+
   const emptyCells = [];
 
   const grid = document.createElement('div');
   grid.className = 'sudoku-grid';
 
   solution.flat().forEach((value, index) => {
-    const row = Math.floor(index / 4);
-    const col = index % 4;
-    const block = Math.floor(row / 2) * 2 + Math.floor(col / 2);
+
+    const row = Math.floor(index / 5);
+    const col = index % 5;
 
     if(fixedIndexes.includes(index)){
+
       const fixed = document.createElement('div');
+
       fixed.className = 'sudoku-cell fixed';
       fixed.dataset.row = String(row);
       fixed.dataset.col = String(col);
-      fixed.dataset.block = String(block);
+
       fixed.textContent = value;
+
       fixed.addEventListener('click', () => speak(value));
+
       grid.appendChild(fixed);
+
       return;
     }
 
-    emptyCells.push({ value, index });
-    const zone = makeZone('?', String(value), 'sudoku-cell');
+    emptyCells.push({
+      value,
+      index
+    });
+
+    const zone = makeZone(
+      '?',
+      String(value),
+      'sudoku-cell'
+    );
+
     zone.dataset.row = String(row);
     zone.dataset.col = String(col);
-    zone.dataset.block = String(block);
+
     grid.appendChild(zone);
   });
 
   const operations = emptyCells.map((cell, index) => {
-    const operation = makeOperationForResult(cell.value, index);
+
+    const operation = makeOperationForResult(
+      cell.value,
+      index
+    );
+
     return {
       label: operation,
       value: String(cell.value),
@@ -107,18 +164,36 @@ function renderSudoku(){
 
 startSingleGame({
   number: 6,
-  title: 'Sudoku matematico',
+  title: 'Sudoku matemático',
   theme: 'sudoku',
-  scene: 'Sudoku 4 x 4',
-  goal: 'Aprender a resolver patrones numericos usando filas, columnas y bloques sin repetir.',
-  instruction: 'Completa la cuadricula con operaciones. En cada fila, columna y bloque de 2 por 2 deben quedar 1, 2, 3 y 4 sin repetir.',
+  scene: 'Sudoku 5 x 5',
+
+  goal:
+    'Aprender a resolver patrones numéricos usando filas y columnas sin repetir.',
+
+  instruction:
+    'Completa la cuadrícula con operaciones. En cada fila y columna deben quedar los números 1, 2, 3, 4 y 5 sin repetir.',
+
   instructionEmphasis: [
-    { text: 'fila', cue: 'fila', rate: 0.62, holdAfter: 1600 },
-    { text: 'columna', cue: 'columna', rate: 0.62, holdAfter: 1600 },
-    { text: 'bloque de 2 por 2', cue: 'bloque', rate: 0.62, holdAfter: 2200 }
+    {
+      text: 'fila',
+      cue: 'fila',
+      rate: 1,
+      holdAfter: 1000
+    },
+    {
+      text: 'columna',
+      cue: 'columna',
+      rate: 1,
+      holdAfter: 1000
+    }
   ],
+
   music: 'sonidos/sudoku.mp3',
+
   nextPage: 'final.html',
+
   onInstructionCue: highlightSudokuGuide,
+
   render: renderSudoku
 });

@@ -974,7 +974,7 @@ h1 {
 
 .sudoku-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(58px, 92px));
+  grid-template-columns: repeat(5, minmax(58px, 92px));
   justify-content: center;
   gap: 8px;
   margin-top: 10px;

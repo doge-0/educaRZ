@@ -97,3 +97,16 @@ resetProgress.addEventListener('click', () => {
 });
 
 renderMenu();
+
+requestAnimationFrame(() => {
+
+  document
+    .querySelectorAll('.game-card')
+    .forEach((card,index) => {
+
+      card.style.animationDelay =
+        `${index * 120}ms`;
+
+    });
+
+});

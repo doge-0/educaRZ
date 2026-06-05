@@ -1,27 +1,59 @@
-function renderNumberLine(){
-  const numbers = uniqueRandomNumbers(6, 1000, 9999, 25).sort((a, b) => a - b);
+function renderNumberLine() {
 
-  board.appendChild(makeBank(numbers.map(number => ({
-    label: formatNumber(number),
-    value: String(number),
-    speak: formatNumber(number)
-  }))));
+  const numbers = uniqueRandomNumbers(6, 1000, 9999, 25)
+    .sort((a, b) => a - b);
 
-  const line = document.createElement('div');
-  line.className = 'number-line';
-  ['Menor', '', '', '', '', 'Mayor'].forEach((label, index) => {
-    line.appendChild(makeZone(label || 'Ubica aqui', String(numbers[index])));
+  const shuffled = [...numbers].sort(() => Math.random() - 0.5);
+
+  board.appendChild(
+    makeBank(
+      shuffled.map(number => ({
+        label: `
+          <div class="car-body">
+            <span>${formatNumber(number)} km</span>
+          </div>
+        `,
+        value: String(number),
+        speak: `${formatNumber(number)} kilometros`,
+        className: 'car-card'
+      }))
+    )
+  );
+
+  const road = document.createElement('div');
+  road.className = 'race-road';
+
+  numbers.forEach((number, index) => {
+
+    let label = '';
+
+    if(index === 0){
+      label = '🚩 Menos km';
+    }
+
+    if(index === numbers.length - 1){
+      label = '🏁 Más km';
+    }
+
+    const zone = makeZone(
+      label || '',
+      String(number),
+      'road-slot'
+    );
+
+    road.appendChild(zone);
   });
-  board.appendChild(line);
+
+  board.appendChild(road);
 }
 
 startSingleGame({
   number: 2,
-  title: 'Recta numerica',
+  title: 'Carrera de kilómetros',
   theme: 'line',
-  scene: 'Recta viajera',
-  goal: 'Aprender a ubicar numeros naturales de menor a mayor en una recta numerica.',
-  instruction: 'Ubica cada numero en la recta numerica, de menor a mayor. Compara millares, centenas, decenas y unidades.',
+  scene: 'Autopista numérica',
+  goal: 'Ordena los autos desde el que ha recorrido menos kilómetros hasta el que ha recorrido más.',
+  instruction: 'Arrastra cada automóvil a la carretera y ordénalo desde el menor número hasta el mayor número.',
   music: 'sonidos/carretera.mp3',
   nextPage: 'juego-tabla-posicional.html',
   render: renderNumberLine

@@ -1,9 +1,251 @@
-body.represent-page {
+body.represent-page{
   background:
-    linear-gradient(rgba(70, 70, 70, 0.34), rgba(70, 70, 70, 0.34)),
-    url("../img/rompecabezas.webp") center / cover fixed;
+    linear-gradient(
+      rgba(60,60,60,.35),
+      rgba(60,60,60,.35)
+    ),
+    url("../img/rompecabezas.webp")
+    center/cover fixed;
 }
 
-.represent-page .theme-represent {
-  background: rgba(255, 255, 255, 0.9);
+/* CONTENEDOR */
+
+.represent-page .theme-represent{
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.96),
+      rgba(248,248,248,.96)
+    );
+
+  border-radius:28px;
+}
+
+/* ======================
+   BANCO DE PIEZAS
+====================== */
+
+.drag-bank{
+
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+
+  gap:18px;
+
+  margin-bottom:30px;
+}
+
+/* PIEZA DE ROMPECABEZAS */
+
+.draggable.puzzle-piece{
+
+  min-width:220px;
+
+  min-height:90px;
+
+  padding:18px;
+
+  border:none;
+
+  color:#243447;
+
+  font-weight:700;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffe082,
+      #ffca28
+    );
+
+  border-radius:18px;
+
+  position:relative;
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,.18);
+
+  cursor:grab;
+
+  transition:
+    transform .2s ease;
+}
+
+.draggable.puzzle-piece:hover{
+
+  transform:
+    translateY(-4px)
+    rotate(-1deg);
+}
+
+/* salientes puzzle */
+
+.draggable.puzzle-piece::before{
+
+  content:"";
+
+  position:absolute;
+
+  right:-12px;
+  top:32px;
+
+  width:24px;
+  height:24px;
+
+  background:#ffca28;
+
+  border-radius:50%;
+}
+
+.draggable.puzzle-piece::after{
+
+  content:"";
+
+  position:absolute;
+
+  left:-12px;
+  bottom:25px;
+
+  width:24px;
+  height:24px;
+
+  background:#ffe082;
+
+  border-radius:50%;
+}
+
+/* ======================
+   TABLEROS
+====================== */
+
+.puzzle-board-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(260px,1fr)
+    );
+
+  gap:20px;
+}
+
+.puzzle-board{
+
+  background:white;
+
+  border-radius:24px;
+
+  padding:18px;
+
+  text-align:center;
+
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.08);
+
+  border:
+    4px solid #ffd54f;
+}
+
+.board-header{
+
+  font-size:.95rem;
+
+  font-weight:700;
+
+  color:#666;
+
+  margin-bottom:10px;
+}
+
+.board-number{
+
+  font-size:2rem;
+
+  font-weight:900;
+
+  color:#1e3a5f;
+
+  margin-bottom:15px;
+}
+
+/* ======================
+   ZONA DE ENCAJE
+====================== */
+
+.puzzle-zone{
+
+  min-height:90px;
+
+  border:
+    4px dashed #ffca28;
+
+  border-radius:18px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  padding:10px;
+
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255,202,40,.08),
+      rgba(255,202,40,.08) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+
+  transition:
+    all .2s ease;
+}
+
+.puzzle-zone.over{
+
+  background:#fff3cd;
+
+  transform:scale(1.03);
+}
+
+.puzzle-zone .draggable{
+
+  width:100%;
+}
+
+/* ======================
+   ARRASTRE
+====================== */
+
+.draggable.dragging{
+
+  position:fixed;
+
+  z-index:9999;
+
+  pointer-events:none;
+
+  transform:scale(1.08);
+}
+
+/* ======================
+   RESPONSIVE
+====================== */
+
+@media(max-width:768px){
+
+  .puzzle-board-grid{
+
+    grid-template-columns:1fr;
+  }
+
+  .draggable.puzzle-piece{
+
+    min-width:100%;
+  }
+
 }
