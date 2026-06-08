@@ -1,21 +1,39 @@
 function renderNumberLine() {
 
-  const numbers = uniqueRandomNumbers(6, 1000, 9999, 25)
-    .sort((a, b) => a - b);
+  const colors = [
+    'car-red',
+    'car-blue',
+    'car-green',
+    'car-purple',
+    'car-orange'
+  ];
 
-  const shuffled = [...numbers].sort(() => Math.random() - 0.5);
+  const numbers = uniqueRandomNumbers(
+    6,
+    1000,
+    9999,
+    25
+  ).sort((a,b)=>a-b);
+
+  const shuffled = [...numbers]
+    .sort(() => Math.random() - 0.5);
 
   board.appendChild(
     makeBank(
-      shuffled.map(number => ({
+      shuffled.map((number,index) => ({
+
         label: `
-          <div class="car-body">
+          <div class="car-body ${colors[index % colors.length]}">
             <span>${formatNumber(number)} km</span>
           </div>
         `,
+
         value: String(number),
+
         speak: `${formatNumber(number)} kilometros`,
-        className: 'car-card'
+
+        className:'car-card'
+
       }))
     )
   );
@@ -23,25 +41,25 @@ function renderNumberLine() {
   const road = document.createElement('div');
   road.className = 'race-road';
 
-  numbers.forEach((number, index) => {
+  road.insertAdjacentHTML(
+    'beforeend',
+    `
+      <div class="cloud cloud-1">☁️</div>
+      <div class="cloud cloud-2">☁️</div>
+      <div class="cloud cloud-3">☁️</div>
+    `
+  );
 
-    let label = '';
-
-    if(index === 0){
-      label = '🚩 Menos km';
-    }
-
-    if(index === numbers.length - 1){
-      label = '🏁 Más km';
-    }
+  numbers.forEach((number,index)=>{
 
     const zone = makeZone(
-      label || '',
+      '',
       String(number),
       'road-slot'
     );
 
     road.appendChild(zone);
+
   });
 
   board.appendChild(road);

@@ -113,6 +113,9 @@ h1 {
   cursor: pointer;
   box-shadow: 0 12px 0 rgba(17, 93, 120, 0.2), 0 18px 35px rgba(21, 73, 92, 0.2);
   transition: transform 0.2s ease, filter 0.2s ease;
+  animation: float-card 5s ease-in-out infinite alternate;
+  animation-fill-mode: both;
+  will-change: transform;
 }
 
 .game-card::before,
@@ -145,10 +148,23 @@ h1 {
   transform: translateY(-4px);
 }
 
+@keyframes float-card {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0) rotateZ(-0.2deg);
+  }
+  100% {
+    transform: translate3d(0, -6px, 0) rotateZ(0.2deg);
+  }
+}
+
 .game-card:disabled {
   cursor: not-allowed;
   filter: grayscale(0.9);
   opacity: 0.62;
+  animation: none;
 }
 
 .game-card .number {

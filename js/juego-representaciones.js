@@ -21,10 +21,6 @@ function placeValueShort(number){
   return `${um} UM + ${c} C + ${d} D + ${u} U`;
 }
 
-/* ==================================
-   LECTURA PEDAGÓGICA
-================================== */
-
 function speakPlaceValue(number){
 
   const [um, c, d, u] =
@@ -59,11 +55,16 @@ function speakPlaceValue(number){
   return `Representación formada por ${parts.join(', ')}`;
 }
 
-/* ==================================
-   RENDER DEL JUEGO
-================================== */
-
 function renderRepresentations(){
+
+  const colors = [
+    'piece-red',
+    'piece-blue',
+    'piece-green',
+    'piece-purple',
+    'piece-orange',
+    'piece-pink'
+  ];
 
   const numbers =
     uniqueRandomNumbers(
@@ -73,12 +74,18 @@ function renderRepresentations(){
       40
     );
 
-  const cards = numbers.map(number => ({
+  const cards = numbers.map((number,index) => ({
 
     label:
-      Math.random() < 0.5
-        ? placeValueText(number)
-        : placeValueShort(number),
+      `
+      <div class="piece-content ${colors[index % colors.length]}">
+        ${
+          Math.random() < 0.5
+            ? placeValueText(number)
+            : placeValueShort(number)
+        }
+      </div>
+      `,
 
     value: String(number),
 
@@ -129,11 +136,28 @@ function renderRepresentations(){
   });
 
   board.appendChild(grid);
-}
 
-/* ==================================
-   INICIO DEL JUEGO
-================================== */
+  setTimeout(() => {
+
+    document
+      .querySelectorAll('.puzzle-zone')
+      .forEach(zone => {
+
+        zone.addEventListener('drop', () => {
+
+          zone.classList.add('correct');
+
+          setTimeout(() => {
+            zone.classList.remove('correct');
+          }, 800);
+
+        });
+
+      });
+
+  }, 100);
+
+}
 
 startSingleGame({
   number: 5,

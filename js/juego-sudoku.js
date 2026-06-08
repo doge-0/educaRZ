@@ -178,13 +178,13 @@ startSingleGame({
     {
       text: 'fila',
       cue: 'fila',
-      rate: 1,
+      rate: 0.75,
       holdAfter: 1000
     },
     {
-      text: 'columna',
+      text: 'y columna',
       cue: 'columna',
-      rate: 1,
+      rate: 0.75,
       holdAfter: 1000
     }
   ],

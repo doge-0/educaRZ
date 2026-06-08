@@ -64,11 +64,9 @@ function clearInstructionHighlight(){
 }
 
 function highlightInstructionWord(wordElement){
-  if(activeInstructionWord === wordElement) return;
-
-  if(activeInstructionWord){
-    activeInstructionWord.classList.remove('is-active');
-  }
+  document
+    .querySelectorAll('.instruction-word.is-active')
+    .forEach(element => element.classList.remove('is-active'));
 
   activeInstructionWord = wordElement || null;
 
@@ -269,6 +267,11 @@ function speakInstruction(text){
   voice.lang = 'es-ES';
   voice.pitch = 1;
   voice.rate = 0.92;
+  voice.onstart = () => {
+    if(words.length){
+      highlightInstructionWord(words[0].element);
+    }
+  };
   voice.onboundary = event => {
     if(event.name && event.name !== 'word') return;
 
@@ -279,17 +282,14 @@ function speakInstruction(text){
     highlightInstructionWord(word.element);
     cueInstructionWord(word.text);
   };
-  voice.onend = clearInstructionHighlight;
+  voice.onend = () => {
+    clearInstructionHighlight();
+  };
   voice.onerror = clearInstructionHighlight;
 
   speechSynthesis.speak(voice);
-
-  instructionFallbackTimer = setTimeout(() => {
-    if(!receivedBoundary){
-      startInstructionFallback(words);
-    }
-  }, 700);
 }
+
 
 function praise(){
   const texts = ['Muy bien', 'Correcto', 'Excelente trabajo', 'Lo lograste'];
@@ -330,7 +330,7 @@ function showVictoryDancers(){
   document.body.appendChild(wrap);
 
   const audio = new Audio('sonidos/Teledancer2.mp3');
-  audio.volume = 0.85;
+  audio.volume = 0.40;
   audio.play().catch(() => {});
 
   setTimeout(() => {
@@ -551,7 +551,7 @@ function renderShell(instruction, themeLabel, theme){
   title.className = 'instruction';
   let match;
   let lastIndex = 0;
-  const wordPattern = /[A-Za-z0-9]+/g;
+  const wordPattern = /[A-Za-zÀ-ÖØ-öø-ÿ0-9]+/g;
 
   while((match = wordPattern.exec(instruction))){
     if(match.index > lastIndex){

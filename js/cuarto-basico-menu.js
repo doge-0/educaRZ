@@ -39,7 +39,7 @@ const games = [
     text: 'Completa la cuadricula con numeros sin repetir.',
     page: 'juego-sudoku.html',
     theme: 'sudoku',
-    icon: '4×4'
+    icon: '5x5'
   }
 ];
 

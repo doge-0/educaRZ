@@ -5,6 +5,74 @@ body.line-page{
       rgba(50,50,50,.35)
     ),
     url("../img/recta.jpg") center/cover fixed;
+
+  overflow-x:hidden;
+}
+
+/* =========================
+   PANEL DEL JUEGO
+========================= */
+
+.activity-board{
+  position:relative;
+  overflow:hidden;
+}
+
+/* =========================
+   ESTACIONAMIENTO
+========================= */
+
+.drag-bank{
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+
+  gap:18px;
+
+  margin-bottom:25px;
+
+  padding:25px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #dce4ea,
+      #cfd9e0
+    );
+
+  border-radius:18px;
+
+  border:3px solid rgba(255,255,255,.8);
+
+  position:relative;
+
+  overflow:hidden;
+
+  z-index:2;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.8),
+    0 4px 10px rgba(0,0,0,.12);
+}
+
+.drag-bank::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  background:
+    repeating-linear-gradient(
+      to right,
+      transparent 0 145px,
+      rgba(255,255,255,.4) 145px 149px
+    );
+
+  pointer-events:none;
 }
 
 /* =========================
@@ -17,11 +85,15 @@ body.line-page{
 
   min-height:220px;
 
-  padding:35px 20px;
+  padding:40px 20px;
 
-  margin-top:20px;
+  margin-top:15px;
 
-  background:#4d4d4d;
+  background:
+    linear-gradient(
+      #5d5d5d,
+      #454545
+    );
 
   border-radius:25px;
 
@@ -30,11 +102,14 @@ body.line-page{
   display:flex;
   justify-content:space-between;
   align-items:center;
+
   gap:10px;
 
+  overflow:hidden;
+
   box-shadow:
-    inset 0 0 15px rgba(0,0,0,.3),
-    0 8px 20px rgba(0,0,0,.25);
+    inset 0 0 25px rgba(0,0,0,.4),
+    0 10px 20px rgba(0,0,0,.25);
 }
 
 /* línea central */
@@ -60,10 +135,108 @@ body.line-page{
       white 0 40px,
       transparent 40px 80px
     );
+
+  animation:roadMove 1s linear infinite;
+}
+
+@keyframes roadMove{
+
+  from{
+    background-position:0 0;
+  }
+
+  to{
+    background-position:-80px 0;
+  }
+
 }
 
 /* =========================
-   ESPACIOS DE AUTOS
+   NUBES SOBRE LA CARRETERA
+========================= */
+
+.cloud{
+
+  position:absolute;
+
+  pointer-events:none;
+
+  z-index:1;
+
+  opacity:.9;
+}
+
+.cloud-1{
+
+  top:15px;
+
+  left:-150px;
+
+  font-size:45px;
+
+  animation:cloud1 18s linear infinite;
+}
+
+.cloud-2{
+
+  top:70px;
+
+  left:-300px;
+
+  font-size:60px;
+
+  animation:cloud2 25s linear infinite;
+}
+
+.cloud-3{
+
+  top:120px;
+
+  left:-500px;
+
+  font-size:40px;
+
+  animation:cloud3 30s linear infinite;
+}
+
+@keyframes cloud1{
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(1600px);
+  }
+
+}
+
+@keyframes cloud2{
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(1800px);
+  }
+
+}
+
+@keyframes cloud3{
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(2000px);
+  }
+
+}
+
+/* =========================
+   ESPACIOS
 ========================= */
 
 .road-slot{
@@ -90,44 +263,116 @@ body.line-page{
 
   z-index:2;
 
-  transition:.2s;
+  transition:.25s;
 }
 
 .road-slot.over{
+
   background:rgba(255,255,255,.3);
-  transform:scale(1.05);
+
+  transform:scale(1.08);
 }
 
 .road-slot:first-child{
+
   border-color:#6cff6c;
+
+  animation:startGlow 1s infinite alternate;
 }
 
 .road-slot:last-child{
+
   border-color:#ffd84d;
+
+  animation:finishGlow 1s infinite alternate;
+}
+
+/* MENOR */
+
+.road-slot:first-child::before{
+
+  content:"MENOR";
+
+  position:absolute;
+
+  top:-38px;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  background:#2ecc71;
+
+  color:white;
+
+  padding:5px 12px;
+
+  border-radius:10px;
+
+  font-size:.75rem;
+
+  font-weight:700;
+}
+
+/* MAYOR */
+
+.road-slot:last-child::before{
+
+  content:"MAYOR";
+
+  position:absolute;
+
+  top:-38px;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  background:#f1c40f;
+
+  color:#333;
+
+  padding:5px 12px;
+
+  border-radius:10px;
+
+  font-size:.75rem;
+
+  font-weight:700;
+}
+
+@keyframes startGlow{
+
+  from{
+    box-shadow:0 0 5px #6cff6c;
+  }
+
+  to{
+    box-shadow:0 0 20px #6cff6c;
+  }
+
+}
+
+@keyframes finishGlow{
+
+  from{
+    box-shadow:0 0 5px #ffd84d;
+  }
+
+  to{
+    box-shadow:0 0 20px #ffd84d;
+  }
+
 }
 
 /* =========================
-   BANCO DE AUTOS
-========================= */
-
-.drag-bank{
-
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-
-  gap:18px;
-
-  margin-bottom:25px;
-}
-
-/* =========================
-   AUTO
+   AUTOS
 ========================= */
 
 .draggable.car-card{
 
   width:130px;
+
   height:70px;
 
   border:none;
@@ -137,21 +382,22 @@ body.line-page{
   cursor:grab;
 
   padding:0;
+
+  transition:.3s;
 }
 
-/* carrocería */
+.draggable.car-card:hover{
+
+  transform:
+    translateY(-8px)
+    scale(1.05);
+}
 
 .car-body{
 
   width:130px;
-  height:55px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #ff5252,
-      #d61f1f
-    );
+  height:55px;
 
   border-radius:
     20px 20px 12px 12px;
@@ -161,17 +407,30 @@ body.line-page{
   justify-content:center;
 
   color:white;
+
   font-weight:700;
 
   font-size:1rem;
 
   position:relative;
 
+  animation:carIdle 1.6s ease-in-out infinite;
+
   box-shadow:
     0 5px 12px rgba(0,0,0,.25);
 }
 
-/* techo */
+@keyframes carIdle{
+
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-4px);
+  }
+
+}
 
 .car-body::before{
 
@@ -185,13 +444,11 @@ body.line-page{
   width:85px;
   height:20px;
 
-  background:#ff6666;
+  background:rgba(255,255,255,.25);
 
   border-radius:
     12px 12px 0 0;
 }
-
-/* ruedas */
 
 .car-body::after{
 
@@ -211,6 +468,28 @@ body.line-page{
     radial-gradient(circle at 75% center,#222 0 10px,transparent 11px);
 }
 
+/* COLORES */
+
+.car-red{
+  background:linear-gradient(135deg,#ff5252,#d61f1f);
+}
+
+.car-blue{
+  background:linear-gradient(135deg,#3f8cff,#1b5dd8);
+}
+
+.car-green{
+  background:linear-gradient(135deg,#52d66f,#18863d);
+}
+
+.car-purple{
+  background:linear-gradient(135deg,#b36dff,#7a35d8);
+}
+
+.car-orange{
+  background:linear-gradient(135deg,#ffb347,#ff7b00);
+}
+
 /* =========================
    ARRASTRANDO
 ========================= */
@@ -223,11 +502,18 @@ body.line-page{
 
   pointer-events:none;
 
-  transform:scale(1.08);
+  transform:
+    scale(1.15)
+    rotate(-5deg);
+
+  filter:
+    drop-shadow(
+      0 12px 15px rgba(0,0,0,.35)
+    );
 }
 
 /* =========================
-  RESPONSIVE
+   RESPONSIVE
 ========================= */
 
 @media(max-width:900px){
@@ -245,4 +531,5 @@ body.line-page{
   .car-body{
     width:110px;
   }
+
 }
