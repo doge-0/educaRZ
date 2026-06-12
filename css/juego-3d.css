@@ -1,0 +1,154 @@
+/* HUD compartido para los juegos 3D de 4 Basico */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', 'Comic Sans MS', sans-serif;
+  background: #1d3557;
+}
+
+#scene-container { position: fixed; inset: 0; }
+#scene-container canvas { display: block; }
+
+.hud-top {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  pointer-events: none;
+  z-index: 10;
+}
+.hud-top > * { pointer-events: auto; }
+
+.hud-title {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 6px 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  border: 3px solid #ffb703;
+  max-width: 60vw;
+}
+.hud-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #e76f51;
+}
+.hud-title h1 { font-size: clamp(0.95rem, 2.2vw, 1.3rem); color: #1d3557; }
+
+.hud-btn {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.92);
+  border: 3px solid #457b9d;
+  color: #1d3557;
+  font-weight: 700;
+  font-size: 0.92rem;
+  padding: 9px 14px;
+  border-radius: 13px;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s;
+  font-family: inherit;
+}
+.hud-btn:hover:not(:disabled) { transform: translateY(-2px) scale(1.04); }
+.hud-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.hud-btn.primary { background: linear-gradient(135deg, #2a9d8f, #43c6ac); border-color: #fff; color: #fff; }
+
+.hud-score {
+  background: linear-gradient(135deg, #ffb703, #fb8500);
+  color: #fff;
+  border-radius: 14px;
+  padding: 6px 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+  border: 3px solid #fff;
+}
+.hud-score span { display: block; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1.5px; }
+.hud-score strong { font-size: 1.2rem; }
+
+.hud-goal {
+  position: fixed;
+  top: 74px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(29, 53, 87, 0.85);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 999px;
+  z-index: 10;
+  pointer-events: none;
+  max-width: 92vw;
+  text-align: center;
+  transition: opacity 0.5s;
+}
+.hud-goal.hidden { opacity: 0; }
+
+.hud-feedback {
+  position: fixed;
+  bottom: 86px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.05rem;
+  font-weight: 800;
+  padding: 10px 26px;
+  border-radius: 999px;
+  z-index: 15;
+  text-align: center;
+  max-width: 92vw;
+  display: none;
+}
+.hud-feedback.good { display: block; background: #d8f3dc; color: #1b4332; border: 3px solid #2a9d8f; }
+.hud-feedback.bad  { display: block; background: #ffe5e5; color: #9d0208; border: 3px solid #e63946; }
+
+.hud-bottom {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px;
+  z-index: 10;
+  pointer-events: none;
+}
+.hud-bottom > * { pointer-events: auto; }
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, #87ceeb, #b8e6c9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  z-index: 100;
+  color: #1d3557;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: opacity 0.6s;
+}
+.loading-overlay.fade { opacity: 0; pointer-events: none; }
+.loading-icon { font-size: 4rem; animation: bounce 0.7s infinite alternate ease-in-out; }
+@keyframes bounce { from { transform: translateY(-12px); } to { transform: translateY(10px); } }
+
+@keyframes hudshake {
+  0%, 100% { transform: translateX(-50%); }
+  25% { transform: translateX(calc(-50% - 8px)); }
+  75% { transform: translateX(calc(-50% + 8px)); }
+}
+.hud-feedback.bad { animation: hudshake 0.3s 2; }
+
+@media (max-width: 640px) {
+  .hud-goal { font-size: 0.74rem; top: 100px; }
+  .hud-title h1 { font-size: 0.9rem; }
+}
