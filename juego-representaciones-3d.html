@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rompecabezas numérico 3D</title>
+  <link rel="icon" type="image/svg+xml" href="img/marhlogo.jpg">
+  <link rel="stylesheet" href="css/juego-3d.css">
+</head>
+<body>
+  <div id="scene-container"></div>
+
+  <header class="hud-top">
+    <button class="hud-btn" id="backMenu" title="Volver al campo del tren">← Estaciones</button>
+    <div class="hud-title">
+      <p class="hud-eyebrow" id="gameStep">Juego 5 de 6</p>
+      <h1>🧩 Rompecabezas numérico</h1>
+    </div>
+    <div class="hud-score">
+      <span>Puntos</span>
+      <strong id="score">0</strong>
+    </div>
+  </header>
+
+  <p class="hud-goal" id="goal">Toca una pieza y luego toca el caballete del número que representa: cada pieza muestra una descomposición.</p>
+
+  <p class="hud-feedback" id="feedback" role="status"></p>
+
+  <footer class="hud-bottom">
+    <button class="hud-btn" id="restartBtn">Reiniciar</button>
+    <button class="hud-btn primary" id="verifyBtn">Verificar</button>
+    <button class="hud-btn primary" id="nextBtn" disabled>Siguiente juego 🚂</button>
+  </footer>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-icon">🧩</div>
+    <p>Ordenando el taller...</p>
+  </div>
+
+  <script src="js/lib/three.min.js"></script>
+  <script src="js/juego-representaciones-3d.js?v=4"></script>
+</body>
+</html>

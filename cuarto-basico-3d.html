@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4 Básico - Tren de los Números</title>
+  <link rel="icon" type="image/svg+xml" href="img/marhlogo.jpg">
+  <link rel="stylesheet" href="css/cuarto-basico-menu-3d.css">
+</head>
+<body>
+  <div id="scene-container"></div>
+
+  <header class="hud-top">
+    <button class="hud-btn" id="backHome" title="Volver al inicio">← Inicio</button>
+    <div class="hud-title">
+      <p class="hud-eyebrow">4° Básico</p>
+      <h1>🚂 El Tren de los Números</h1>
+    </div>
+    <div class="hud-score" title="Tu puntaje">
+      <span>Puntaje</span>
+      <strong id="puntajeMenu">0</strong>
+    </div>
+  </header>
+
+  <p class="hud-hint" id="hudHint">Haz clic en una estación para que el tren viaje hasta ella 🚉</p>
+
+  <footer class="hud-bottom">
+    <button class="hud-btn danger" id="resetProgress">Reiniciar progreso</button>
+    <a class="hud-btn" href="todos.html">Otros juegos</a>
+    <a class="hud-btn" href="cuarto-basico.html" title="Volver al menú clásico">Menú clásico</a>
+  </footer>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-train">🚂</div>
+    <p>Preparando el tren...</p>
+  </div>
+
+  <script src="js/lib/three.min.js"></script>
+  <script src="js/cuarto-basico-menu-3d.js?v=11"></script>
+</body>
+</html>
